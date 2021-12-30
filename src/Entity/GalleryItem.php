@@ -5,7 +5,7 @@ namespace SovicCms\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * App\Entity\GalleryItem
+ * SovicCms\Entity\GalleryItem
  *
  * @ORM\Table(name="galleriesitems")
  * @ORM\Entity

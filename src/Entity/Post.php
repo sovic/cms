@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * App\Entity\Post
+ * SovicCms\Entity\Post
  *
  * @ORM\Table(name="posts")
  * @ORM\Entity(repositoryClass="SovicCms\Repository\PostRepository")

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ORM;
+namespace SovicCms\ORM;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

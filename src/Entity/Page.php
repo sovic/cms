@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace SovicCms\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * App\Entity\Page
+ * SovicCms\Entity\Page
  *
  * @ORM\Table(name="pages")
  * @ORM\Entity
