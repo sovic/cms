@@ -54,7 +54,7 @@ abstract class AbstractEntityModel
         if (!$this instanceof EntityModelGalleryInterface) {
             throw new RuntimeException('Not yet implemented');
         }
-        if (null === $this->galleryManager) {
+        if (empty($this->galleryManager)) {
             /** @var EntityModelGalleryInterface $this */
             $modelName = $this->getGalleryModelName();
             $this->galleryManager = new GalleryManager($this->getEntityManager(), $modelName);

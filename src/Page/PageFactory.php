@@ -20,7 +20,7 @@ final class PageFactory extends EntityModelFactory
     public function loadByUrlId(string $urlId, bool $allowPrivate = false): ?Page
     {
         $urlId = trim($urlId, '/\\'); // trim leading / trailing slashes
-        $model = $this->loadModelBy(PageEntity::class, Page::class, ['rawID' => $urlId]);
+        $model = $this->loadModelBy(PageEntity::class, Page::class, ['urlId' => $urlId]);
         if (null === $model) {
             return null;
         }
