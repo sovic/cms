@@ -292,7 +292,7 @@ class Post
 
     public function setPublished(?DateTimeImmutable $published): void
     {
-        $this->published = $published ? $published->getTimestamp() : null;
+        $this->published = $published?->getTimestamp();
     }
 
     public function getCreated(): DateTimeImmutable

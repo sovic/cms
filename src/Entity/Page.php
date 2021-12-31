@@ -28,7 +28,7 @@ class Page
     /**
      * @ORM\Column(name="raw_id", type="string", length=200, nullable=true)
      */
-    protected string $rawID;
+    protected string $urlId;
 
     /**
      * @ORM\Column(name="head_title", type="string", length=200, nullable=true)
@@ -51,34 +51,34 @@ class Page
     protected string $heading;
 
     /**
-     * @ORM\Column(name="perex", length=65535, nullable=true)
+     * @ORM\Column(name="perex", type="text", length=65535, nullable=true, options={"default"="NULL"})
      */
-    protected string $perex;
+    protected ?string $perex;
 
     /**
-     * @ORM\Column(name="content", length=4294967295, nullable=true)
+     * @ORM\Column(name="content", type="text", length=4294967295, nullable=true, options={"default"="NULL"})
      */
-    protected string $content;
+    protected ?string $content;
 
     /**
-     * @ORM\Column(name="sequence", type="integer")
+     * @ORM\Column(name="sequence", type="integer", nullable=true)
      */
     protected int $sequence;
 
     /**
-     * @ORM\Column(name="public", type="boolean")
+     * @ORM\Column(name="public", type="boolean", nullable=false, options={"default"=0})
      */
-    protected bool $public;
+    protected bool $public = false;
 
     /**
-     * @ORM\Column(name="content_raw", length=65535, nullable=true)
+     * @ORM\Column(name="content_raw", type="text", length=65535, nullable=true, options={"default"="NULL"})
      */
-    protected string $contentRaw;
+    protected ?string $contentRaw;
 
     /**
-     * @ORM\Column(name="content_raw_utf", length=65535, nullable=true)
+     * @ORM\Column(name="content_raw_utf", type="text", length=65535, nullable=true, options={"default"="NULL"})
      */
-    protected string $contentRawUtf;
+    protected ?string $contentRawUtf;
 
     /**
      * @ORM\Column(name="lang", length=5, nullable=true, options={"default": "cs"})
@@ -86,14 +86,14 @@ class Page
     protected string $lang = 'cs';
 
     /**
-     * @ORM\Column(name="group_id", type="integer")
+     * @ORM\Column(name="group_id", type="integer", nullable=true)
      */
-    protected int $groupID;
+    protected int $groupId;
 
     /**
-     * @ORM\Column(name="toc", type="boolean")
+     * @ORM\Column(name="toc", type="boolean", nullable=false, options={"default"=0})
      */
-    protected bool $toc;
+    protected bool $toc = false;
 
     /**
      * @ORM\Column(name="cta_link", length=255, nullable=true)
@@ -155,14 +155,14 @@ class Page
         $this->name = $name;
     }
 
-    public function getRawID(): string
+    public function getUrlId(): string
     {
-        return $this->rawID;
+        return $this->urlId;
     }
 
-    public function setRawID(string $rawID): void
+    public function setUrlId(string $urlId): void
     {
-        $this->rawID = $rawID;
+        $this->urlId = $urlId;
     }
 
     public function getHeadTitle(): string
@@ -205,22 +205,22 @@ class Page
         $this->heading = $heading;
     }
 
-    public function getPerex(): string
+    public function getPerex(): ?string
     {
         return $this->perex;
     }
 
-    public function setPerex(string $perex): void
+    public function setPerex(?string $perex): void
     {
         $this->perex = $perex;
     }
 
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setContent(string $content): void
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }
@@ -245,22 +245,22 @@ class Page
         $this->public = $public;
     }
 
-    public function getContentRaw(): string
+    public function getContentRaw(): ?string
     {
         return $this->contentRaw;
     }
 
-    public function setContentRaw(string $contentRaw): void
+    public function setContentRaw(?string $contentRaw): void
     {
         $this->contentRaw = $contentRaw;
     }
 
-    public function getContentRawUtf(): string
+    public function getContentRawUtf(): ?string
     {
         return $this->contentRawUtf;
     }
 
-    public function setContentRawUtf(string $contentRawUtf): void
+    public function setContentRawUtf(?string $contentRawUtf): void
     {
         $this->contentRawUtf = $contentRawUtf;
     }
@@ -275,14 +275,14 @@ class Page
         $this->lang = $lang;
     }
 
-    public function getGroupID(): int
+    public function getGroupId(): int
     {
-        return $this->groupID;
+        return $this->groupId;
     }
 
-    public function setGroupID(int $groupID): void
+    public function setGroupId(int $groupId): void
     {
-        $this->groupID = $groupID;
+        $this->groupId = $groupId;
     }
 
     public function isToc(): bool
