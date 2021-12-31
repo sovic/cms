@@ -2,6 +2,7 @@
 
 namespace SovicCms\Gallery;
 
+use JetBrains\PhpStorm\Pure;
 use SovicCms\Entity\GalleryItem;
 
 class GalleryHelper
@@ -23,7 +24,7 @@ class GalleryHelper
         self::SIZE_FULL,
     ];
 
-    public static function getMediumPaths(GalleryItem $item, array $sizes = [self::SIZE_THUMB, self::SIZE_BIG]): array
+    #[Pure] public static function getMediumPaths(GalleryItem $item, array $sizes = [self::SIZE_THUMB, self::SIZE_BIG]): array
     {
         $domain = 'https://www.ods.cz'; // TODO
         $dir = sprintf('%04d', (int) ($item->getId() / 100));

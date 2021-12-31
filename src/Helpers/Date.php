@@ -6,6 +6,7 @@ use DateTimeInterface;
 
 class Date
 {
+    /** @noinspection SpellCheckingInspection */
     public static function readable(DateTimeInterface $date): string
     {
         $day = (int) $date->format('w');

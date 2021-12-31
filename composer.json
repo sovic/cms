@@ -13,7 +13,7 @@
         ]
     },
     "require": {
-        "php": ">=7.4",
+        "php": "~8.0",
         "doctrine/orm": "^2.10",
         "symfony/validator": "^6.0",
         "doctrine/annotations": "^1.13"

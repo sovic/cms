@@ -10,9 +10,7 @@ abstract class AbstractEntityModel
 {
     protected EntityManagerInterface $entityManager;
     protected GalleryManager $galleryManager;
-
-    /** @var mixed $entity */
-    protected $entity;
+    protected mixed $entity;
 
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {

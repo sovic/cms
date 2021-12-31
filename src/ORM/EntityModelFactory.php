@@ -22,9 +22,9 @@ abstract class EntityModelFactory
     /**
      * @param mixed $entity Entity
      * @param string $modelClass
-     * @return mixed|null Model
+     * @return mixed Model
      */
-    protected function loadEntityModel($entity, string $modelClass)
+    protected function loadEntityModel(mixed $entity, string $modelClass): mixed
     {
         if (null === $entity) {
             return null;
@@ -41,9 +41,9 @@ abstract class EntityModelFactory
      * @param string $entityClass
      * @param string $modelClass
      * @param int $id
-     * @return mixed|null
+     * @return mixed
      */
-    protected function loadModelById(string $entityClass, string $modelClass, int $id)
+    protected function loadModelById(string $entityClass, string $modelClass, int $id): mixed
     {
         return $this->loadModelBy($entityClass, $modelClass, ['id' => $id]);
     }
@@ -52,9 +52,9 @@ abstract class EntityModelFactory
      * @param string $entityClass
      * @param string $modelClass
      * @param array $criteria
-     * @return mixed|null
+     * @return mixed
      */
-    protected function loadModelBy(string $entityClass, string $modelClass, array $criteria)
+    protected function loadModelBy(string $entityClass, string $modelClass, array $criteria): mixed
     {
         /** @var EntityRepository $repository */
         $repository = $this->entityManager->getRepository($entityClass);

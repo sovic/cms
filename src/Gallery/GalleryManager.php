@@ -24,11 +24,11 @@ final class GalleryManager
     }
 
     /**
-     * @param null|int|array|int[] $modelId
+     * @param array|int|int[]|null $modelId
      * @param string|null $galleryName
      * @return QueryBuilder
      */
-    private function initQueryBuilder($modelId = null, string $galleryName = null): QueryBuilder
+    private function initQueryBuilder(array|int $modelId = null, string $galleryName = null): QueryBuilder
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('gi')->from(Gallery::class, 'g')->where('g.model = :model');
@@ -197,11 +197,12 @@ final class GalleryManager
         $result = [];
         /** @var GalleryItem $item */
         foreach ($items as $item) {
-            if ($item->getDescription() && Text::isUrl($item->getDescription())) {
+            $description = $item->getDescription();
+            if ($description && Text::isUrl($description)) {
                 $name = File::publicFileName(basename($item->getFile()));
                 $url = $item->getDescription();
-            } elseif ($item->getName() || $item->getDescription()) {
-                $filename = !empty($item->getName()) ? $item->getName() : $item->getDescription();
+            } elseif ($description || $item->getName()) {
+                $filename = !empty($item->getName()) ? $item->getName() : $description;
                 $name = File::publicFileName($filename, $item->getFile());
                 $url = '/dl/' . $item->getId() . '/' . $filename . '.' . $item->getFile();
             } else {
