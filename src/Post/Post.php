@@ -20,17 +20,22 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
         return 'post';
     }
 
+    public function getGalleryModelId(): string
+    {
+        return $this->getId();
+    }
+
     public function getTitlePhoto(): ?array
     {
         $galleryManager = $this->getGalleryManager();
 
-        return $galleryManager->getTitlePhoto($this->getEntity()->getId(), 'post');
+        return $galleryManager->getTitlePhoto('post');
     }
 
     public function getGallery(): array
     {
         $galleryManager = $this->getGalleryManager();
 
-        return $galleryManager->getGallery($this->getEntity()->getId(), 'post');
+        return $galleryManager->getGallery('post');
     }
 }

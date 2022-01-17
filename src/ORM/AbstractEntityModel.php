@@ -57,7 +57,8 @@ abstract class AbstractEntityModel
         if (empty($this->galleryManager)) {
             /** @var EntityModelGalleryInterface $this */
             $modelName = $this->getGalleryModelName();
-            $this->galleryManager = new GalleryManager($this->getEntityManager(), $modelName);
+            $modelId = $this->getGalleryModelId();
+            $this->galleryManager = new GalleryManager($this->getEntityManager(), $modelName, $modelId);
         }
 
         return $this->galleryManager;

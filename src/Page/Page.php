@@ -20,6 +20,11 @@ class Page extends AbstractEntityModel implements EntityModelGalleryInterface
         return 'page';
     }
 
+    public function getGalleryModelId(): string
+    {
+        return $this->getId();
+    }
+
     public function getHeading(): array
     {
         return explode('/', $this->getEntity()->getHeading());
@@ -70,16 +75,15 @@ class Page extends AbstractEntityModel implements EntityModelGalleryInterface
             return [];
         }
 
-        $id = $this->getId();
         $entity = $this->getEntity();
         $galleryManager = $this->getGalleryManager();
-        $heroImages = $galleryManager->getHeroImages($id, 'page');
+        $heroImages = $galleryManager->getHeroImages('page');
 
         return [
             'header' => $entity->getHeader(),
             'hero_image' => $heroImages['hero'],
             'hero_image_mobile' => $heroImages['hero_mobile'],
-            'gallery' => $galleryManager->getGallery($id, 'gallery'),
+            'gallery' => $galleryManager->getGallery('gallery'),
             'menu_active' => '/' . $entity->getUrlId(),
         ];
     }

@@ -16,32 +16,33 @@ final class GalleryManager
     private EntityManagerInterface $entityManager;
     private QueryBuilder $queryBuilder;
     private string $modelName;
+    private array|int $modelId;
 
-    public function __construct(EntityManagerInterface $entityManager, string $modelName)
+    public function __construct(EntityManagerInterface $entityManager, string $modelName, array|int $modelId)
     {
         $this->entityManager = $entityManager;
         $this->modelName = $modelName;
+        $this->modelId = $modelId;
     }
 
     /**
-     * @param array|int|int[]|null $modelId
      * @param string|null $galleryName
      * @return QueryBuilder
      */
-    private function initQueryBuilder(array|int $modelId = null, string $galleryName = null): QueryBuilder
+    private function initQueryBuilder(string $galleryName = null): QueryBuilder
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('gi')->from(Gallery::class, 'g')->where('g.model = :model');
         $qb->leftJoin(GalleryItem::class, 'gi', Join::WITH, 'gi.galleryId = g.id');
         $qb->setParameter(':model', $this->modelName);
         $qb->andWhere('gi.temp = 0');
-        if (null !== $modelId) {
-            if (is_array($modelId)) {
+        if (null !== $this->modelId) {
+            if (is_array($this->modelId)) {
                 $qb->andWhere($qb->expr()->in('g.modelId', ':model_id'));
-                $qb->setParameter(':model_id', $modelId, Connection::PARAM_INT_ARRAY);
+                $qb->setParameter(':model_id', $this->modelId, Connection::PARAM_INT_ARRAY);
             } else {
                 $qb->andWhere('g.modelId = :model_id');
-                $qb->setParameter(':model_id', $modelId);
+                $qb->setParameter(':model_id', $this->modelId);
             }
         }
         if (null !== $galleryName) {
@@ -98,17 +99,17 @@ final class GalleryManager
         return !empty($items) ? $items[0] : null;
     }
 
-    public function getTitlePhoto(int $modelId, string $galleryName): ?array
+    public function getTitlePhoto(string $galleryName): ?array
     {
-        $qb = $this->initQueryBuilder($modelId, $galleryName);
+        $qb = $this->initQueryBuilder($galleryName);
         $qb->orderBy('gi.title', 'DESC');
 
         return $this->getSingleItem();
     }
 
-    public function getTitlePhotos(array $modelIds, string $galleryName): ?array
+    public function getTitlePhotos(string $galleryName): ?array
     {
-        $qb = $this->initQueryBuilder($modelIds, $galleryName);
+        $qb = $this->initQueryBuilder($galleryName);
         $qb->orderBy('gi.title', 'DESC');
 
         $result = $this->getItems();
@@ -122,9 +123,9 @@ final class GalleryManager
         return $return;
     }
 
-    public function getHeroImages(int $modelId, string $galleryName): array
+    public function getHeroImages(string $galleryName): array
     {
-        $qb = $this->initQueryBuilder($modelId, $galleryName);
+        $qb = $this->initQueryBuilder($galleryName);
         $qb->andWhere($qb->expr()->orX('gi.hero = 1', 'gi.heroMobile = 1'));
 
         $return = [
@@ -143,10 +144,10 @@ final class GalleryManager
         return $return;
     }
 
-    public function getVideo(int $modelId): ?array
+    public function getVideo(): ?array
     {
         $expr = $this->entityManager->getExpressionBuilder();
-        $qb = $this->initQueryBuilder($modelId, 'video');
+        $qb = $this->initQueryBuilder('video');
         $qb->andWhere(
             $qb->expr()->orX(
                 $expr->isNotNull('gi.name'),
@@ -174,18 +175,18 @@ final class GalleryManager
         ];
     }
 
-    public function getGallery(int $modelId, string $galleryName): array
+    public function getGallery(string $galleryName): array
     {
-        $qb = $this->initQueryBuilder($modelId, $galleryName);
+        $qb = $this->initQueryBuilder($galleryName);
         $qb->orderBy('gi.sequence', 'ASC');
 
         return $this->getItems();
     }
 
-    public function getDocs(int $modelId): array
+    public function getDocs(): array
     {
         $expr = $this->entityManager->getExpressionBuilder();
-        $qb = $this->initQueryBuilder($modelId, 'reading');
+        $qb = $this->initQueryBuilder('reading');
         $qb->andWhere(
             $qb->expr()->orX(
                 $expr->isNotNull('gi.name'),

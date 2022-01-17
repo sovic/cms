@@ -58,8 +58,8 @@ class PostResultSet
     {
         $entityManager = $this->getEntityManager();
         // title photos
-        $galleryManager = new GalleryManager($entityManager, 'post');
-        $titlePhotos = $galleryManager->getTitlePhotos($this->getPostsIdList(), 'post');
+        $galleryManager = new GalleryManager($entityManager, 'post', $this->getPostsIdList());
+        $titlePhotos = $galleryManager->getTitlePhotos('post');
         // url slugify
         $slugify = new Slugify();
         $slugify->activateRuleSet('default');
