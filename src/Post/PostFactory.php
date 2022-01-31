@@ -18,6 +18,21 @@ final class PostFactory extends EntityModelFactory
         return $this->loadModelById(PostEntity::class, Post::class, $id);
     }
 
+    public function loadByUrlId(string $urlId, bool $allowNonPublished = false): ?Post
+    {
+        $urlId = trim($urlId, '/\\'); // trim leading / trailing slashes
+        /** @var Post $model */
+        $model = $this->loadModelBy(PostEntity::class, Post::class, ['urlId' => $urlId]);
+        if (null === $model) {
+            return null;
+        }
+        if (!$allowNonPublished && !$model->getEntity()->isPublic()) {
+            return null;
+        }
+
+        return $model;
+    }
+
     public function loadPublicPostById(int $id): ?Post
     {
         return $this->loadModelBy(

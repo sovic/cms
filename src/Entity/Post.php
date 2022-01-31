@@ -28,7 +28,7 @@ class Post
     /**
      * @ORM\Column(name="raw_id", type="string", length=255, nullable=true)
      */
-    protected string $rawID;
+    protected string $urlId;
 
     /**
      * @ORM\Column(name="head_title", type="string", length=255, nullable=true)
@@ -101,49 +101,49 @@ class Post
     protected int $title;
 
     /**
-     * @ORM\Column(name="import_id", type="integer")
+     * @ORM\Column(name="import_id", type="integer", nullable=true, options={"default"="NULL"})
      */
-    protected int $importID;
+    protected ?int $importID;
 
     /**
-     * @ORM\Column(name="import_service", type="string", length=50, nullable=true)
+     * @ORM\Column(name="import_service", type="string", length=50, nullable=true, options={"default"="NULL"})
      */
-    protected string $importService;
+    protected ?string $importService;
 
     /**
-     * @ORM\Column(name="infobox", length=65535, nullable=true)
+     * @ORM\Column(name="infobox", length=1024, nullable=true)
      */
-    protected string $infoBox;
+    protected ?string $infoBox;
 
     /**
-     * @ORM\Column(name="signature", type="string", length=1024, nullable=true)
+     * @ORM\Column(name="signature", type="string", length=1024, nullable=true, options={"default"="NULL"})
      */
-    protected string $signature;
+    protected ?string $signature;
 
     /**
-     * @ORM\Column(name="modified", type="integer")
+     * @ORM\Column(name="modified", type="integer", options={"default"=0})
      */
-    protected int $modified;
+    protected int $modified = 0;
 
     /**
-     * @ORM\Column(name="publishers_id", type="integer")
+     * @ORM\Column(name="publishers_id", type="integer", options={"default"=0})
      */
-    protected int $publishersID;
+    protected int $publishersID = 0;
 
     /**
-     * @ORM\Column(name="postsauthors_id", type="integer")
+     * @ORM\Column(name="postsauthors_id", type="integer", options={"default"=0})
      */
-    protected int $postsAuthorsID;
+    protected int $postsAuthorsID = 0;
 
     /**
-     * @ORM\Column(name="gallery", type="boolean")
+     * @ORM\Column(name="gallery", type="boolean", options={"default"=false})
      */
-    protected bool $gallery;
+    protected bool $gallery = false;
 
     /**
-     * @ORM\Column(name="media_id", type="integer")
+     * @ORM\Column(name="media_id", type="integer", options={"default"=0})
      */
-    protected int $mediaID;
+    protected int $mediaID = 0;
 
     /**
      * @ORM\Column(name="authorsusers_id", type="integer", nullable=true, options={"default"="NULL"})
@@ -165,14 +165,14 @@ class Post
         $this->name = $name;
     }
 
-    public function getRawID(): string
+    public function getUrlId(): string
     {
-        return $this->rawID;
+        return $this->urlId;
     }
 
-    public function setRawID(string $rawID): void
+    public function setUrlId(string $urlId): void
     {
-        $this->rawID = $rawID;
+        $this->urlId = $urlId;
     }
 
     public function getHeadTitle(): string
@@ -315,45 +315,6 @@ class Post
         $this->title = $title;
     }
 
-    public function getImportID(): int
-    {
-        return $this->importID;
-    }
-
-    public function setImportID(int $importID): void
-    {
-        $this->importID = $importID;
-    }
-
-    public function getImportService(): string
-    {
-        return $this->importService;
-    }
-
-    public function setImportService(string $importService): void
-    {
-        $this->importService = $importService;
-    }
-
-    public function getInfoBox(): string
-    {
-        return $this->infoBox;
-    }
-
-    public function setInfoBox(string $infoBox): void
-    {
-        $this->infoBox = $infoBox;
-    }
-
-    public function getSignature(): string
-    {
-        return $this->signature;
-    }
-
-    public function setSignature(string $signature): void
-    {
-        $this->signature = $signature;
-    }
 
     public function getModified(): int
     {
@@ -413,5 +374,45 @@ class Post
     public function setAuthorsUsersID(?int $authorsUsersID): void
     {
         $this->authorsUsersID = $authorsUsersID;
+    }
+
+    public function getImportID(): ?int
+    {
+        return $this->importID;
+    }
+
+    public function setImportID(?int $importID): void
+    {
+        $this->importID = $importID;
+    }
+
+    public function getImportService(): ?string
+    {
+        return $this->importService;
+    }
+
+    public function setImportService(?string $importService): void
+    {
+        $this->importService = $importService;
+    }
+
+    public function getInfoBox(): ?string
+    {
+        return $this->infoBox;
+    }
+
+    public function setInfoBox(?string $infoBox): void
+    {
+        $this->infoBox = $infoBox;
+    }
+
+    public function getSignature(): ?string
+    {
+        return $this->signature;
+    }
+
+    public function setSignature(?string $signature): void
+    {
+        $this->signature = $signature;
     }
 }
