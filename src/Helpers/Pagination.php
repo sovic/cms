@@ -58,8 +58,8 @@ class Pagination
         if ($currentPage < 1) {
             throw new InvalidArgumentException('invalid page');
         }
-        $currentPage--; // reset to 0 based
-        if ($currentPage * $this->getPerPage() > $this->getTotal()) {
+        // check validity as 0 based
+        if (($currentPage - 1) * $this->getPerPage() > $this->getTotal()) {
             throw new InvalidArgumentException('invalid page');
         }
         $this->currentPage = $currentPage;
