@@ -75,12 +75,12 @@ class GalleryItem
     protected int $modelId;
 
     /**
-     * @ORM\Column(name="processed", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(name="processed", type="boolean", nullable=true, options={"default"="0"})
      */
     protected bool $processed = false;
 
     /**
-     * @ORM\Column(name="generate", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(name="generate", type="boolean", nullable=true, options={"default"="0"})
      */
     protected bool $generate = false;
 
