@@ -17,7 +17,7 @@ final class GalleryManager
     private QueryBuilder $queryBuilder;
     private string $modelName;
     private array|int $modelId;
-    private string $baseUrl;
+    private string $baseUrl = '';
 
     public function __construct(EntityManagerInterface $entityManager, string $modelName, array|int $modelId)
     {
