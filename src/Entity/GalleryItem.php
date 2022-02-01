@@ -77,12 +77,12 @@ class GalleryItem
     /**
      * @ORM\Column(name="processed", type="boolean", nullable=true, options={"default"="0"})
      */
-    protected bool $processed = false;
+    protected ?bool $processed = false;
 
     /**
      * @ORM\Column(name="generate", type="boolean", nullable=true, options={"default"="0"})
      */
-    protected bool $generate = false;
+    protected ?bool $generate = false;
 
     /**
      * @ORM\Column(name="title", type="boolean", nullable=false, options={"default"="0"})
@@ -242,7 +242,7 @@ class GalleryItem
 
     public function isProcessed(): bool
     {
-        return $this->processed;
+        return (bool) $this->processed;
     }
 
     public function setProcessed(bool $processed): void
@@ -252,7 +252,7 @@ class GalleryItem
 
     public function isGenerate(): bool
     {
-        return $this->generate;
+        return (bool) $this->generate;
     }
 
     public function setGenerate(bool $generate): void
