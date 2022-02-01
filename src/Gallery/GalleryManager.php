@@ -17,12 +17,18 @@ final class GalleryManager
     private QueryBuilder $queryBuilder;
     private string $modelName;
     private array|int $modelId;
+    private string $baseUrl;
 
     public function __construct(EntityManagerInterface $entityManager, string $modelName, array|int $modelId)
     {
         $this->entityManager = $entityManager;
         $this->modelName = $modelName;
         $this->modelId = $modelId;
+    }
+
+    public function setBaseUrl(string $baseUrl): void
+    {
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -36,14 +42,12 @@ final class GalleryManager
         $qb->leftJoin(GalleryItem::class, 'gi', Join::WITH, 'gi.galleryId = g.id');
         $qb->setParameter(':model', $this->modelName);
         $qb->andWhere('gi.temp = 0');
-        if (null !== $this->modelId) {
-            if (is_array($this->modelId)) {
-                $qb->andWhere($qb->expr()->in('g.modelId', ':model_id'));
-                $qb->setParameter(':model_id', $this->modelId, Connection::PARAM_INT_ARRAY);
-            } else {
-                $qb->andWhere('g.modelId = :model_id');
-                $qb->setParameter(':model_id', $this->modelId);
-            }
+        if (is_array($this->modelId)) {
+            $qb->andWhere($qb->expr()->in('g.modelId', ':model_id'));
+            $qb->setParameter(':model_id', $this->modelId, Connection::PARAM_INT_ARRAY);
+        } else {
+            $qb->andWhere('g.modelId = :model_id');
+            $qb->setParameter(':model_id', $this->modelId);
         }
         if (null !== $galleryName) {
             $qb->andWhere('g.name = :gallery_name');
@@ -85,7 +89,7 @@ final class GalleryManager
                 'width' => !empty($item->getWidth()) ? $item->getWidth() : null,
                 'height' => !empty($item->getHeight()) ? $item->getHeight() : null,
             ];
-            $mediumPaths = GalleryHelper::getMediumPaths($item, GalleryHelper::SIZES_SET_ALL);
+            $mediumPaths = GalleryHelper::getMediaPaths($item, $this->baseUrl, GalleryHelper::SIZES_SET_ALL);
             $results[] = array_merge($result, $mediumPaths);
         }
 

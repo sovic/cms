@@ -24,11 +24,14 @@ class GalleryHelper
         self::SIZE_FULL,
     ];
 
-    #[Pure] public static function getMediumPaths(GalleryItem $item, array $sizes = [self::SIZE_THUMB, self::SIZE_BIG]): array
-    {
-        $domain = 'https://www.ods.cz'; // TODO
+    #[Pure]
+    public static function getMediaPaths(
+        GalleryItem $item,
+        string      $baseUrl = '',
+        array       $sizes = [self::SIZE_THUMB, self::SIZE_BIG]
+    ): array {
         $dir = sprintf('%04d', (int) ($item->getId() / 100));
-        $basePath = $domain . '/media/content/' . $item->getModel() . '/' . $dir;
+        $basePath = $baseUrl . '/content/' . $item->getModel() . '/' . $dir;
         $result = [];
         foreach ($sizes as $size) {
             if (!in_array($size, self::SIZES, true)) {
