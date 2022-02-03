@@ -169,7 +169,7 @@ final class GalleryManager
             $url = $item->getDescription();
         } elseif ($item->getName() || $item->getDescription()) {
             $filename = $item->getName() ?: $item->getDescription();
-            $url = '/dl/' . $item->getId() . '/' . $filename . '.' . $item->getFile();
+            $url = '/dl/' . $item->getId() . '/' . $filename . '.' . $item->getExtension();
         } else {
             return null;
         }
@@ -204,12 +204,12 @@ final class GalleryManager
         foreach ($items as $item) {
             $description = $item->getDescription();
             if ($description && Text::isUrl($description)) {
-                $name = File::publicFileName(basename($item->getFile()));
+                $name = File::publicFileName(basename($item->getExtension()));
                 $url = $item->getDescription();
             } elseif ($description || $item->getName()) {
                 $filename = !empty($item->getName()) ? $item->getName() : $description;
-                $name = File::publicFileName($filename, $item->getFile());
-                $url = '/dl/' . $item->getId() . '/' . $filename . '.' . $item->getFile();
+                $name = File::publicFileName($filename, $item->getExtension());
+                $url = '/dl/' . $item->getId() . '/' . $filename . '.' . $item->getExtension();
             } else {
                 continue;
             }

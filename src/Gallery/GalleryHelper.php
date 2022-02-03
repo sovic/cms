@@ -38,9 +38,9 @@ class GalleryHelper
                 continue;
             }
             if ($size === self::SIZE_FULL) {
-                $result[$size] = $basePath . '/' . $item->getId() . '.' . $item->getFile();
+                $result[$size] = $basePath . '/' . $item->getId() . '.' . $item->getExtension();
             } else {
-                $result[$size] = $basePath . '/' . $item->getId() . '_' . $size . '.' . $item->getFile();
+                $result[$size] = $basePath . '/' . $item->getId() . '_' . $size . '.' . $item->getExtension();
             }
         }
 

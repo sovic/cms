@@ -27,7 +27,7 @@ class GalleryItem
     /**
      * @ORM\Column(name="file", type="string", length=50, nullable=true, options={"default"="NULL"})
      */
-    protected ?string $file;
+    protected ?string $extension;
 
     /**
      * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"="NULL"})
@@ -140,14 +140,14 @@ class GalleryItem
         $this->galleryId = $galleryId;
     }
 
-    public function getFile(): ?string
+    public function getExtension(): ?string
     {
-        return $this->file;
+        return $this->extension;
     }
 
-    public function setFile(?string $file): void
+    public function setExtension(?string $extension): void
     {
-        $this->file = $file;
+        $this->extension = $extension;
     }
 
     public function getDescription(): ?string
