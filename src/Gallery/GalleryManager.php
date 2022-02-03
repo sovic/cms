@@ -63,7 +63,7 @@ final class GalleryManager
      * @param int $offset
      * @return array
      */
-    private function getItems(int $limit = 0, int $offset = 0): array
+    public function getItems(int $limit = 0, int $offset = 0): array
     {
         $qb = $this->queryBuilder;
         if ($limit) {
@@ -221,5 +221,26 @@ final class GalleryManager
         }
 
         return $result;
+    }
+
+    public function getDownloads(): array
+    {
+        $qb = $this->initQueryBuilder('downloads');
+        $qb->orderBy('gi.sequence', 'ASC');
+        $items = $qb->getQuery()->getResult();
+
+        $results = [];
+        /** @var GalleryItem $item */
+        foreach ($items as $item) {
+            $mediaPaths = GalleryHelper::getMediaPaths($item, $this->baseUrl, [GalleryHelper::SIZE_FULL]);
+            $result = [
+                'name' => File::publicFileName($item->getName(), $item->getExtension()),
+                'filename' => $item->getName() . '.' . $item->getExtension(),
+                'url' => $mediaPaths[GalleryHelper::SIZE_FULL],
+            ];
+            $results[] = $result;
+        }
+
+        return $results;
     }
 }
