@@ -150,6 +150,11 @@ class Post
      */
     protected ?int $authorsUsersID;
 
+    /**
+     * @ORM\Column(name="secret", type="string", length=10, nullable=true)
+     */
+    protected ?string $secret;
+
     public function getId(): int
     {
         return $this->id;
@@ -414,5 +419,15 @@ class Post
     public function setSignature(?string $signature): void
     {
         $this->signature = $signature;
+    }
+
+    public function getSecret(): ?string
+    {
+        return $this->secret;
+    }
+
+    public function setSecret(?string $secret): void
+    {
+        $this->secret = $secret;
     }
 }
