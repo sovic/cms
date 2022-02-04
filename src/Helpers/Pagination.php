@@ -20,7 +20,7 @@ class Pagination
     #[Pure]
     public function getPageCount(): int
     {
-        $pagesCount = $this->getTotal() / $this->getPerPage();
+        $pagesCount = floor($this->getTotal() / $this->getPerPage());
         if ($pagesCount * $this->getPerPage() < $this->getTotal()) {
             $pagesCount++;
         }
