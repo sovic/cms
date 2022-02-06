@@ -34,4 +34,12 @@ class FrontendController extends AbstractController
 
         return parent::render($view, $parameters, $response);
     }
+
+    protected function show404(): Response
+    {
+        $response = new Response();
+        $response->setStatusCode(404);
+
+        return $this->render('page/404.html.twig', [], $response);
+    }
 }
