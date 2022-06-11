@@ -67,17 +67,20 @@ class PostResultSet
         $results = [];
         foreach ($this->getPosts() as $post) {
             $id = $post->getId();
+            $entity = $post->getEntity();
             $item = [
+                'content' => $entity->getContent(),
                 'id' => $id,
-                'published' => $post->getEntity()->getPublished(),
-                'title' => $post->getEntity()->getHeading(),
-                'image' => null,
-                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($post->getEntity()->getName()),
+                'keywords' => $entity->getMetaKeywords(),
+                'perex' => $entity->getPerex(),
+                'published' => $entity->getPublished(),
                 'tags' => [],
+                'title' => $entity->getHeading(),
+                'title_image' => $titlePhotos[$id] ?? null,
+                'title_image_url' => isset($titlePhotos[$id]) ? $titlePhotos[$id]['full'] : null,
+                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
+                'url_id' => $entity->getUrlId(),
             ];
-            if (isset($titlePhotos[$id])) {
-                $item['image'] = $titlePhotos[$id];
-            }
             $results[$id] = $item;
         }
 
