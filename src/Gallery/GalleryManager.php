@@ -2,6 +2,7 @@
 
 namespace SovicCms\Gallery;
 
+use JetBrains\PhpStorm\ArrayShape;
 use SovicCms\Entity\Gallery;
 use SovicCms\Entity\GalleryItem;
 use SovicCms\Helpers\File;
@@ -127,6 +128,7 @@ final class GalleryManager
         return $return;
     }
 
+    #[ArrayShape(['hero' => "mixed|null", 'hero_mobile' => "mixed|null"])]
     public function getHeroImages(string $galleryName): array
     {
         $qb = $this->initQueryBuilder($galleryName);

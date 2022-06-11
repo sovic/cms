@@ -40,10 +40,10 @@ class Text
         $regexDingbats = '/[\x{1F980}-\x{1F991}]/u';
         $cleanText = preg_replace($regexDingbats, '', $cleanText);
 
-        $regexDingbats = '/[\x{1F9C0}]/u';
+        $regexDingbats = '/\x{1F9C0}/u';
         $cleanText = preg_replace($regexDingbats, '', $cleanText);
 
-        $regexDingbats = '/[\x{1F9F9}]/u';
+        $regexDingbats = '/\x{1F9F9}/u';
         $cleanText = preg_replace($regexDingbats, '', $cleanText);
 
         return trim($cleanText);
