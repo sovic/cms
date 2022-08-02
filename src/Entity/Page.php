@@ -33,7 +33,7 @@ class Page
     /**
      * @ORM\Column(name="head_title", type="string", length=200, nullable=true)
      */
-    protected string $headTitle;
+    protected ?string $metaTitle = null;
 
     /**
      * @ORM\Column(name="meta_description", type="string", length=200, nullable=true)
@@ -155,14 +155,14 @@ class Page
         $this->urlId = $urlId;
     }
 
-    public function getHeadTitle(): string
+    public function getMetaTitle(): ?string
     {
-        return $this->headTitle;
+        return $this->metaTitle;
     }
 
-    public function setHeadTitle(string $headTitle): void
+    public function setMetaTitle(?string $metaTitle): void
     {
-        $this->headTitle = $headTitle;
+        $this->metaTitle = $metaTitle;
     }
 
     public function getMetaDescription(): string
