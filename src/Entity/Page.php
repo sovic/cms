@@ -71,24 +71,14 @@ class Page
     protected bool $public = false;
 
     /**
-     * @ORM\Column(name="content_raw", type="text", length=65535, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="lang", length=5, nullable=true, options={"default": "NULL"})
      */
-    protected ?string $contentRaw;
+    protected ?string $lang = null;
 
     /**
-     * @ORM\Column(name="content_raw_utf", type="text", length=65535, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="group_id", type="integer", nullable=true, options={"default": "NULL"})
      */
-    protected ?string $contentRawUtf;
-
-    /**
-     * @ORM\Column(name="lang", length=5, nullable=true, options={"default": "cs"})
-     */
-    protected string $lang = 'cs';
-
-    /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     */
-    protected int $groupId;
+    protected ?int $groupId = null;
 
     /**
      * @ORM\Column(name="toc", type="boolean", nullable=false, options={"default"=0})
@@ -96,44 +86,44 @@ class Page
     protected bool $toc = false;
 
     /**
-     * @ORM\Column(name="cta_link", length=255, nullable=true)
+     * @ORM\Column(name="cta_link", length=255, nullable=true, options={"default": "NULL"})
      */
-    protected string $ctaLink;
+    protected ?string $ctaLink = null;
 
     /**
-     * @ORM\Column(name="cta_text", length=255, nullable=true)
+     * @ORM\Column(name="cta_text", length=255, nullable=true, options={"default": "NULL"})
      */
-    protected string $ctaText;
+    protected ?string $ctaText = null;
 
     /**
      * @ORM\Column(name="content_type", length=255, nullable=true, options={"default"="NULL"})
      */
-    protected ?string $contentType;
+    protected ?string $contentType = null;
 
     /**
      * @ORM\Column(name="header", length=255, nullable=true, options={"default"="NULL"})
      */
-    protected ?string $header;
+    protected ?string $header = null;
 
     /**
      * @ORM\Column(name="theme", length=255, nullable=true, options={"default"="NULL"})
      */
-    protected ?string $theme;
+    protected ?string $theme = null;
 
     /**
-     * @ORM\Column(name="in_sitemap", type="boolean", nullable=false, options={"default": true})
+     * @ORM\Column(name="in_sitemap", type="boolean", nullable=false, options={"default": 1})
      */
     protected bool $inSitemap = true;
 
     /**
-     * @ORM\Column(name="last_update_date", type="datetime_immutable", nullable=true, options={"default": null})
+     * @ORM\Column(name="last_update_date", type="datetime_immutable", nullable=true, options={"default"="NULL"})
      */
-    protected ?DateTimeImmutable $lastUpdateDate;
+    protected ?DateTimeImmutable $lastUpdateDate = null;
 
     /**
      * @ORM\Column(name="side_menu_id", length=255, nullable=true, options={"default"="NULL"})
      */
-    protected ?string $sideMenuId;
+    protected ?string $sideMenuId = null;
 
     public function getId(): int
     {
@@ -245,72 +235,52 @@ class Page
         $this->public = $public;
     }
 
-    public function getContentRaw(): ?string
-    {
-        return $this->contentRaw;
-    }
-
-    public function setContentRaw(?string $contentRaw): void
-    {
-        $this->contentRaw = $contentRaw;
-    }
-
-    public function getContentRawUtf(): ?string
-    {
-        return $this->contentRawUtf;
-    }
-
-    public function setContentRawUtf(?string $contentRawUtf): void
-    {
-        $this->contentRawUtf = $contentRawUtf;
-    }
-
-    public function getLang(): string
+    public function getLang(): ?string
     {
         return $this->lang;
     }
 
-    public function setLang(string $lang): void
+    public function setLang(?string $lang): void
     {
         $this->lang = $lang;
     }
 
-    public function getGroupId(): int
+    public function getGroupId(): ?int
     {
         return $this->groupId;
     }
 
-    public function setGroupId(int $groupId): void
+    public function setGroupId(?int $groupId): void
     {
         $this->groupId = $groupId;
     }
 
-    public function isToc(): bool
+    public function hasToc(): bool
     {
         return $this->toc;
     }
 
-    public function setToc(bool $toc): void
+    public function setHasToc(bool $toc): void
     {
         $this->toc = $toc;
     }
 
-    public function getCtaLink(): string
+    public function getCtaLink(): ?string
     {
         return $this->ctaLink;
     }
 
-    public function setCtaLink(string $ctaLink): void
+    public function setCtaLink(?string $ctaLink): void
     {
         $this->ctaLink = $ctaLink;
     }
 
-    public function getCtaText(): string
+    public function getCtaText(): ?string
     {
         return $this->ctaText;
     }
 
-    public function setCtaText(string $ctaText): void
+    public function setCtaText(?string $ctaText): void
     {
         $this->ctaText = $ctaText;
     }
@@ -350,7 +320,7 @@ class Page
         return $this->inSitemap;
     }
 
-    public function setInSitemap($inSitemap): void
+    public function setInSitemap(bool $inSitemap): void
     {
         $this->inSitemap = $inSitemap;
     }
