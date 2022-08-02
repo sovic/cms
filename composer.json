@@ -1,6 +1,6 @@
 {
     "name": "sovic/symfony-cms",
-    "description": "My Symfony CMS package",
+    "description": "Symfony web applications SDK",
     "keywords": [
     ],
     "type": "library",

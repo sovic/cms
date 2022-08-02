@@ -1,1 +1,1 @@
-# Sovic Symfony CMS
+# Symfony web applications SDK
