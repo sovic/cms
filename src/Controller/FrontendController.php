@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FrontendController extends AbstractController
 {
+    use PageControllerTrait;
+
     private EntityManagerInterface $entityManager;
     private array $variables = [];
 
