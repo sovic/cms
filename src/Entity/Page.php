@@ -51,12 +51,12 @@ class Page
     protected string $heading;
 
     /**
-     * @ORM\Column(name="perex", type="text", length=65535, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="perex", type="text", length=16383, nullable=true, options={"default"=NULL})
      */
     protected ?string $perex;
 
     /**
-     * @ORM\Column(name="content", type="text", length=4294967295, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="content", type="text", length=4294967295, nullable=true, options={"default"=NULL})
      */
     protected ?string $content;
 
@@ -71,12 +71,12 @@ class Page
     protected bool $public = false;
 
     /**
-     * @ORM\Column(name="lang", length=5, nullable=true, options={"default": "NULL"})
+     * @ORM\Column(name="lang", length=5, nullable=true, options={"default": NULL})
      */
     protected ?string $lang = null;
 
     /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true, options={"default": "NULL"})
+     * @ORM\Column(name="group_id", type="integer", nullable=true, options={"default": NULL})
      */
     protected ?int $groupId = null;
 
@@ -86,27 +86,27 @@ class Page
     protected bool $toc = false;
 
     /**
-     * @ORM\Column(name="cta_link", length=255, nullable=true, options={"default": "NULL"})
+     * @ORM\Column(name="cta_link", length=255, nullable=true, options={"default": NULL})
      */
     protected ?string $ctaLink = null;
 
     /**
-     * @ORM\Column(name="cta_text", length=255, nullable=true, options={"default": "NULL"})
+     * @ORM\Column(name="cta_text", length=255, nullable=true, options={"default": NULL})
      */
     protected ?string $ctaText = null;
 
     /**
-     * @ORM\Column(name="content_type", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="content_type", length=255, nullable=true, options={"default"=NULL})
      */
     protected ?string $contentType = null;
 
     /**
-     * @ORM\Column(name="header", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="header", length=255, nullable=true, options={"default"=NULL})
      */
     protected ?string $header = null;
 
     /**
-     * @ORM\Column(name="theme", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="theme", length=255, nullable=true, options={"default"=NULL})
      */
     protected ?string $theme = null;
 
@@ -116,12 +116,12 @@ class Page
     protected bool $inSitemap = true;
 
     /**
-     * @ORM\Column(name="last_update_date", type="datetime_immutable", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="last_update_date", type="datetime_immutable", nullable=true, options={"default"=NULL})
      */
     protected ?DateTimeImmutable $lastUpdateDate = null;
 
     /**
-     * @ORM\Column(name="side_menu_id", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="side_menu_id", length=255, nullable=true, options={"default"=NULL})
      */
     protected ?string $sideMenuId = null;
 

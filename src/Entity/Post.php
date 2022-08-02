@@ -56,14 +56,14 @@ class Post
     protected string $subtitle;
 
     /**
-     * @ORM\Column(name="perex", length=65535, nullable=true)
+     * @ORM\Column(name="perex", type="text", length=16383, nullable=true, options={"default"=NULL})
      */
-    protected string $perex;
+    protected ?string $perex = null;
 
     /**
-     * @ORM\Column(name="content", length=4294967295, nullable=true)
+     * @ORM\Column(name="content", type="text", length=4294967295, nullable=true, options={"default"=NULL})
      */
-    protected string $content;
+    protected ?string $content;
 
     /**
      * @ORM\Column(name="sequence", type="integer")
@@ -76,17 +76,17 @@ class Post
     protected bool $public;
 
     /**
-     * @ORM\Column(name="lang", type="string", length=5, nullable=true, options={"default"="cs"})
+     * @ORM\Column(name="lang", type="string", length=5, nullable=true, options={"default"=NULL})
      */
-    protected string $lang;
+    protected ?string $lang;
 
     /**
      * @ORM\Column(name="group_id", type="integer")
      */
-    protected int $groupID;
+    protected int $groupId;
 
     /**
-     * @ORM\Column(name="published", type="integer", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="published", type="integer", nullable=true, options={"default"=NULL})
      */
     protected ?int $published;
 
@@ -101,22 +101,22 @@ class Post
     protected int $title;
 
     /**
-     * @ORM\Column(name="import_id", type="integer", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="import_id", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $importID;
+    protected ?int $importId;
 
     /**
-     * @ORM\Column(name="import_service", type="string", length=50, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="import_service", type="string", length=50, nullable=true, options={"default"=NULL})
      */
     protected ?string $importService;
 
     /**
-     * @ORM\Column(name="infobox", length=1024, nullable=true)
+     * @ORM\Column(name="infobox", type="text", length=1024, nullable=true)
      */
     protected ?string $infoBox;
 
     /**
-     * @ORM\Column(name="signature", type="string", length=1024, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="signature", type="string", length=1024, nullable=true, options={"default"=NULL})
      */
     protected ?string $signature;
 
@@ -128,12 +128,12 @@ class Post
     /**
      * @ORM\Column(name="publishers_id", type="integer", options={"default"=0})
      */
-    protected int $publishersID = 0;
+    protected int $publishersId = 0;
 
     /**
      * @ORM\Column(name="postsauthors_id", type="integer", options={"default"=0})
      */
-    protected int $postsAuthorsID = 0;
+    protected int $postsAuthorsId = 0;
 
     /**
      * @ORM\Column(name="gallery", type="boolean", options={"default"=false})
@@ -143,12 +143,12 @@ class Post
     /**
      * @ORM\Column(name="media_id", type="integer", options={"default"=0})
      */
-    protected int $mediaID = 0;
+    protected int $mediaId = 0;
 
     /**
-     * @ORM\Column(name="authorsusers_id", type="integer", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="authorsusers_id", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $authorsUsersID;
+    protected ?int $authorsUsersId;
 
     /**
      * @ORM\Column(name="secret", type="string", length=10, nullable=true)
@@ -280,14 +280,14 @@ class Post
         $this->lang = $lang;
     }
 
-    public function getGroupID(): int
+    public function getGroupId(): int
     {
-        return $this->groupID;
+        return $this->groupId;
     }
 
-    public function setGroupID(int $groupID): void
+    public function setGroupId(int $groupId): void
     {
-        $this->groupID = $groupID;
+        $this->groupId = $groupId;
     }
 
     public function getPublished(): ?DateTimeImmutable
@@ -331,24 +331,24 @@ class Post
         $this->modified = $modified;
     }
 
-    public function getPublishersID(): int
+    public function getPublishersId(): int
     {
-        return $this->publishersID;
+        return $this->publishersId;
     }
 
-    public function setPublishersID(int $publishersID): void
+    public function setPublishersId(int $publishersId): void
     {
-        $this->publishersID = $publishersID;
+        $this->publishersId = $publishersId;
     }
 
-    public function getPostsAuthorsID(): int
+    public function getPostsAuthorsId(): int
     {
-        return $this->postsAuthorsID;
+        return $this->postsAuthorsId;
     }
 
-    public function setPostsAuthorsID(int $postsAuthorsID): void
+    public function setPostsAuthorsId(int $postsAuthorsId): void
     {
-        $this->postsAuthorsID = $postsAuthorsID;
+        $this->postsAuthorsId = $postsAuthorsId;
     }
 
     public function isGallery(): bool
@@ -361,34 +361,34 @@ class Post
         $this->gallery = $gallery;
     }
 
-    public function getMediaID(): int
+    public function getMediaId(): int
     {
-        return $this->mediaID;
+        return $this->mediaId;
     }
 
-    public function setMediaID(int $mediaID): void
+    public function setMediaId(int $mediaId): void
     {
-        $this->mediaID = $mediaID;
+        $this->mediaId = $mediaId;
     }
 
-    public function getAuthorsUsersID(): ?int
+    public function getAuthorsUsersId(): ?int
     {
-        return $this->authorsUsersID;
+        return $this->authorsUsersId;
     }
 
-    public function setAuthorsUsersID(?int $authorsUsersID): void
+    public function setAuthorsUsersId(?int $authorsUsersId): void
     {
-        $this->authorsUsersID = $authorsUsersID;
+        $this->authorsUsersId = $authorsUsersId;
     }
 
-    public function getImportID(): ?int
+    public function getImportId(): ?int
     {
-        return $this->importID;
+        return $this->importId;
     }
 
-    public function setImportID(?int $importID): void
+    public function setImportId(?int $importId): void
     {
-        $this->importID = $importID;
+        $this->importId = $importId;
     }
 
     public function getImportService(): ?string
