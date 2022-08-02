@@ -26,6 +26,13 @@ class FrontendController extends AbstractController
         $this->variables[$key] = $val;
     }
 
+    protected function assignArray(array $data): void
+    {
+        foreach ($data as $key => $val) {
+            $this->variables[$key] = $val;
+        }
+    }
+    
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
         foreach ($this->variables as $key => $val) {
