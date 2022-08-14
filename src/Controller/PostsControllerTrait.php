@@ -19,6 +19,16 @@ trait PostsControllerTrait
         $this->postsMediaBaseUrl = $postsMediaBaseUrl;
     }
 
+    protected function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    protected function getTag(): ?Tag
+    {
+        return $this->tag;
+    }
+
     protected function loadPostIndex(int $pageNr, int $perPage): void
     {
         /** @var PostRepository $repo */
