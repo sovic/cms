@@ -25,27 +25,27 @@ class GalleryItem
     protected int $galleryId;
 
     /**
-     * @ORM\Column(name="file", type="string", length=50, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="file", type="string", length=50, nullable=true, options={"default"=NULL})
      */
     protected ?string $extension;
 
     /**
-     * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"=NULL})
      */
     protected ?string $description;
 
     /**
-     * @ORM\Column(name="name", type="string", length=100, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="name", type="string", length=100, nullable=true, options={"default"=NULL})
      */
     protected ?string $name;
 
     /**
-     * @ORM\Column(name="timestamp", type="integer", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="timestamp", type="integer", nullable=true, options={"default"=NULL})
      */
     protected ?int $timestamp;
 
     /**
-     * @ORM\Column(name="sequence", type="integer", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="sequence", type="integer", nullable=true, options={"default"=NULL})
      */
     protected ?int $sequence;
 
@@ -60,7 +60,7 @@ class GalleryItem
     protected int $height = 0;
 
     /**
-     * @ORM\Column(name="tagslist", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="tagslist", type="string", length=255, nullable=true, options={"default"=NULL})
      */
     protected ?string $tagsList;
 
@@ -90,7 +90,7 @@ class GalleryItem
     protected bool $title = false;
 
     /**
-     * @ORM\Column(name="tagssearch", type="text", length=65535, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="tagssearch", type="text", length=65535, nullable=true, options={"default"=NULL})
      */
     protected ?string $tagsSearch;
 
