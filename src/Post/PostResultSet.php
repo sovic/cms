@@ -70,12 +70,13 @@ class PostResultSet
             $entity = $post->getEntity();
             $item = [
                 'content' => $entity->getContent(),
+                'heading' => $post->getHeading(),
                 'id' => $id,
                 'keywords' => $entity->getMetaKeywords(),
-                'perex' => $entity->getPerex(),
+                'perex' => $post->getPerex(),
                 'published' => $entity->getPublished(),
                 'tags' => [],
-                'title' => $entity->getHeading(),
+                'title' => $entity->getHeading(), // TODO remove
                 'title_image' => $titlePhotos[$id] ?? null,
                 'title_image_url' => isset($titlePhotos[$id]) ? $titlePhotos[$id]['full'] : null,
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),

@@ -33,7 +33,7 @@ class Post
     /**
      * @ORM\Column(name="head_title", type="string", length=255, nullable=true)
      */
-    protected string $headTitle;
+    protected ?string $headTitle;
 
     /**
      * @ORM\Column(name="meta_description", type="string", length=255, nullable=true)
@@ -48,7 +48,7 @@ class Post
     /**
      * @ORM\Column(name="heading", type="string", length=255, nullable=true)
      */
-    protected string $heading;
+    protected ?string $heading;
 
     /**
      * @ORM\Column(name="subtitle", type="string", length=255, nullable=true)
@@ -180,12 +180,12 @@ class Post
         $this->urlId = $urlId;
     }
 
-    public function getHeadTitle(): string
+    public function getHeadTitle(): ?string
     {
         return $this->headTitle;
     }
 
-    public function setHeadTitle(string $headTitle): void
+    public function setHeadTitle(?string $headTitle): void
     {
         $this->headTitle = $headTitle;
     }
@@ -210,12 +210,12 @@ class Post
         $this->metaKeywords = $metaKeywords;
     }
 
-    public function getHeading(): string
+    public function getHeading(): ?string
     {
         return $this->heading;
     }
 
-    public function setHeading(string $heading): void
+    public function setHeading(?string $heading): void
     {
         $this->heading = $heading;
     }
@@ -230,12 +230,12 @@ class Post
         $this->subtitle = $subtitle;
     }
 
-    public function getPerex(): string
+    public function getPerex(): ?string
     {
         return $this->perex;
     }
 
-    public function setPerex(string $perex): void
+    public function setPerex(?string $perex): void
     {
         $this->perex = $perex;
     }

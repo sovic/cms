@@ -15,6 +15,22 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
         return $this->getEntity()->getId();
     }
 
+    public function getHeading(): string
+    {
+        return $this->getEntity()->getHeading() ?: $this->getEntity()->getName();
+    }
+
+    public function getPerex(): ?string
+    {
+        $perex = $this->getEntity()->getPerex();
+        if ($perex) {
+            return $perex;
+        }
+        $content = strip_tags($this->getEntity()->getContent());
+
+        return $content ? substr($content, 0, 250) . '…' : null;
+    }
+
     public function getGalleryModelName(): string
     {
         return 'post';
