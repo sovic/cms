@@ -6,10 +6,18 @@ use SovicCms\Entity\Post as PostEntity;
 use SovicCms\Entity\Tag;
 use SovicCms\Helpers\Pagination;
 use SovicCms\Post\Post;
+use SovicCms\Post\PostFactory;
+use SovicCms\Post\PostResultSetFactory;
 use SovicCms\Repository\PostRepository;
 
+/**
+ * Requires PostFactory, PostResultSetFactory
+ */
 trait PostsControllerTrait
 {
+    private PostFactory $postFactory;
+    private PostResultSetFactory $postResultSetFactory;
+
     private ?Post $post = null;
     private ?Tag $tag = null;
     private ?string $postsMediaBaseUrl = null;
@@ -17,6 +25,16 @@ trait PostsControllerTrait
     public function setPostsMediaBaseUrl(?string $postsMediaBaseUrl): void
     {
         $this->postsMediaBaseUrl = $postsMediaBaseUrl;
+    }
+
+    public function setPostFactory(PostFactory $postFactory): void
+    {
+        $this->postFactory = $postFactory;
+    }
+
+    public function setPostResultSetFactory(PostResultSetFactory $postResultSetFactory): void
+    {
+        $this->postResultSetFactory = $postResultSetFactory;
     }
 
     protected function getPost(): ?Post

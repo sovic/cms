@@ -3,7 +3,6 @@
 namespace SovicCms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use JetBrains\PhpStorm\Pure;
 use SovicCms\Post\PostFactory;
 use SovicCms\Post\PostResultSetFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,18 +14,14 @@ class PostsController extends FrontendController
 
     use PostsControllerTrait;
 
-    private PostFactory $postFactory;
-    private PostResultSetFactory $postResultSetFactory;
-
-    #[Pure]
     public function __construct(
         EntityManagerInterface $entityManager,
         PostFactory            $postFactory,
         PostResultSetFactory   $postResultSetFactory
     ) {
         parent::__construct($entityManager);
-        $this->postFactory = $postFactory;
-        $this->postResultSetFactory = $postResultSetFactory;
+        $this->setPostFactory($postFactory);
+        $this->setPostResultSetFactory($postResultSetFactory);
     }
 
     /**
