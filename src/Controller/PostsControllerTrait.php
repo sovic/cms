@@ -40,8 +40,8 @@ trait PostsControllerTrait
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('media_base_url', $this->postsMediaBaseUrl);
-        $this->assign('posts', $postsResultSet->toArray());
         $this->assign('pagination', $pagination);
+        $this->assign('posts', $postsResultSet->toArray());
     }
 
     protected function loadPostTagIndex(string $tagName, int $pageNr, int $perPage): void
@@ -61,8 +61,8 @@ trait PostsControllerTrait
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('media_base_url', $this->postsMediaBaseUrl);
-        $this->assign('posts', $postsResultSet->toArray());
         $this->assign('pagination', $pagination);
+        $this->assign('posts', $postsResultSet->toArray());
         $this->assign('tag', $tag);
     }
 
@@ -80,6 +80,7 @@ trait PostsControllerTrait
         $media = $galleryManager->getGallery('post');
 
         $this->assign('media', $media);
+        $this->assign('media_base_url', $this->postsMediaBaseUrl);
         $this->assign('post', $post);
     }
 }
