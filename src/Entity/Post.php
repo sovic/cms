@@ -66,9 +66,9 @@ class Post
     protected ?string $content;
 
     /**
-     * @ORM\Column(name="sequence", type="integer")
+     * @ORM\Column(name="sequence", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected int $sequence;
+    protected ?int $sequence = null;
 
     /**
      * @ORM\Column(name="public", type="boolean")
@@ -81,14 +81,14 @@ class Post
     protected ?string $lang;
 
     /**
-     * @ORM\Column(name="group_id", type="integer")
+     * @ORM\Column(name="group_id", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected int $groupId;
+    protected ?int $groupId = null;
 
     /**
      * @ORM\Column(name="published", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $published;
+    protected ?int $publishDate;
 
     /**
      * @ORM\Column(name="created", type="integer")
@@ -96,9 +96,9 @@ class Post
     protected int $created;
 
     /**
-     * @ORM\Column(name="title", type="integer")
+     * @ORM\Column(name="title", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected int $title;
+    protected ?int $title;
 
     /**
      * @ORM\Column(name="import_id", type="integer", nullable=true, options={"default"=NULL})
@@ -154,6 +154,11 @@ class Post
      * @ORM\Column(name="secret", type="string", length=10, nullable=true)
      */
     protected ?string $secret;
+
+    /**
+     * @ORM\Column(name="is_featured", type="boolean", nullable=false, options={"default"="0"})
+     */
+    protected bool $isFeatured = false;
 
     public function getId(): int
     {
@@ -250,12 +255,12 @@ class Post
         $this->content = $content;
     }
 
-    public function getSequence(): int
+    public function getSequence(): ?int
     {
         return $this->sequence;
     }
 
-    public function setSequence(int $sequence): void
+    public function setSequence(?int $sequence): void
     {
         $this->sequence = $sequence;
     }
@@ -280,24 +285,24 @@ class Post
         $this->lang = $lang;
     }
 
-    public function getGroupId(): int
+    public function getGroupId(): ?int
     {
         return $this->groupId;
     }
 
-    public function setGroupId(int $groupId): void
+    public function setGroupId(?int $groupId): void
     {
         $this->groupId = $groupId;
     }
 
-    public function getPublished(): ?DateTimeImmutable
+    public function getPublishDate(): ?DateTimeImmutable
     {
-        return $this->published ? (new DateTimeImmutable())->setTimestamp($this->published) : null;
+        return $this->publishDate ? (new DateTimeImmutable())->setTimestamp($this->publishDate) : null;
     }
 
-    public function setPublished(?DateTimeImmutable $published): void
+    public function setPublishDate(?DateTimeImmutable $publishDate): void
     {
-        $this->published = $published?->getTimestamp();
+        $this->publishDate = $publishDate?->getTimestamp();
     }
 
     public function getCreated(): DateTimeImmutable
@@ -310,16 +315,15 @@ class Post
         $this->created = $created->getTimestamp();
     }
 
-    public function getTitle(): int
+    public function getTitle(): ?int
     {
         return $this->title;
     }
 
-    public function setTitle(int $title): void
+    public function setTitle(?int $title): void
     {
         $this->title = $title;
     }
-
 
     public function getModified(): int
     {
@@ -430,4 +434,15 @@ class Post
     {
         $this->secret = $secret;
     }
+
+    public function isFeatured(): bool
+    {
+        return $this->isFeatured;
+    }
+
+    public function setIsFeatured(bool $isFeatured): void
+    {
+        $this->isFeatured = $isFeatured;
+    }
 }
+

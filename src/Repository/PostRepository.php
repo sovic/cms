@@ -14,7 +14,7 @@ class PostRepository extends EntityRepository
     {
         return $this->findBy(
             ['public' => true],
-            ['published' => 'DESC', 'id' => 'DESC'],
+            ['publishDate' => 'DESC', 'id' => 'DESC'],
             $limit,
             $offset,
         );
@@ -33,7 +33,7 @@ class PostRepository extends EntityRepository
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
         $qb->setParameter(':tag_id', $tag->getId());
-        $qb->addOrderBy('p.published', 'DESC');
+        $qb->addOrderBy('p.publishDate', 'DESC');
         $qb->addOrderBy('p.id', 'DESC');
         if ($limit) {
             $qb->setMaxResults($limit);

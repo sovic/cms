@@ -72,9 +72,10 @@ class PostResultSet
                 'content' => $entity->getContent(),
                 'heading' => $post->getHeading(),
                 'id' => $id,
+                'is_featured' => $entity->isFeatured(),
                 'keywords' => $entity->getMetaKeywords(),
                 'perex' => $post->getPerex(),
-                'published' => $entity->getPublished(),
+                'publish_date' => $entity->getPublishDate(),
                 'tags' => [],
                 'title' => $entity->getHeading(), // TODO remove
                 'title_image' => $titlePhotos[$id] ?? null,
