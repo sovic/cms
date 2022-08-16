@@ -1,0 +1,4 @@
+# translations/security.cs.yaml
+'Invalid credentials.': Zadané heslo je neplatné!
+invalid_email: E-mail nebyl nalezen.
+invalid_new_password: Nové heslo je neplatné!

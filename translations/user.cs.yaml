@@ -1,0 +1,34 @@
+user:
+  activation:
+    activated: 'Uživatel aktivován'
+    error: 'Chyba během aktivace, kontaktujte nás'
+    invalid_code: 'Neplatný aktivační kód'
+  sign_in:
+    link: 'Přihlásit se'
+    title: 'Přihlásit se'
+    note: 'Přihlaste se ke svému účtu pomocí e-mailu a hesla poskytnutého při registraci.'
+    sign_up_note: 'Nemáte účet?'
+  sign_out:
+    link: 'Odhlásit se'
+  sign_up:
+    link: 'Zaregistrujte se'
+    link_teaser: 'Zaregistrujte se zdarma'
+    title: 'Zaregistrujte se'
+    note: 'Registrace trvá méně než minutu a poskytuje Vám plnou kontrolu nad vaším obsahem.'
+    email_subject: 'Účet vytvořen'
+    sign_in_note: 'Již máte účet?'
+    success: 'Účet byl úspěšně vytvořen. Je vyžadována aktivace e-mailu, zkontrolujte prosím svůj e-mailový účet.'
+    email_exists: 'Účet pro tento e-mail již existuje'
+    passwords_dont_match: 'Zadaná hesla se neshodují'
+  forgot_password:
+    link: 'Zapomněli jste heslo?'
+    title: 'Zapomněli jste heslo'
+    note: 'Zapomněli jste heslo? Se stane. Zadejte svůj e-mail a my vám zašleme odkaz na jeho resetování.'
+    email_subject: 'Zapomněli jste heslo'
+    invalid_code: 'Neplatný kód pro zapomenuté heslo'
+    invalid_email: 'Neplatná e-mailová adresa'
+    success: 'Ověřovací e-mail odeslán'
+  new_password:
+    title: 'Obnovení hesla'
+    note: 'Zadejte nové heslo'
+    success: 'Úspěšné resetování hesla'

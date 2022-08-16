@@ -1,0 +1,4 @@
+# translations/security.en.yaml
+'Invalid credentials.': The password you entered was invalid!
+invalid_email: E-mail could not be found.
+invalid_new_password: New password is invalid!
