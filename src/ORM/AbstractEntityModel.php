@@ -5,16 +5,48 @@ namespace SovicCms\ORM;
 use SovicCms\Gallery\GalleryManager;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractEntityModel
 {
     protected EntityManagerInterface $entityManager;
     protected GalleryManager $galleryManager;
+    protected RouterInterface $router;
+    protected TranslatorInterface $translator;
+
     protected mixed $entity;
 
+    /**
+     * @required
+     * @param EntityManagerInterface $entityManager
+     */
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
+    }
+
+    protected function getEntityManager(): EntityManagerInterface
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @required
+     * @param RouterInterface $router
+     */
+    public function setRouter(RouterInterface $router): void
+    {
+        $this->router = $router;
+    }
+
+    /**
+     * @required
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator): void
+    {
+        $this->translator = $translator;
     }
 
     public function setEntity($entity): void
@@ -25,11 +57,6 @@ abstract class AbstractEntityModel
     public function getEntity()
     {
         return $this->entity;
-    }
-
-    protected function getEntityManager(): EntityManagerInterface
-    {
-        return $this->entityManager;
     }
 
     protected function flush(): void
