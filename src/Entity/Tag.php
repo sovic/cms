@@ -37,7 +37,7 @@ class Tag
     /**
      * @ORM\Column(name="lang", length=5, nullable=true, options={"default": "cs"})
      */
-    protected string $lang = 'cs';
+    protected ?string $lang = 'cs';
 
     /**
      * @ORM\Column(name="group_id", type="integer", nullable=true)
@@ -84,12 +84,12 @@ class Tag
         $this->public = $public;
     }
 
-    public function getLang(): string
+    public function getLang(): ?string
     {
         return $this->lang;
     }
 
-    public function setLang(string $lang): void
+    public function setLang(?string $lang): void
     {
         $this->lang = $lang;
     }
