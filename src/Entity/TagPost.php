@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SovicCms\Entity\TagPost
  *
- * @ORM\Table(name="tags_posts")
+ * @ORM\Table(name="tag_post")
  * @ORM\Entity
  */
 class TagPost

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SovicCms\Entity\Gallery
  *
- * @ORM\Table(name="galleries")
+ * @ORM\Table(name="gallery")
  * @ORM\Entity
  */
 class Gallery
