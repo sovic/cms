@@ -2,6 +2,7 @@
 
 namespace SovicCms\Post;
 
+use SovicCms\Entity\PostAuthor;
 use SovicCms\ORM\AbstractEntityModel;
 use SovicCms\ORM\EntityModelGalleryInterface;
 
@@ -49,5 +50,10 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
     public function getGallery(): array
     {
         return $this->getGalleryManager()->getGallery('post');
+    }
+
+    public function getAuthors(): array
+    {
+        return $this->getEntityManager()->getRepository(PostAuthor::class)->findBy(['postId' => $this->getId()]);
     }
 }

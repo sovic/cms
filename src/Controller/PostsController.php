@@ -55,7 +55,7 @@ class PostsController extends FrontendController
             return $this->show404();
         }
 
-        return $this->render('post/detail.html.twig');
+        return $this->render('post/show.html.twig');
     }
 
     /**

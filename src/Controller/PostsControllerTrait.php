@@ -91,12 +91,14 @@ trait PostsControllerTrait
             return;
         }
         $this->post = $post;
+        $authors = $this->post->getAuthors();
         $galleryManager = $post->getGalleryManager();
         if ($this->postsMediaBaseUrl) {
             $galleryManager->setBaseUrl($this->postsMediaBaseUrl);
         }
         $media = $galleryManager->getGallery('post');
 
+        $this->assign('authors', $authors);
         $this->assign('media', $media);
         $this->assign('media_base_url', $this->postsMediaBaseUrl);
         $this->assign('post', $post);
