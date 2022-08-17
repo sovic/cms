@@ -71,9 +71,9 @@ class Post
     protected ?int $sequence = null;
 
     /**
-     * @ORM\Column(name="public", type="boolean")
+     * @ORM\Column(name="public", type="boolean", nullable=false, options={"default"=0})
      */
-    protected bool $public;
+    protected bool $public = false;
 
     /**
      * @ORM\Column(name="lang", type="string", length=5, nullable=true, options={"default"=NULL})
