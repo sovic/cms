@@ -20,7 +20,7 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
         return $this->getEntity()->getHeading() ?: $this->getEntity()->getName();
     }
 
-    public function getPerex(): ?string
+    public function getIntroText(): ?string
     {
         $perex = $this->getEntity()->getPerex();
         if ($perex) {

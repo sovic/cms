@@ -72,9 +72,10 @@ class PostResultSet
                 'content' => $entity->getContent(),
                 'heading' => $post->getHeading(),
                 'id' => $id,
+                'intro_text' => $post->getIntroText(),
                 'is_featured' => $entity->isFeatured(),
                 'keywords' => $entity->getMetaKeywords(),
-                'perex' => $post->getPerex(),
+                'perex' => $entity->getPerex(),
                 'publish_date' => $entity->getPublishDate(),
                 'tags' => [],
                 'title' => $entity->getHeading(), // TODO remove
