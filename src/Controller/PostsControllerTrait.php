@@ -20,12 +20,9 @@ trait PostsControllerTrait
 
     private ?Post $post = null;
     private ?Tag $tag = null;
-    private ?string $postsMediaBaseUrl = null;
 
-    public function setPostsMediaBaseUrl(?string $postsMediaBaseUrl): void
-    {
-        $this->postsMediaBaseUrl = $postsMediaBaseUrl;
-    }
+    private ?string $postsMediaBaseUrl = null;
+    private bool $addAuthors = false;
 
     public function setPostFactory(PostFactory $postFactory): void
     {
@@ -47,12 +44,23 @@ trait PostsControllerTrait
         return $this->tag;
     }
 
+    public function setPostsMediaBaseUrl(?string $postsMediaBaseUrl): void
+    {
+        $this->postsMediaBaseUrl = $postsMediaBaseUrl;
+    }
+
+    public function setAddAuthors(bool $addAuthors): void
+    {
+        $this->addAuthors = $addAuthors;
+    }
+
     protected function loadPostIndex(int $pageNr, int $perPage): void
     {
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
         $posts = $repo->findPublic($perPage, ($pageNr - 1) * $perPage);
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
+        $postsResultSet->setAddAuthors($this->addAuthors);
 
         $pagination = new Pagination($repo->countPublic(), $perPage);
         $pagination->setCurrentPage($pageNr);
@@ -74,6 +82,7 @@ trait PostsControllerTrait
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
         $posts = $repo->findPublicByTag($tag, $perPage, ($pageNr - 1) * $perPage);
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
+        $postsResultSet->setAddAuthors($this->addAuthors);
 
         $pagination = new Pagination($repo->countPublicByTag($tag), self::PER_PAGE);
         $pagination->setCurrentPage($pageNr);

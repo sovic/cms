@@ -15,6 +15,7 @@ class PostResultSet
     private array $postsList;
     /** @var array */
     private array $authorsIds = [];
+    private bool $addAuthors = false;
 
     /**
      * PostResultSet constructor.
@@ -43,6 +44,11 @@ class PostResultSet
     public function setAuthorsIds(array $authorsIds): void
     {
         $this->authorsIds = $authorsIds;
+    }
+
+    public function setAddAuthors(bool $addAuthors): void
+    {
+        $this->addAuthors = $addAuthors;
     }
 
     /**
@@ -92,6 +98,9 @@ class PostResultSet
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
                 'url_id' => $entity->getUrlId(),
             ];
+            if ($this->addAuthors) {
+                $item['authors'] = $post->getAuthors();
+            }
 
             if ($groupByAuthors) {
                 $authorIds = $this->authorsIds[$post->getId()];
