@@ -13,6 +13,8 @@ class PostResultSet
     private array $posts = [];
     /** @var Post[] */
     private array $postsList;
+    /** @var array */
+    private array $authorsIds = [];
 
     /**
      * PostResultSet constructor.
@@ -36,6 +38,11 @@ class PostResultSet
     public function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
+    }
+
+    public function setAuthorsIds(array $authorsIds): void
+    {
+        $this->authorsIds = $authorsIds;
     }
 
     /**
@@ -65,6 +72,7 @@ class PostResultSet
         $slugify->activateRuleSet('default');
 
         $results = [];
+        $groupByAuthors = !empty($this->authorsIds);
         foreach ($this->getPosts() as $post) {
             $id = $post->getId();
             $entity = $post->getEntity();
@@ -84,7 +92,18 @@ class PostResultSet
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
                 'url_id' => $entity->getUrlId(),
             ];
-            $results[$id] = $item;
+
+            if ($groupByAuthors) {
+                $authorIds = $this->authorsIds[$post->getId()];
+                foreach ($authorIds as $authorId) {
+                    if (!isset($results[$authorId])) {
+                        $results[$authorId] = [];
+                    }
+                    $results[$authorId][$id] = $item;
+                }
+            } else {
+                $results[$id] = $item;
+            }
         }
 
         return $results;

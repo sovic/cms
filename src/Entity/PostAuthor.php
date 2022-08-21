@@ -5,7 +5,7 @@ namespace SovicCms\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SovicCms\Entity\Tag
+ * SovicCms\Entity\PostAuthor
  *
  * @ORM\Table(name="post_author")
  * @ORM\Entity
@@ -13,47 +13,28 @@ use Doctrine\ORM\Mapping as ORM;
 class PostAuthor
 {
     /**
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="post_id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected int $id;
-
-    /**
-     * @ORM\Column(name="posts_id", type="integer")
      */
     protected int $postId;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Column(name="author_id", type="integer", nullable=false)
+     * @ORM\Id
      */
-    protected string $name;
+    protected int $authorId;
 
     /**
-     * @ORM\Column(name="short_description", type="string", length=1000, nullable=true, options={"default"=NULL})
+     * @ORM\ManyToOne(targetEntity="Post")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected ?string $shortDescription;
+    protected Post $post;
 
     /**
-     * @ORM\Column(name="user_id", type="integer", nullable=true, options={"default"=NULL})
+     * @ORM\ManyToOne(targetEntity="Author")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected ?int $userId;
-
-    /**
-     * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    protected User $user;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
+    protected Author $author;
 
     public function getPostId(): int
     {
@@ -65,33 +46,25 @@ class PostAuthor
         $this->postId = $postId;
     }
 
-    public function getName(): string
+    public function getAuthorId(): int
     {
-        return $this->name;
+        return $this->authorId;
     }
 
-    public function setName(string $name): void
+    public function setAuthorId(int $authorId): void
     {
-        $this->name = $name;
+        $this->authorId = $authorId;
     }
 
-    public function getShortDescription(): ?string
+    public function getPost(): Post
     {
-        return $this->shortDescription;
+        return $this->post;
     }
 
-    public function setShortDescription(?string $shortDescription): void
+    public function setPost(Post $post): void
     {
-        $this->shortDescription = $shortDescription;
+        $this->post = $post;
     }
 
-    public function getUser(): User
-    {
-        return $this->user;
-    }
 
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
 }
