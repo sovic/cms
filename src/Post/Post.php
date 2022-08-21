@@ -2,6 +2,8 @@
 
 namespace SovicCms\Post;
 
+use Doctrine\ORM\Query\Expr\Join;
+use SovicCms\Entity\Author;
 use SovicCms\Entity\PostAuthor;
 use SovicCms\ORM\AbstractEntityModel;
 use SovicCms\ORM\EntityModelGalleryInterface;
@@ -54,6 +56,13 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
 
     public function getAuthors(): array
     {
-        return $this->getEntityManager()->getRepository(PostAuthor::class)->findBy(['postId' => $this->getId()]);
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('author');
+        $qb->from(Author::class, 'author');
+        $qb->leftJoin(PostAuthor::class, 'pa', Join::WITH, 'author.id = pa.authorId');
+        $qb->where("pa.postId = :post_id");
+        $qb->setParameter('post_id', $this->getId());
+
+        return $qb->getQuery()->getResult();
     }
 }
