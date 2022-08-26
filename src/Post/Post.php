@@ -62,6 +62,7 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
         $qb->leftJoin(PostAuthor::class, 'pa', Join::WITH, 'author.id = pa.authorId');
         $qb->where("pa.postId = :post_id");
         $qb->setParameter('post_id', $this->getId());
+        $qb->addOrderBy('author.surname', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
