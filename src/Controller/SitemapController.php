@@ -35,6 +35,9 @@ abstract class SitemapController extends AbstractController
         $pagesRepo = $entityManager->getRepository(Page::class);
         $pages = $pagesRepo->findPublic();
         foreach ($pages as $page) {
+            if (!$page->isInSitemap()) {
+                continue;
+            }
             $this->addUrl($baseUrl . $page->getUrlId(), $page->getLastUpdateDate());
         }
 
