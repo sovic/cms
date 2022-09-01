@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * SovicCms\Entity\Page
  *
  * @ORM\Table(name="page")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="SovicCms\Repository\PageRepository")
  */
 class Page
 {
