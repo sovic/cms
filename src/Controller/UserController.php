@@ -26,13 +26,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/user", name="user_")
- */
 class UserController extends FrontendController
 {
     /**
-     * @Route("/signin", name="sign_in")
+     * @Route("/user/signin", name="user_sign_in")
      *
      * @param AuthenticationUtils $authenticationUtils
      * @param TranslatorInterface $translator
@@ -65,7 +62,7 @@ class UserController extends FrontendController
     }
 
     /**
-     * @Route("/signup", name="sign_up")
+     * @Route("/user/signup", name="user_sign_up")
      *
      * @param EmailManager $emailManager
      * @param ManagerRegistry $registry
@@ -123,7 +120,7 @@ class UserController extends FrontendController
     }
 
     /**
-     * @Route("/activate/{code}", name="activate", requirements={"code": "[A-Za-z0-9]{32}"})
+     * @Route("/user/activate/{code}", name="user_activate", requirements={"code": "[A-Za-z0-9]{32}"})
      *
      * @param string $code
      * @param UserFactory $userFactory
@@ -148,7 +145,7 @@ class UserController extends FrontendController
     }
 
     /**
-     * @Route("/forgot-password", name="forgot_password")
+     * @Route("/user/forgot-password", name="user_forgot_password")
      *
      * @param EmailManager $emailManager
      * @param Request $request
@@ -186,7 +183,7 @@ class UserController extends FrontendController
     }
 
     /**
-     * @Route("/new-password/{code}", name="new_password")
+     * @Route("/user/new-password/{code}", name="user_new_password")
      *
      * @param string $code
      * @param Request $request
@@ -231,7 +228,7 @@ class UserController extends FrontendController
     }
 
     /**
-     * @Route("/logout", name="logout", methods={"GET"})
+     * @Route("/user/logout", name="user_logout", methods={"GET"})
      * @throws Exception
      */
     public function logout(): void
