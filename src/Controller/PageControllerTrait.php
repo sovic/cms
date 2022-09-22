@@ -2,6 +2,7 @@
 
 namespace SovicCms\Controller;
 
+use RuntimeException;
 use SovicCms\Page\Page;
 use SovicCms\Page\PageFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,7 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 trait PageControllerTrait
 {
+    private ?string $mediaBaseUrl = null;
     protected ?Page $page = null;
+
+    public function setMediaBaseUrl(?string $mediaBaseUrl): void
+    {
+        $this->mediaBaseUrl = $mediaBaseUrl;
+    }
 
     /**
      * # keep priority low, only if no other route found
@@ -52,5 +59,20 @@ trait PageControllerTrait
         if (!isset($this->variables['side_menu_id'])) {
             $this->variables['side_menu_id'] = $this->page->getEntity()->getSideMenuId();
         }
+    }
+
+    protected function loadGallery(string $galleryName = 'page'): void
+    {
+        if (null === $this->page) {
+            throw new RuntimeException('page not loaded');
+        }
+
+        $galleryManager = $this->page->getGalleryManager();
+        if (null !== $this->mediaBaseUrl) {
+            $galleryManager->setBaseUrl($this->mediaBaseUrl);
+        }
+        $media = $galleryManager->getGallery($galleryName);
+
+        $this->assign('media_' . $galleryName, $media);
     }
 }
