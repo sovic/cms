@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="author",
  *     indexes={
- *         @ORM\Index(name="surname", columns={"surname"})
+ *         @ORM\Index(name="surname", columns={"surname"}, options={"lengths": {191}})
  *     }
  * )
  *
