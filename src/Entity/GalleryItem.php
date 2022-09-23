@@ -60,11 +60,6 @@ class GalleryItem
     protected int $height = 0;
 
     /**
-     * @ORM\Column(name="tagslist", type="string", length=255, nullable=true, options={"default"=NULL})
-     */
-    protected ?string $tagsList;
-
-    /**
      * @ORM\Column(name="model", type="string", length=100)
      */
     protected string $model;
@@ -75,49 +70,39 @@ class GalleryItem
     protected int $modelId;
 
     /**
-     * @ORM\Column(name="processed", type="boolean", nullable=true, options={"default"="0"})
+     * @ORM\Column(name="is_processed", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected ?bool $processed = false;
+    protected bool $isProcessed = false;
 
     /**
-     * @ORM\Column(name="generate", type="boolean", nullable=true, options={"default"="0"})
+     * @ORM\Column(name="is_cover", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected ?bool $generate = false;
+    protected bool $isCover = false;
 
     /**
-     * @ORM\Column(name="title", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(name="is_optimized", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected bool $title = false;
+    protected bool $isOptimized = false;
 
     /**
-     * @ORM\Column(name="tagssearch", type="text", length=65535, nullable=true, options={"default"=NULL})
+     * @ORM\Column(name="is_temp", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected ?string $tagsSearch;
+    protected bool $isTemp = false;
 
     /**
-     * @ORM\Column(name="optimized", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(name="is_hero", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected bool $optimized = false;
+    protected bool $isHero = false;
 
     /**
-     * @ORM\Column(name="temp", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(name="is_hero_mobile", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected bool $temp = false;
+    protected bool $isHeroMobile;
 
     /**
-     * @ORM\Column(name="hero", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(name="is_meta_image", type="boolean", nullable=false, options={"default"="0"})
      */
-    protected bool $hero = false;
-
-    /**
-     * @ORM\Column(name="hero_mobile", type="boolean", nullable=false, options={"default"="0"})
-     */
-    protected bool $heroMobile;
-
-    /**
-     * @ORM\Column(name="meta_image", type="boolean", nullable=false, options={"default"="0"})
-     */
-    protected bool $metaImage = false;
+    protected bool $isMetaImage = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Gallery", inversedBy="galleryItems")
@@ -210,16 +195,6 @@ class GalleryItem
         $this->height = $height;
     }
 
-    public function getTagsList(): ?string
-    {
-        return $this->tagsList;
-    }
-
-    public function setTagsList(?string $tagsList): void
-    {
-        $this->tagsList = $tagsList;
-    }
-
     public function getModel(): ?string
     {
         return $this->model;
@@ -242,92 +217,72 @@ class GalleryItem
 
     public function isProcessed(): bool
     {
-        return (bool) $this->processed;
+        return $this->isProcessed;
     }
 
-    public function setProcessed(bool $processed): void
+    public function setIsProcessed(bool $isProcessed): void
     {
-        $this->processed = $processed;
+        $this->isProcessed = $isProcessed;
     }
 
-    public function isGenerate(): bool
+    public function isCover(): bool
     {
-        return (bool) $this->generate;
+        return $this->isCover;
     }
 
-    public function setGenerate(bool $generate): void
+    public function setIsCover(bool $isCover): void
     {
-        $this->generate = $generate;
-    }
-
-    public function isTitle(): bool
-    {
-        return $this->title;
-    }
-
-    public function setTitle(bool $title): void
-    {
-        $this->title = $title;
-    }
-
-    public function getTagsSearch(): ?string
-    {
-        return $this->tagsSearch;
-    }
-
-    public function setTagsSearch(?string $tagsSearch): void
-    {
-        $this->tagsSearch = $tagsSearch;
+        $this->isCover = $isCover;
     }
 
     public function isOptimized(): bool
     {
-        return $this->optimized;
+        return $this->isOptimized;
     }
 
-    public function setOptimized(bool $optimized): void
+    public function setIsOptimized(bool $isOptimized): void
     {
-        $this->optimized = $optimized;
+        $this->isOptimized = $isOptimized;
     }
 
     public function isTemp(): bool
     {
-        return $this->temp;
+        return $this->isTemp;
     }
 
-    public function setTemp(bool $temp): void
+    public function setIsTemp(bool $isTemp): void
     {
-        $this->temp = $temp;
+        $this->isTemp = $isTemp;
     }
 
     public function isHero(): bool
     {
-        return $this->hero;
+        return $this->isHero;
     }
 
-    public function setHero(bool $hero): void
+    public function setIsHero(bool $isHero): void
     {
-        $this->hero = $hero;
+        $this->isHero = $isHero;
     }
 
     public function isHeroMobile(): bool
     {
-        return $this->heroMobile;
+        return $this->isHeroMobile;
     }
 
-    public function setHeroMobile(bool $heroMobile): void
+    public function setIsHeroMobile(bool $isHeroMobile): void
     {
-        $this->heroMobile = $heroMobile;
+        $this->isHeroMobile = $isHeroMobile;
     }
 
     public function isMetaImage(): bool
     {
-        return $this->metaImage;
+        return $this->isMetaImage;
     }
 
-    public function setMetaImage(bool $metaImage): void
+    public function setIsMetaImage(bool $isMetaImage): void
     {
-        $this->metaImage = $metaImage;
+        $this->isMetaImage = $isMetaImage;
     }
 
     public function getGallery(): Gallery

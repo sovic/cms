@@ -42,7 +42,7 @@ final class GalleryManager
         $qb->select('gi')->from(Gallery::class, 'g')->where('g.model = :model');
         $qb->leftJoin(GalleryItem::class, 'gi', Join::WITH, 'gi.galleryId = g.id');
         $qb->setParameter(':model', $this->modelName);
-        $qb->andWhere('gi.temp = 0');
+        $qb->andWhere('gi.isTemp = 0');
         if (is_array($this->modelId)) {
             $qb->andWhere($qb->expr()->in('g.modelId', ':model_id'));
             $qb->setParameter(':model_id', $this->modelId, Connection::PARAM_INT_ARRAY);
@@ -85,8 +85,8 @@ final class GalleryManager
                 'id' => $item->getId(),
                 'model' => $item->getModel(),
                 'model_id' => $item->getModelId(),
-                'hero' => $item->isHero(),
-                'hero_mobile' => $item->isHeroMobile(),
+                'is_hero' => $item->isHero(),
+                'is_hero_mobile' => $item->isHeroMobile(),
                 'width' => !empty($item->getWidth()) ? $item->getWidth() : null,
                 'height' => !empty($item->getHeight()) ? $item->getHeight() : null,
             ];
@@ -104,18 +104,18 @@ final class GalleryManager
         return !empty($items) ? $items[0] : null;
     }
 
-    public function getTitlePhoto(string $galleryName): ?array
+    public function getCoverPhoto(string $galleryName): ?array
     {
         $qb = $this->initQueryBuilder($galleryName);
-        $qb->orderBy('gi.title', 'DESC');
+        $qb->orderBy('gi.isCover', 'DESC');
 
         return $this->getSingleItem();
     }
 
-    public function getTitlePhotos(string $galleryName): ?array
+    public function getCoverPhotos(string $galleryName): ?array
     {
         $qb = $this->initQueryBuilder($galleryName);
-        $qb->orderBy('gi.title', 'DESC');
+        $qb->orderBy('gi.isCover', 'DESC');
 
         $result = $this->getItems();
         $return = [];
@@ -128,21 +128,21 @@ final class GalleryManager
         return $return;
     }
 
-    #[ArrayShape(['hero' => "mixed|null", 'hero_mobile' => "mixed|null"])]
+    #[ArrayShape(['hero' => "array|null", 'hero_mobile' => "array|null"])]
     public function getHeroImages(string $galleryName): array
     {
         $qb = $this->initQueryBuilder($galleryName);
-        $qb->andWhere($qb->expr()->orX('gi.hero = 1', 'gi.heroMobile = 1'));
+        $qb->andWhere($qb->expr()->orX('gi.isHero = 1', 'gi.isHeroMobile = 1'));
 
         $return = [
             'hero' => null,
             'hero_mobile' => null,
         ];
         foreach ($this->getItems() as $item) {
-            if ($item['hero']) {
+            if ($item['is_hero']) {
                 $return['hero'] = $item;
             }
-            if ($item['hero_mobile']) {
+            if ($item['is_hero_mobile']) {
                 $return['hero_mobile'] = $item;
             }
         }

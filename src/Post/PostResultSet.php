@@ -72,7 +72,7 @@ class PostResultSet
         $entityManager = $this->getEntityManager();
         // title photos
         $galleryManager = new GalleryManager($entityManager, 'post', $this->getPostsIdList());
-        $titlePhotos = $galleryManager->getTitlePhotos('post');
+        $coverPhotos = $galleryManager->getCoverPhotos('post');
         // url slugify
         $slugify = new Slugify();
         $slugify->activateRuleSet('default');
@@ -93,8 +93,8 @@ class PostResultSet
                 'publish_date' => $entity->getPublishDate(),
                 'tags' => [],
                 'title' => $entity->getHeading(), // TODO remove
-                'title_image' => $titlePhotos[$id] ?? null,
-                'title_image_url' => isset($titlePhotos[$id]) ? $titlePhotos[$id]['full'] : null,
+                'cover_photo' => $coverPhotos[$id] ?? null,
+                'cover_photo_url' => isset($coverPhotos[$id]) ? $coverPhotos[$id]['full'] : null,
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
                 'url_id' => $entity->getUrlId(),
             ];

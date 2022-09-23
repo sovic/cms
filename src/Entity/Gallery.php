@@ -7,7 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SovicCms\Entity\Gallery
  *
- * @ORM\Table(name="gallery")
+ * @ORM\Table(
+ *     name="gallery",
+ *     indexes={
+ *         @ORM\Index(name="model_model_id", columns={"model","model_id"}),
+ *         @ORM\Index(name="model_model_id_name", columns={"model","model_id","name"})
+ *     }
+ * )
  * @ORM\Entity
  */
 class Gallery
