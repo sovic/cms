@@ -3,15 +3,16 @@
 namespace SovicCms\Post;
 
 use Doctrine\ORM\Query\Expr\Join;
+use Sovic\Gallery\Entity\GalleryModelInterface;
+use Sovic\Gallery\Gallery\Gallery;
 use SovicCms\Entity\Author;
 use SovicCms\Entity\PostAuthor;
 use SovicCms\ORM\AbstractEntityModel;
-use SovicCms\ORM\EntityModelGalleryInterface;
 
 /**
  * @method \SovicCms\Entity\Post getEntity()
  */
-class Post extends AbstractEntityModel implements EntityModelGalleryInterface
+class Post extends AbstractEntityModel implements GalleryModelInterface
 {
     public function getId(): int
     {
@@ -44,14 +45,14 @@ class Post extends AbstractEntityModel implements EntityModelGalleryInterface
         return $this->getId();
     }
 
-    public function getTitlePhoto(): ?array
+    public function getCoverImage(): ?array
     {
-        return $this->getGalleryManager()->getCoverPhoto('post');
+        return $this->getGallery()->getCoverImage();
     }
 
-    public function getGallery(): array
+    public function getGallery(): Gallery
     {
-        return $this->getGalleryManager()->getGallery('post');
+        return $this->getGalleryManager()->loadGallery('post');
     }
 
     public function getAuthors(): array

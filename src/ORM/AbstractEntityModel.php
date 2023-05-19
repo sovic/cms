@@ -2,24 +2,25 @@
 
 namespace SovicCms\ORM;
 
-use SovicCms\Gallery\GalleryManager;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
+use Sovic\Gallery\Entity\GalleryModelInterface;
+use Sovic\Gallery\Gallery\GalleryManager;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractEntityModel
 {
     protected EntityManagerInterface $entityManager;
-    protected GalleryManager $galleryManager;
     protected RouterInterface $router;
     protected TranslatorInterface $translator;
 
     protected mixed $entity;
 
+    protected GalleryManager $galleryManager;
+
     /**
      * @required
-     * @param EntityManagerInterface $entityManager
      */
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
@@ -78,14 +79,14 @@ abstract class AbstractEntityModel
 
     public function getGalleryManager(): GalleryManager
     {
-        if (!$this instanceof EntityModelGalleryInterface) {
+        if (!$this instanceof GalleryModelInterface) {
             throw new RuntimeException('Not yet implemented');
         }
         if (empty($this->galleryManager)) {
-            /** @var EntityModelGalleryInterface $this */
-            $modelName = $this->getGalleryModelName();
-            $modelId = $this->getGalleryModelId();
-            $this->galleryManager = new GalleryManager($this->getEntityManager(), $modelName, $modelId);
+            $manager = new GalleryManager($this->getGalleryModelName(), $this->getGalleryModelId());
+            $manager->setEntityManager($this->entityManager);
+
+            $this->galleryManager = $manager;
         }
 
         return $this->galleryManager;

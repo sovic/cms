@@ -10,12 +10,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 trait PageControllerTrait
 {
-    private ?string $mediaBaseUrl = null;
+    private ?string $galleryBaseUrl = null;
     protected ?Page $page = null;
 
-    public function setMediaBaseUrl(?string $mediaBaseUrl): void
+    public function setGalleryBaseUrl(?string $galleryBaseUrl): void
     {
-        $this->mediaBaseUrl = $mediaBaseUrl;
+        $this->galleryBaseUrl = $galleryBaseUrl;
     }
 
     /**
@@ -67,12 +67,14 @@ trait PageControllerTrait
             throw new RuntimeException('page not loaded');
         }
 
+        // galleries
         $galleryManager = $this->page->getGalleryManager();
-        if (null !== $this->mediaBaseUrl) {
-            $galleryManager->setBaseUrl($this->mediaBaseUrl);
+        $gallery = $galleryManager->loadGallery($galleryName);
+        $resultSet = $gallery->getItemsResultSet();
+        if ($this->galleryBaseUrl) {
+            $resultSet->setBaseUrl($this->galleryBaseUrl);
         }
-        $media = $galleryManager->getGallery($galleryName);
 
-        $this->assign('media_' . $galleryName, $media);
+        $this->assign('gallery_' . $galleryName, $resultSet->toArray());
     }
 }

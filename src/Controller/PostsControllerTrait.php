@@ -21,7 +21,7 @@ trait PostsControllerTrait
     private ?Post $post = null;
     private ?Tag $tag = null;
 
-    private ?string $postsMediaBaseUrl = null;
+    private ?string $postGalleryBaseUrl = null;
     private bool $addAuthors = false;
 
     public function setPostFactory(PostFactory $postFactory): void
@@ -44,9 +44,9 @@ trait PostsControllerTrait
         return $this->tag;
     }
 
-    public function setPostsMediaBaseUrl(?string $postsMediaBaseUrl): void
+    public function setPostGalleryBaseUrl(?string $postGalleryBaseUrl): void
     {
-        $this->postsMediaBaseUrl = $postsMediaBaseUrl;
+        $this->postGalleryBaseUrl = $postGalleryBaseUrl;
     }
 
     public function setAddAuthors(bool $addAuthors): void
@@ -65,8 +65,8 @@ trait PostsControllerTrait
         $pagination = new Pagination($repo->countPublic(), $perPage);
         $pagination->setCurrentPage($pageNr);
 
-        $this->assign('media_base_url', $this->postsMediaBaseUrl);
         $this->assign('pagination', $pagination);
+        $this->assign('post_gallery_base_url', $this->postGalleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
     }
 
@@ -87,8 +87,8 @@ trait PostsControllerTrait
         $pagination = new Pagination($repo->countPublicByTag($tag), self::PER_PAGE);
         $pagination->setCurrentPage($pageNr);
 
-        $this->assign('media_base_url', $this->postsMediaBaseUrl);
         $this->assign('pagination', $pagination);
+        $this->assign('post_gallery_base_url', $this->postGalleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
         $this->assign('tag', $tag);
     }
@@ -100,16 +100,17 @@ trait PostsControllerTrait
             return;
         }
         $this->post = $post;
-        $authors = $this->post->getAuthors();
-        $galleryManager = $post->getGalleryManager();
-        if ($this->postsMediaBaseUrl) {
-            $galleryManager->setBaseUrl($this->postsMediaBaseUrl);
-        }
-        $media = $galleryManager->getGallery('post');
 
-        $this->assign('authors', $authors);
-        $this->assign('media', $media);
-        $this->assign('media_base_url', $this->postsMediaBaseUrl);
+        // galleries
+        $galleryManager = $this->post->getGalleryManager();
+        $gallery = $galleryManager->loadGallery('post');
+        $resultSet = $gallery->getItemsResultSet();
+        if ($this->postGalleryBaseUrl) {
+            $resultSet->setBaseUrl($this->postGalleryBaseUrl);
+        }
+
         $this->assign('post', $post);
+        $this->assign('post_authors', $this->post->getAuthors());
+        $this->assign('post_gallery', $resultSet->toArray());
     }
 }

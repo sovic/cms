@@ -2,13 +2,13 @@
 
 namespace SovicCms\Page;
 
+use Sovic\Gallery\Entity\GalleryModelInterface;
 use SovicCms\ORM\AbstractEntityModel;
-use SovicCms\ORM\EntityModelGalleryInterface;
 
 /**
  * @method \SovicCms\Entity\Page getEntity()
  */
-class Page extends AbstractEntityModel implements EntityModelGalleryInterface
+class Page extends AbstractEntityModel implements GalleryModelInterface
 {
     public function getId(): int
     {
@@ -66,8 +66,6 @@ class Page extends AbstractEntityModel implements EntityModelGalleryInterface
 
     /**
      * Double check what you add to this method, this will be loaded on every page!
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -76,14 +74,14 @@ class Page extends AbstractEntityModel implements EntityModelGalleryInterface
         }
 
         $entity = $this->getEntity();
-        $galleryManager = $this->getGalleryManager();
-        $heroImages = $galleryManager->getHeroImages('page');
+        $galleryManager = $this->getGalleryManager()->loadGallery('page');
+
+        // $heroImage = $galleryManager->getHeroImage();
 
         return [
             'header' => $entity->getHeader(),
-            'hero_image' => $heroImages['hero'],
-            'hero_image_mobile' => $heroImages['hero_mobile'],
-            'gallery' => $galleryManager->getGallery('gallery'),
+            'hero_image' => null, // $heroImage,
+            // 'gallery' => $galleryManager->getGallery('gallery'),
             'menu_active' => '/' . $entity->getUrlId(),
         ];
     }
