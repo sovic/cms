@@ -125,9 +125,8 @@ class PostResultSet
                 'perex' => $entity->getPerex(),
                 'publish_date' => $entity->getPublishDate(),
                 'tags' => [],
-                'title' => $entity->getHeading(), // TODO remove
                 'cover_photo' => $covers[$id] ?? null,
-                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()), // TODO db
+                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
                 'url_id' => $entity->getUrlId(),
             ];
             if ($this->addAuthors) {
