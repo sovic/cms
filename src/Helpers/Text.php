@@ -58,22 +58,11 @@ class Text
 
     public static function prettyText(string $text): string
     {
-        // TODO regex
-        return (string) str_replace(
-            [' a ', ' s ', ' k ', ' o ', ' %', ' od ', ' do ', ' se ', ' na ', ' ke '],
-            [
-                ' a&nbsp;',
-                ' s&nbsp;',
-                ' k&nbsp;',
-                ' o&nbsp;',
-                '&nbsp;%',
-                ' od&nbsp;',
-                ' do&nbsp;',
-                ' se&nbsp;',
-                ' na&nbsp;',
-                ' ke&nbsp;',
-            ],
-            $text
-        );
+        $prepositions = ['v', 've', 's', 'na', 'pod', 'u', 'k', 'před', 'od', 'do', 'při', 'nad', 'ke', 'o'];
+        $conjunctions = ['a'];
+        $search = array_merge($prepositions, $conjunctions);
+        $searchRegex = '/ ([' . implode('|', $search) . ']) /';
+
+        return preg_replace($searchRegex, ' $1&nbsp;', $text);
     }
 }
