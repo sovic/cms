@@ -24,7 +24,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         return $this->getEntity()->getHeading() ?: $this->getEntity()->getName();
     }
 
-    public function getIntroText(): ?string
+    public function getIntroText(int $length = 250): ?string
     {
         $perex = $this->getEntity()->getPerex();
         if ($perex) {
@@ -32,7 +32,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         }
         $content = strip_tags($this->getEntity()->getContent());
 
-        return $content ? substr($content, 0, 250) . '…' : null;
+        return $content ? substr($content, 0, $length) . '…' : null;
     }
 
     public function getGalleryModelName(): string
