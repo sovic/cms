@@ -52,15 +52,6 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
             }
         }
 
-        /*
-         * TODO
-        if (!empty($this->variables['breadcrumbs_after'])) {
-            foreach ($this->variables['breadcrumbs_after'] as $breadcrumb) {
-                $breadcrumbs[] = $breadcrumb;
-            }
-        }
-        */
-
         return $breadcrumbs;
     }
 
@@ -74,14 +65,14 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
         }
 
         $entity = $this->getEntity();
-        $galleryManager = $this->getGalleryManager()->loadGallery('page');
-
-        // $heroImage = $galleryManager->getHeroImage();
+        $galleryManager = $this->getGalleryManager();
+        $gallery = $galleryManager->loadGallery('page');
+        $heroImage = $gallery->getHeroImage();
 
         return [
+            'gallery' => $gallery,
             'header' => $entity->getHeader(),
-            'hero_image' => null, // $heroImage,
-            // 'gallery' => $galleryManager->getGallery('gallery'),
+            'hero_image' => $heroImage,
             'menu_active' => '/' . $entity->getUrlId(),
         ];
     }
