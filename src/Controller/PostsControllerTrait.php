@@ -23,6 +23,7 @@ trait PostsControllerTrait
 
     private ?string $postGalleryBaseUrl = null;
     private bool $addAuthors = false;
+    private bool $addCovers = true;
 
     public function setPostFactory(PostFactory $postFactory): void
     {
@@ -61,6 +62,8 @@ trait PostsControllerTrait
         $posts = $repo->findPublic($perPage, ($pageNr - 1) * $perPage);
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
+        $postsResultSet->setAddCovers($this->addCovers);
+        $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
 
         $pagination = new Pagination($repo->countPublic(), $perPage);
         $pagination->setCurrentPage($pageNr);
@@ -83,6 +86,8 @@ trait PostsControllerTrait
         $posts = $repo->findPublicByTag($tag, $perPage, ($pageNr - 1) * $perPage);
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
+        $postsResultSet->setAddCovers($this->addCovers);
+        $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
 
         $pagination = new Pagination($repo->countPublicByTag($tag), self::PER_PAGE);
         $pagination->setCurrentPage($pageNr);

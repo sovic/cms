@@ -4,6 +4,8 @@ namespace SovicCms\Post;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Gallery\Entity\GalleryItem;
+use Sovic\Gallery\Gallery\GalleryHelper;
 
 class PostResultSet
 {
@@ -14,7 +16,11 @@ class PostResultSet
     private array $postsList;
     /** @var array */
     private array $authorsIds = [];
+
     private bool $addAuthors = false;
+    private bool $addCovers = false;
+
+    private string $galleryBaseUrl = '';
 
     /**
      * PostResultSet constructor.
@@ -50,6 +56,16 @@ class PostResultSet
         $this->addAuthors = $addAuthors;
     }
 
+    public function setAddCovers(bool $addCovers): void
+    {
+        $this->addCovers = $addCovers;
+    }
+
+    public function setGalleryBaseUrl(string $galleryBaseUrl): void
+    {
+        $this->galleryBaseUrl = $galleryBaseUrl;
+    }
+
     /**
      * @return Post[]
      */
@@ -66,12 +82,29 @@ class PostResultSet
         return array_keys($this->postsList);
     }
 
+    private function loadCovers(): array
+    {
+        $repo = $this->getEntityManager()->getRepository(GalleryItem::class);
+        $entities = $repo->findGalleriesCovers('post', $this->getPostsIdList());
+        $result = [];
+        /** @var GalleryItem $entity */
+        foreach ($entities as $entity) {
+            $cover = GalleryHelper::getMediaPaths(
+                $entity,
+                $this->galleryBaseUrl,
+                GalleryHelper::SIZES_SET_ALL
+            );
+            $result[$entity->getModelId()] = $cover;
+        }
+
+        return $result;
+    }
+
     public function toArray(): array
     {
-        // $entityManager = $this->getEntityManager();
-        // title photos
-        // $galleryManager = new GalleryManager('post', $this->getPostsIdList());
-        // $coverPhotos = $galleryManager->getCoverPhotos('post');
+        // covers
+        $covers = $this->addCovers ? $this->loadCovers() : [];
+
         // url slugify
         $slugify = new Slugify();
         $slugify->activateRuleSet('default');
@@ -81,6 +114,7 @@ class PostResultSet
         foreach ($this->getPosts() as $post) {
             $id = $post->getId();
             $entity = $post->getEntity();
+
             $item = [
                 'content' => $entity->getContent(),
                 'heading' => $post->getHeading(),
@@ -92,9 +126,8 @@ class PostResultSet
                 'publish_date' => $entity->getPublishDate(),
                 'tags' => [],
                 'title' => $entity->getHeading(), // TODO remove
-                'cover_photo' => null, // $coverPhotos[$id] ?? null,
-                'cover_photo_url' => null, // isset($coverPhotos[$id]) ? $coverPhotos[$id]['full'] : null,
-                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
+                'cover_photo' => $covers[$id] ?? null,
+                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()), // TODO db
                 'url_id' => $entity->getUrlId(),
             ];
             if ($this->addAuthors) {
