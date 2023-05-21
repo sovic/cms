@@ -51,9 +51,9 @@ class Post
     protected ?string $heading;
 
     /**
-     * @ORM\Column(name="subtitle", type="string", length=255, nullable=true)
+     * @ORM\Column(name="subtitle", type="string", length=255, nullable=true, options={"default"=NULL})
      */
-    protected string $subtitle;
+    protected ?string $subtitle = null;
 
     /**
      * @ORM\Column(name="perex", type="text", length=16383, nullable=true, options={"default"=NULL})
@@ -225,12 +225,12 @@ class Post
         $this->heading = $heading;
     }
 
-    public function getSubtitle(): string
+    public function getSubtitle(): ?string
     {
         return $this->subtitle;
     }
 
-    public function setSubtitle(string $subtitle): void
+    public function setSubtitle(?string $subtitle): void
     {
         $this->subtitle = $subtitle;
     }
