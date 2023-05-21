@@ -1,14 +1,14 @@
 <?php
 
-namespace SovicCms\Controller;
+namespace Sovic\Cms\Controller;
 
-use SovicCms\Entity\Post as PostEntity;
-use SovicCms\Entity\Tag;
-use SovicCms\Helpers\Pagination;
-use SovicCms\Post\Post;
-use SovicCms\Post\PostFactory;
-use SovicCms\Post\PostResultSetFactory;
-use SovicCms\Repository\PostRepository;
+use Sovic\Cms\Entity\Post as PostEntity;
+use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Helpers\Pagination;
+use Sovic\Cms\Post\Post;
+use Sovic\Cms\Post\PostFactory;
+use Sovic\Cms\Post\PostResultSetFactory;
+use Sovic\Cms\Repository\PostRepository;
 
 /**
  * Requires PostFactory, PostResultSetFactory

@@ -1,15 +1,15 @@
 <?php
 
-namespace SovicCms\User;
+namespace Sovic\Cms\User;
 
 use DateTime;
 use DateTimeImmutable;
-use SovicCms\ORM\AbstractEntityModel;
+use Sovic\Cms\ORM\AbstractEntityModel;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Email;
 
 /**
- * @method \SovicCms\Entity\User getEntity()
+ * @method \Sovic\Cms\Entity\User getEntity()
  */
 class User extends AbstractEntityModel
 {

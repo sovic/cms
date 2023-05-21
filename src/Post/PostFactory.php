@@ -1,10 +1,10 @@
 <?php
 
-namespace SovicCms\Post;
+namespace Sovic\Cms\Post;
 
-use SovicCms\Entity\Post as PostEntity;
-use SovicCms\ORM\EntityModelFactory;
-use SovicCms\Repository\PostRepository;
+use Sovic\Cms\Entity\Post as PostEntity;
+use Sovic\Cms\ORM\EntityModelFactory;
+use Sovic\Cms\Repository\PostRepository;
 
 final class PostFactory extends EntityModelFactory
 {

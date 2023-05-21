@@ -1,11 +1,11 @@
 <?php
 
-namespace SovicCms\Controller;
+namespace Sovic\Cms\Controller;
 
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use SovicCms\Entity\Page;
-use SovicCms\Repository\PageRepository;
+use Sovic\Cms\Entity\Page;
+use Sovic\Cms\Repository\PageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,12 +1,12 @@
 <?php
 
-namespace SovicCms\Repository;
+namespace Sovic\Cms\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use RuntimeException;
-use SovicCms\Entity\User;
+use Sovic\Cms\Entity\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;

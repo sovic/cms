@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\Page;
+namespace Sovic\Cms\Page;
 
 class PageHelper
 {

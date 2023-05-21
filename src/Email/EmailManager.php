@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\Email;
+namespace Sovic\Cms\Email;
 
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\Entity;
+namespace Sovic\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;

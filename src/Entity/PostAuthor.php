@@ -1,11 +1,11 @@
 <?php
 
-namespace SovicCms\Entity;
+namespace Sovic\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SovicCms\Entity\PostAuthor
+ * Sovic\Cms\Entity\PostAuthor
  *
  * @ORM\Table(name="post_author")
  * @ORM\Entity

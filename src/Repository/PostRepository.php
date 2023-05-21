@@ -1,12 +1,12 @@
 <?php
 
-namespace SovicCms\Repository;
+namespace Sovic\Cms\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use SovicCms\Entity\Post;
-use SovicCms\Entity\Tag;
-use SovicCms\Entity\TagPost;
+use Sovic\Cms\Entity\Post;
+use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Entity\TagPost;
 
 class PostRepository extends EntityRepository
 {

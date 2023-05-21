@@ -1,10 +1,10 @@
 <?php
 
-namespace SovicCms\Controller;
+namespace Sovic\Cms\Controller;
 
 use RuntimeException;
-use SovicCms\Page\Page;
-use SovicCms\Page\PageFactory;
+use Sovic\Cms\Page\Page;
+use Sovic\Cms\Page\PageFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

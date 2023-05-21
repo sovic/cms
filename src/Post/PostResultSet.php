@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\Post;
+namespace Sovic\Cms\Post;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;

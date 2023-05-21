@@ -1,10 +1,10 @@
 <?php
 
-namespace SovicCms\Controller;
+namespace Sovic\Cms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use SovicCms\Post\PostFactory;
-use SovicCms\Post\PostResultSetFactory;
+use Sovic\Cms\Post\PostFactory;
+use Sovic\Cms\Post\PostResultSetFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

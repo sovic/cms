@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\Controller;
+namespace Sovic\Cms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

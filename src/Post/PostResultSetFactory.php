@@ -1,11 +1,11 @@
 <?php
 
-namespace SovicCms\Post;
+namespace Sovic\Cms\Post;
 
 use Doctrine\ORM\EntityManagerInterface;
-use SovicCms\Entity\Author;
-use SovicCms\Entity\Post as PostEntity;
-use SovicCms\Entity\PostAuthor;
+use Sovic\Cms\Entity\Author;
+use Sovic\Cms\Entity\Post as PostEntity;
+use Sovic\Cms\Entity\PostAuthor;
 
 class PostResultSetFactory
 {

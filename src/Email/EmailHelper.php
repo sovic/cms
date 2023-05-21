@@ -1,6 +1,6 @@
 <?php /** @noinspection ALL */
 
-namespace SovicCms\Email;
+namespace Sovic\Cms\Email;
 
 use RuntimeException;
 use Symfony\Component\Mime\Crypto\DkimSigner;

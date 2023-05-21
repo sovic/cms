@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms;
+namespace Sovic\Cms;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

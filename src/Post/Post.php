@@ -1,16 +1,16 @@
 <?php
 
-namespace SovicCms\Post;
+namespace Sovic\Cms\Post;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Gallery\Gallery\Gallery;
-use SovicCms\Entity\Author;
-use SovicCms\Entity\PostAuthor;
-use SovicCms\ORM\AbstractEntityModel;
+use Sovic\Cms\Entity\Author;
+use Sovic\Cms\Entity\PostAuthor;
+use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @method \SovicCms\Entity\Post getEntity()
+ * @method \Sovic\Cms\Entity\Post getEntity()
  */
 class Post extends AbstractEntityModel implements GalleryModelInterface
 {

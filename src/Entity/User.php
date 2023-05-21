@@ -1,8 +1,8 @@
 <?php
 
-namespace SovicCms\Entity;
+namespace Sovic\Cms\Entity;
 
-use SovicCms\Repository\UserRepository;
+use Sovic\Cms\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;

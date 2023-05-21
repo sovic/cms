@@ -1,11 +1,11 @@
 <?php
 
-namespace SovicCms\Entity;
+namespace Sovic\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SovicCms\Entity\TagPost
+ * Sovic\Cms\Entity\TagPost
  *
  * @ORM\Table(name="post_tag")
  * @ORM\Entity

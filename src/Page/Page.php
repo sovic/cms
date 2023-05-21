@@ -1,12 +1,12 @@
 <?php
 
-namespace SovicCms\Page;
+namespace Sovic\Cms\Page;
 
 use Sovic\Gallery\Entity\GalleryModelInterface;
-use SovicCms\ORM\AbstractEntityModel;
+use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @method \SovicCms\Entity\Page getEntity()
+ * @method \Sovic\Cms\Entity\Page getEntity()
  */
 class Page extends AbstractEntityModel implements GalleryModelInterface
 {

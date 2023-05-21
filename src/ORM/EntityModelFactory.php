@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\ORM;
+namespace Sovic\Cms\ORM;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;

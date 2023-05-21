@@ -1,9 +1,9 @@
 <?php
 
-namespace SovicCms\User;
+namespace Sovic\Cms\User;
 
-use SovicCms\Entity\User as UserEntity;
-use SovicCms\ORM\EntityModelFactory;
+use Sovic\Cms\Entity\User as UserEntity;
+use Sovic\Cms\ORM\EntityModelFactory;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;

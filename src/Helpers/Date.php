@@ -1,6 +1,6 @@
 <?php
 
-namespace SovicCms\Helpers;
+namespace Sovic\Cms\Helpers;
 
 use DateTimeInterface;
 

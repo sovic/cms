@@ -1,9 +1,9 @@
 <?php
 
-namespace SovicCms\Repository;
+namespace Sovic\Cms\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use SovicCms\Entity\Page;
+use Sovic\Cms\Entity\Page;
 
 class PageRepository extends EntityRepository
 {

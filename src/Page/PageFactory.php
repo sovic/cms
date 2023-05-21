@@ -1,9 +1,9 @@
 <?php
 
-namespace SovicCms\Page;
+namespace Sovic\Cms\Page;
 
-use SovicCms\ORM\EntityModelFactory;
-use SovicCms\Entity\Page as PageEntity;
+use Sovic\Cms\ORM\EntityModelFactory;
+use Sovic\Cms\Entity\Page as PageEntity;
 
 final class PageFactory extends EntityModelFactory
 {

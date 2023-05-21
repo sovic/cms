@@ -5,19 +5,19 @@
 /** @noinspection PhpTemplateMissingInspection */
 /** @noinspection PhpTranslationKeyInspection */
 
-namespace SovicCms\Controller;
+namespace Sovic\Cms\Controller;
 
-use SovicCms\Email\EmailManager;
-use SovicCms\Form\Type\ForgotPassword;
-use SovicCms\Form\Type\NewPassword;
-use SovicCms\Form\Type\SignIn;
-use SovicCms\Form\Type\SignUp;
-use SovicCms\User\UserFactory;
+use Sovic\Cms\Email\EmailManager;
+use Sovic\Cms\Form\Type\ForgotPassword;
+use Sovic\Cms\Form\Type\NewPassword;
+use Sovic\Cms\Form\Type\SignIn;
+use Sovic\Cms\Form\Type\SignUp;
+use Sovic\Cms\User\UserFactory;
 use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use LogicException;
-use SovicCms\Entity\User;
+use Sovic\Cms\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
