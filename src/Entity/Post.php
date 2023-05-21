@@ -8,7 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Sovic\Cms\Entity\Post
  *
- * @ORM\Table(name="post")
+ * @ORM\Table(
+ *     name="post",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="url_id", columns={"raw_id"})
+ *     },
+ *     indexes={
+ *         @ORM\Index(name="public_post", columns={"raw_id", "public"}),
+ *         @ORM\Index(name="published", columns={"published"})
+ *     }
+ * )
+ *
  * @ORM\Entity(repositoryClass="Sovic\Cms\Repository\PostRepository")
  */
 class Post
@@ -18,37 +28,37 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected int $id;
+    public int $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     protected string $name;
 
     /**
-     * @ORM\Column(name="raw_id", type="string", length=255, nullable=true)
+     * @ORM\Column(name="raw_id", type="string", length=255, nullable=false)
      */
-    protected string $urlId;
+    public string $urlId;
 
     /**
-     * @ORM\Column(name="head_title", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_title", type="string", length=255, nullable=true, options={"default"=NULL})
      */
-    protected ?string $headTitle;
+    protected ?string $metaTitle = null;
 
     /**
-     * @ORM\Column(name="meta_description", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_description", type="string", length=255, nullable=true, options={"default"=NULL})
      */
-    protected ?string $metaDescription;
+    protected ?string $metaDescription = null;
 
     /**
-     * @ORM\Column(name="meta_keywords", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_keywords", type="string", length=255, nullable=true, options={"default"=NULL})
      */
-    protected ?string $metaKeywords;
+    protected ?string $metaKeywords = null;
 
     /**
-     * @ORM\Column(name="heading", type="string", length=255, nullable=true)
+     * @ORM\Column(name="heading", type="string", length=255, nullable=true, options={"default"=NULL})
      */
-    protected ?string $heading;
+    protected ?string $heading = null;
 
     /**
      * @ORM\Column(name="subtitle", type="string", length=255, nullable=true, options={"default"=NULL})
@@ -66,9 +76,9 @@ class Post
     protected ?string $content;
 
     /**
-     * @ORM\Column(name="sequence", type="integer", nullable=true, options={"default"=NULL})
+     * @ORM\Column(name="`index`", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $sequence = null;
+    protected ?int $index = null;
 
     /**
      * @ORM\Column(name="public", type="boolean", nullable=false, options={"default"=0})
@@ -88,7 +98,7 @@ class Post
     /**
      * @ORM\Column(name="published", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $publishDate;
+    protected ?int $publishDate = null;
 
     /**
      * @ORM\Column(name="created", type="integer")
@@ -98,27 +108,27 @@ class Post
     /**
      * @ORM\Column(name="title", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $title;
+    protected ?int $title = null;
 
     /**
      * @ORM\Column(name="import_id", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $importId;
+    protected ?int $importId = null;
 
     /**
      * @ORM\Column(name="import_service", type="string", length=50, nullable=true, options={"default"=NULL})
      */
-    protected ?string $importService;
+    protected ?string $importService = null;
 
     /**
      * @ORM\Column(name="infobox", type="text", length=1024, nullable=true)
      */
-    protected ?string $infoBox;
+    protected ?string $infoBox = null;
 
     /**
      * @ORM\Column(name="signature", type="string", length=1024, nullable=true, options={"default"=NULL})
      */
-    protected ?string $signature;
+    protected ?string $signature = null;
 
     /**
      * @ORM\Column(name="modified", type="integer", options={"default"=0})
@@ -148,12 +158,12 @@ class Post
     /**
      * @ORM\Column(name="authorsusers_id", type="integer", nullable=true, options={"default"=NULL})
      */
-    protected ?int $authorsUsersId;
+    protected ?int $authorsUsersId = null;
 
     /**
      * @ORM\Column(name="secret", type="string", length=10, nullable=true)
      */
-    protected ?string $secret;
+    protected ?string $secret = null;
 
     /**
      * @ORM\Column(name="is_featured", type="boolean", nullable=false, options={"default"="0"})
@@ -185,14 +195,14 @@ class Post
         $this->urlId = $urlId;
     }
 
-    public function getHeadTitle(): ?string
+    public function getMetaTitle(): ?string
     {
-        return $this->headTitle;
+        return $this->metaTitle;
     }
 
-    public function setHeadTitle(?string $headTitle): void
+    public function setMetaTitle(?string $metaTitle): void
     {
-        $this->headTitle = $headTitle;
+        $this->metaTitle = $metaTitle;
     }
 
     public function getMetaDescription(): ?string
@@ -255,14 +265,14 @@ class Post
         $this->content = $content;
     }
 
-    public function getSequence(): ?int
+    public function getIndex(): ?int
     {
-        return $this->sequence;
+        return $this->index;
     }
 
-    public function setSequence(?int $sequence): void
+    public function setIndex(?int $index): void
     {
-        $this->sequence = $sequence;
+        $this->index = $index;
     }
 
     public function isPublic(): bool
