@@ -2,6 +2,8 @@
 
 namespace Sovic\Cms\Post;
 
+use Cocur\Slugify\Slugify;
+use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Gallery\Gallery\Gallery;
@@ -66,5 +68,34 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         $qb->addOrderBy('author.surname', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function save(bool $publish = true): void
+    {
+        $entity = $this->getEntity();
+
+        // if urlId missing
+        if (!isset($entity->urlId)) {
+            $slugify = new Slugify();
+            $slugify->activateRuleSet('default');
+
+            $urlId = $slugify->slugify($entity->getName()); // TODO normalize
+            $entity->setUrlId($urlId);
+        }
+
+        // if new entity
+        if (!isset($entity->id)) {
+            $entity->setCreated(new DateTimeImmutable());
+        }
+
+        // publish
+        if ($publish) {
+            $entity->setPublic(true);
+            if ($entity->getPublishDate() === null) {
+                $entity->setPublishDate(new DateTimeImmutable());
+            }
+        }
+
+        $this->flush();
     }
 }
