@@ -5,15 +5,12 @@ namespace Sovic\Cms\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Sovic\Cms\Entity\Tag
- *
  * @ORM\Table(
  *     name="author",
  *     indexes={
  *         @ORM\Index(name="surname", columns={"surname"}, options={"lengths": {191}})
  *     }
  * )
- *
  * @ORM\Entity
  */
 class Author
