@@ -33,7 +33,7 @@
         "symfony/security-bundle": "^6.0",
         "symfony/twig-bundle": "^6.0",
         "symfony/validator": "^6.0",
-        "sovic/symfony-gallery": "^0.1.5"
+        "sovic/symfony-gallery": "^0.2.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master"
