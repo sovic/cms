@@ -170,6 +170,11 @@ class Post
      */
     protected bool $isFeatured = false;
 
+    /**
+     * @ORM\Column(name="is_gallery_enabled", type="boolean", nullable=false, options={"default"="1"})
+     */
+    protected bool $isGalleryEnabled = true;
+
     public function getId(): int
     {
         return $this->id;
@@ -453,6 +458,16 @@ class Post
     public function setIsFeatured(bool $isFeatured): void
     {
         $this->isFeatured = $isFeatured;
+    }
+
+    public function isGalleryEnabled(): bool
+    {
+        return $this->isGalleryEnabled;
+    }
+
+    public function setIsGalleryEnabled(bool $isGalleryEnabled): void
+    {
+        $this->isGalleryEnabled = $isGalleryEnabled;
     }
 }
 

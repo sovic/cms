@@ -121,6 +121,7 @@ class PostResultSet
                 'id' => $id,
                 'intro_text' => $post->getIntroText(),
                 'is_featured' => $entity->isFeatured(),
+                'is_gallery_enabled' => $entity->isGalleryEnabled(),
                 'keywords' => $entity->getMetaKeywords(),
                 'perex' => $entity->getPerex(),
                 'publish_date' => $entity->getPublishDate(),
