@@ -54,7 +54,12 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
 
     public function getGallery(): Gallery
     {
-        return $this->getGalleryManager()->loadGallery('post');
+        return $this->getGalleryManager()->loadGallery();
+    }
+
+    public function getGalleries(): array
+    {
+        return $this->getGalleryManager()->getGalleries();
     }
 
     public function getAuthors(): array
@@ -97,5 +102,16 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         }
 
         $this->flush();
+    }
+
+    public function delete(): void
+    {
+        $galleries = $this->getGalleries();
+        foreach ($galleries as $gallery) {
+            $gallery->delete();
+        }
+
+        $this->getEntityManager()->remove($this->getEntity());
+        $this->getEntityManager()->flush();
     }
 }

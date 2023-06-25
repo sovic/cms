@@ -85,7 +85,7 @@ class PostResultSet
     private function loadCovers(): array
     {
         $repo = $this->getEntityManager()->getRepository(GalleryItem::class);
-        $entities = $repo->findGalleriesCovers('post', $this->getPostsIdList());
+        $entities = $repo->findGalleriesCovers('post', $this->getPostsIdList(), 'post');
         $result = [];
         /** @var GalleryItem $entity */
         foreach ($entities as $entity) {
