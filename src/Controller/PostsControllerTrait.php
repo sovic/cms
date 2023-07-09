@@ -9,6 +9,7 @@ use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Requires PostFactory, PostResultSetFactory
@@ -55,7 +56,7 @@ trait PostsControllerTrait
         $this->addAuthors = $addAuthors;
     }
 
-    protected function loadPostIndex(int $pageNr, int $perPage): void
+    protected function loadPostIndex(int $pageNr, int $perPage): ?Response
     {
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
@@ -66,18 +67,23 @@ trait PostsControllerTrait
         $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
 
         $pagination = new Pagination($repo->countPublic(), $perPage);
+        if ($pageNr > $pagination->getPageCount()) {
+            return $this->show404();
+        }
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('pagination', $pagination);
         $this->assign('post_gallery_base_url', $this->postGalleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
+
+        return null;
     }
 
-    protected function loadPostTagIndex(string $tagName, int $pageNr, int $perPage): void
+    protected function loadPostTagIndex(string $tagName, int $pageNr, int $perPage): ?Response
     {
         $tag = $this->getEntityManager()->getRepository(Tag::class)->findOneBy(['urlId' => $tagName]);
         if (null === $tag) {
-            return;
+            return $this->show404();
         }
         $this->tag = $tag;
 
@@ -96,13 +102,15 @@ trait PostsControllerTrait
         $this->assign('post_gallery_base_url', $this->postGalleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
         $this->assign('tag', $tag);
+
+        return null;
     }
 
-    protected function loadPost(string $urlId): void
+    protected function loadPost(string $urlId): ?Response
     {
         $post = $this->postFactory->loadByUrlId($urlId, true);
         if (null === $post) {
-            return;
+            return $this->show404();
         }
         $this->post = $post;
 
@@ -117,5 +125,7 @@ trait PostsControllerTrait
         $this->assign('post', $post);
         $this->assign('post_authors', $this->post->getAuthors());
         $this->assign('post_gallery', $resultSet->toArray());
+
+        return null;
     }
 }

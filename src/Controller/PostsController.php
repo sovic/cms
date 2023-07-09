@@ -37,9 +37,9 @@ class PostsController extends FrontendController
      */
     public function index(int $pageNr): Response
     {
-        $this->loadPostIndex($pageNr, self::PER_PAGE);
+        $response = $this->loadPostIndex($pageNr, self::PER_PAGE);
 
-        return $this->render('post/index.html.twig');
+        return $response ?? $this->render('post/index.html.twig');
     }
 
     /**
@@ -50,12 +50,9 @@ class PostsController extends FrontendController
      */
     public function post(string $urlId): Response
     {
-        $this->loadPost($urlId);
-        if (null === $this->post) {
-            return $this->show404();
-        }
+        $response = $this->loadPost($urlId);
 
-        return $this->render('post/show.html.twig');
+        return $response ?? $this->render('post/show.html.twig');
     }
 
     /**
@@ -72,11 +69,8 @@ class PostsController extends FrontendController
      */
     public function tag(string $tagName, int $pageNr): Response
     {
-        $this->loadPostTagIndex($tagName, $pageNr, self::PER_PAGE);
-        if (null === $this->tag) {
-            return $this->show404();
-        }
+        $response = $this->loadPostTagIndex($tagName, $pageNr, self::PER_PAGE);
 
-        return $this->render('post/index.html.twig');
+        return $response ?? $this->render('post/index.html.twig');
     }
 }
