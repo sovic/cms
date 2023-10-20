@@ -64,7 +64,9 @@ trait PostsControllerTrait
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
-        $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
+        if ($this->postGalleryBaseUrl) {
+            $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
+        }
 
         $pagination = new Pagination($repo->countPublic(), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
@@ -93,7 +95,9 @@ trait PostsControllerTrait
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
-        $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
+        if ($this->postGalleryBaseUrl) {
+            $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
+        }
 
         $pagination = new Pagination($repo->countPublicByTag($tag), self::PER_PAGE);
         $pagination->setCurrentPage($pageNr);
