@@ -18,10 +18,10 @@
             "url": "https://github.com/sovic/symfony-gallery.git"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "~8.0",
+        "php": "^8.0",
         "cocur/slugify": "^4.0",
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
@@ -36,7 +36,6 @@
         "sovic/symfony-gallery": "^0.2.2"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-master"
     },
     "config": {
         "allow-plugins": {
