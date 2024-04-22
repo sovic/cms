@@ -99,7 +99,7 @@ trait PostsControllerTrait
             $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
         }
 
-        $pagination = new Pagination($repo->countPublicByTag($tag), self::PER_PAGE);
+        $pagination = new Pagination($repo->countPublicByTag($tag), $perPage);
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('pagination', $pagination);
