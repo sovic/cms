@@ -18,10 +18,8 @@ abstract class SitemapController extends AbstractController
 {
     private array $urls = [];
 
-    /**
-     * @Route("/sitemap", name="sitemap")
-     * @Route("/sitemap.xml", name="sitemap_xml")
-     */
+    #[Route('/sitemap', name: 'sitemap')]
+    #[Route('/sitemap.xml', name: 'sitemap_xml')]
     public function index(
         EntityManagerInterface $entityManager,
         ProjectFactory         $projectFactory,

@@ -33,14 +33,7 @@ class PostsController extends FrontendController
         $this->setPostResultSetFactory($postResultSetFactory);
     }
 
-    /**
-     * @Route(
-     *     "/posts/{pageNr}",
-     *     name="posts_index",
-     *     requirements={"pageNr"="\d+"},
-     *     defaults={"pageNr"=1}
-     * )
-     */
+    #[Route('/posts/{pageNr}', name: 'posts_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function index(int $pageNr): Response
     {
         $response = $this->loadPostIndex($pageNr, self::PER_PAGE);
@@ -48,9 +41,7 @@ class PostsController extends FrontendController
         return $response ?? $this->render('post/index.html.twig');
     }
 
-    /**
-     * @Route("/posts/{urlId}", name="posts_detail", defaults={})
-     */
+    #[Route('/posts/{urlId}', name: 'posts_detail', defaults: [])]
     public function post(string $urlId): Response
     {
         $response = $this->loadPost($urlId);
@@ -58,14 +49,7 @@ class PostsController extends FrontendController
         return $response ?? $this->render('post/show.html.twig');
     }
 
-    /**
-     * @Route(
-     *     "/posts/tag/{tagName}/{pageNr}",
-     *     name="posts_w_tag",
-     *     requirements={"pageNr"="\d+"},
-     *     defaults={"pageNr"=1}
-     * )
-     */
+    #[Route('/posts/tag/{tagName}/{pageNr}', name: 'posts_w_tag', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function tag(string $tagName, int $pageNr): Response
     {
         $response = $this->loadPostTagIndex($tagName, $pageNr, self::PER_PAGE);

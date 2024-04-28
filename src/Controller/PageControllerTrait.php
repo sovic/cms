@@ -20,14 +20,8 @@ trait PageControllerTrait
 
     /**
      * # keep priority low, only if no other route found
-     *
-     * @Route(
-     *     "/{urlId}",
-     *     name="page_show",
-     *     requirements={"urlId"="[a-zA-Z0-9\-]+"},
-     *     priority="-10"
-     * )
      */
+    #[Route('/{urlId}', name: 'page_show', requirements: ['urlId' => '[a-zA-Z0-9\-]+'], priority: -10)]
     public function show(string $urlId, PageFactory $pageFactory): Response
     {
         $this->loadPage($pageFactory, $urlId);

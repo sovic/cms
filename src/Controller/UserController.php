@@ -26,9 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends FrontendController
 {
-    /**
-     * @Route("/user/signin", name="user_sign_in")
-     */
+    #[Route('/user/signin', name: 'user_sign_in')]
     public function signIn(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
         if (null !== $this->getUser()) {
@@ -55,9 +53,7 @@ class UserController extends FrontendController
         return $this->render('page/user/sign-in.html.twig');
     }
 
-    /**
-     * @Route("/user/signup", name="user_sign_up")
-     */
+    #[Route('/user/signup', name: 'user_sign_up')]
     public function signup(
         EmailManager                $emailManager,
         ManagerRegistry             $registry,
@@ -104,9 +100,7 @@ class UserController extends FrontendController
         return $this->redirectToRoute('user_sign_up');
     }
 
-    /**
-     * @Route("/user/activate/{code}", name="user_activate", requirements={"code": "[A-Za-z0-9]{32}"})
-     */
+    #[Route('/user/activate/{code}', name: 'user_activate', requirements: ['code' => '[A-Za-z0-9]{32}'])]
     public function activate(
         string              $code,
         UserFactory         $userFactory,
@@ -124,9 +118,7 @@ class UserController extends FrontendController
         return $this->render('page/homepage.index.html.twig');
     }
 
-    /**
-     * @Route("/user/forgot-password", name="user_forgot_password")
-     */
+    #[Route('/user/forgot-password', name: 'user_forgot_password')]
     public function forgotPassword(
         EmailManager        $emailManager,
         Request             $request,
@@ -155,9 +147,7 @@ class UserController extends FrontendController
         return $this->render('page/user/forgot-password.html.twig');
     }
 
-    /**
-     * @Route("/user/new-password/{code}", name="user_new_password")
-     */
+    #[Route('/user/new-password/{code}', name: 'user_new_password', requirements: ['code' => '[A-Za-z0-9]{32}'])]
     public function newPassword(
         string                      $code,
         Request                     $request,
@@ -193,9 +183,7 @@ class UserController extends FrontendController
         return $this->render('page/user/new-password.html.twig');
     }
 
-    /**
-     * @Route("/user/logout", name="user_logout", methods={"GET"})
-     */
+    #[Route('/user/logout', name: 'user_logout', methods: ['GET'])]
     public function logout(): void
     {
         // controller can be blank: it will never be executed!
