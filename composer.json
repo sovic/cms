@@ -21,21 +21,22 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "cocur/slugify": "^4.0",
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/orm": "^2.10",
-        "symfony/form": "^6.0",
-        "symfony/framework-bundle": "^6.0",
-        "symfony/http-foundation": "^6.0",
-        "symfony/mailer": "^6.0",
-        "symfony/security-bundle": "^6.0",
-        "symfony/twig-bundle": "^6.0",
-        "symfony/validator": "^6.0",
+        "symfony/form": "^6.4",
+        "symfony/framework-bundle": "^6.4",
+        "symfony/http-foundation": "^6.4",
+        "symfony/mailer": "^6.4",
+        "symfony/security-bundle": "^6.4",
+        "symfony/twig-bundle": "^6.4",
+        "symfony/validator": "^6.4",
         "sovic/symfony-gallery": "^0.2.2"
     },
     "require-dev": {
+        "rector/rector": "^1.0"
     },
     "config": {
         "allow-plugins": {
