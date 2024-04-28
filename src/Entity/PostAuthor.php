@@ -4,36 +4,24 @@ namespace Sovic\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Sovic\Cms\Entity\PostAuthor
- *
- * @ORM\Table(name="post_author")
- * @ORM\Entity
- */
+#[ORM\Table(name: 'post_author')]
+#[ORM\Entity]
 class PostAuthor
 {
-    /**
-     * @ORM\Column(name="post_id", type="integer", nullable=false)
-     * @ORM\Id
-     */
+    #[ORM\Column(name: 'post_id', type: 'integer', nullable: false)]
+    #[ORM\Id]
     protected int $postId;
 
-    /**
-     * @ORM\Column(name="author_id", type="integer", nullable=false)
-     * @ORM\Id
-     */
+    #[ORM\Column(name: 'author_id', type: 'integer', nullable: false)]
+    #[ORM\Id]
     protected int $authorId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Post")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Post::class)]
     protected Post $post;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Author")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Author::class)]
     protected Author $author;
 
     public function getPostId(): int

@@ -4,48 +4,30 @@ namespace Sovic\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(
- *     name="author",
- *     indexes={
- *         @ORM\Index(name="surname", columns={"surname"}, options={"lengths": {191}})
- *     }
- * )
- * @ORM\Entity
- */
+#[ORM\Table(name: 'author')]
+#[ORM\Index(columns: ['surname'], name: 'surname', options: ['lengths' => [191]])]
+#[ORM\Entity]
 class Author
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
     protected string $name;
 
-    /**
-     * @ORM\Column(name="surname", type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(name: 'surname', type: 'string', length: 255, nullable: false)]
     protected string $surname;
 
-    /**
-     * @ORM\Column(name="short_description", type="string", length=1000, nullable=true, options={"default"=NULL})
-     */
+    #[ORM\Column(name: 'short_description', type: 'string', length: 1000, nullable: true, options: ['default' => null])]
     protected ?string $shortDescription;
 
-    /**
-     * @ORM\Column(name="user_id", type="integer", nullable=true, options={"default"=NULL})
-     */
+    #[ORM\Column(name: 'user_id', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $userId;
 
-    /**
-     * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: User::class)]
     protected User $user;
 
     public function getId(): int

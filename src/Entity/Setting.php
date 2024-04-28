@@ -5,10 +5,8 @@ namespace Sovic\Cms\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
-/**
- * @ORM\Table(name="setting")
- * @ORM\Entity
- */
+#[ORM\Table(name: 'setting')]
+#[ORM\Entity]
 class Setting
 {
     private const TYPE_STRING = 'string';
@@ -23,36 +21,24 @@ class Setting
         self::TYPE_STRING,
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    /**
-     * @ORM\Column(name="`group`", type="string", length=100, nullable=false)
-     */
+    #[ORM\Column(name: '`group`', type: 'string', length: 100, nullable: false)]
     protected string $group;
 
-    /**
-     * @ORM\Column(name="key", type="string", length=100, nullable=false)
-     */
+    #[ORM\Column(name: 'key', type: 'string', length: 100, nullable: false)]
     protected string $key;
 
-    /**
-     * @ORM\Column(name="value", type="text", length=65535, nullable=false)
-     */
+    #[ORM\Column(name: 'value', type: 'text', length: 65535, nullable: false)]
     protected string $value;
 
-    /**
-     * @ORM\Column(name="description", type="text", length=65535, nullable=false)
-     */
+    #[ORM\Column(name: 'description', type: 'text', length: 65535, nullable: false)]
     protected string $description;
 
-    /**
-     * @ORM\Column(name="type", type="string", length=255, nullable=true, options={"default"=NULL})
-     */
+    #[ORM\Column(name: 'type', type: 'string', length: 255, nullable: true, options: ['default' => null])]
     protected ?string $type;
 
     public function getId(): int

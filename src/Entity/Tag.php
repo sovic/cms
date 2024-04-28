@@ -4,44 +4,28 @@ namespace Sovic\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Sovic\Cms\Entity\Tag
- *
- * @ORM\Table(name="tag")
- * @ORM\Entity
- */
+#[ORM\Table(name: 'tag')]
+#[ORM\Entity]
 class Tag
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=100, nullable=true)
-     */
+    #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: true)]
     protected string $name;
 
-    /**
-     * @ORM\Column(name="raw_id", type="string", length=100, nullable=true)
-     */
+    #[ORM\Column(name: 'raw_id', type: 'string', length: 100, nullable: true)]
     protected string $urlId;
 
-    /**
-     * @ORM\Column(name="public", type="boolean", nullable=false, options={"default"=0})
-     */
+    #[ORM\Column(name: 'public', type: 'boolean', nullable: false, options: ['default' => 0])]
     protected bool $public = false;
 
-    /**
-     * @ORM\Column(name="lang", length=5, nullable=true, options={"default": "cs"})
-     */
+    #[ORM\Column(name: 'lang', length: 5, nullable: true, options: ['default' => 'cs'])]
     protected ?string $lang = 'cs';
 
-    /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     */
+    #[ORM\Column(name: 'group_id', type: 'integer', nullable: true)]
     protected int $groupId;
 
     public function getId(): int
