@@ -9,6 +9,7 @@ use Sovic\Cms\Repository\PageRepository;
 
 #[ORM\Table(name: 'page')]
 #[ORM\Index(columns: ['project_id'], name: 'project_id')]
+#[ORM\UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[ORM\Entity(repositoryClass: PageRepository::class)]
 class Page
 {
@@ -24,7 +25,7 @@ class Page
     #[ORM\Column(name: 'name', type: Types::STRING, length: 200, nullable: true)]
     protected string $name;
 
-    #[ORM\Column(name: 'raw_id', type: Types::STRING, length: 200, nullable: true)]
+    #[ORM\Column(name: 'url_id', type: Types::STRING, length: 200, nullable: true)]
     protected string $urlId;
 
     #[ORM\Column(name: 'head_title', type: Types::STRING, length: 200, nullable: true)]
@@ -78,7 +79,7 @@ class Page
     #[ORM\Column(name: 'in_sitemap', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
     protected bool $inSitemap = true;
 
-    #[ORM\Column(name: 'last_update_date', type: Types::DATE_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'last_update_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $lastUpdateDate = null;
 
     #[ORM\Column(name: 'side_menu_id', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]

@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Sovic\Cms\Repository\PostRepository;
 
 #[ORM\Table(name: 'post')]
-#[ORM\Index(columns: ['raw_id', 'public'], name: 'public_post')]
+#[ORM\Index(columns: ['url_id', 'public'], name: 'public_post')]
 #[ORM\Index(columns: ['published'], name: 'published')]
 #[ORM\Index(columns: ['project_id'], name: 'project_id')]
-#[ORM\UniqueConstraint(name: 'url_id', columns: ['raw_id'])]
+#[ORM\UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
@@ -27,7 +27,7 @@ class Post
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'raw_id', type: Types::STRING, length: 255, nullable: false)]
+    #[ORM\Column(name: 'url_id', type: Types::STRING, length: 255, nullable: false)]
     public string $urlId;
 
     #[ORM\Column(name: 'meta_title', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]

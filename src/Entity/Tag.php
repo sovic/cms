@@ -17,7 +17,7 @@ class Tag
     #[ORM\Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
     protected string $name;
 
-    #[ORM\Column(name: 'raw_id', type: Types::STRING, length: 100, nullable: true)]
+    #[ORM\Column(name: 'url_id', type: Types::STRING, length: 100, nullable: true)]
     protected string $urlId;
 
     #[ORM\Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]

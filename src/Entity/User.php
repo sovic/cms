@@ -33,13 +33,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 180, unique: true, nullable: false)]
     private string $email;
 
-    #[ORM\Column(name: 'created_date', type: Types::DATE_IMMUTABLE, nullable: false)]
+    #[ORM\Column(name: 'created_date', type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private DateTimeImmutable $createdDate;
 
     #[ORM\Column(name: 'is_active', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     private bool $isActive = false;
 
-    #[ORM\Column(name: 'activated_date', type: Types::DATE_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'activated_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     private ?DateTimeImmutable $activatedDate;
 
     #[ORM\Column(name: 'activation_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'logins', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $logins = 0;
 
-    #[ORM\Column(name: 'last_login_date', type: Types::DATE_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'last_login_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     private ?DateTimeImmutable $lastLoginDate;
 
     #[ORM\Column(name: 'forgot_password_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
