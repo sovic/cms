@@ -32,7 +32,11 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         if ($perex) {
             return $perex;
         }
-        $content = strip_tags($this->getEntity()->getContent());
+        $content = $this->getEntity()->getContent();
+        if (empty($content)) {
+            return null;
+        }
+        $content = strip_tags($content);
 
         return $content ? substr($content, 0, $length) . '…' : null;
     }
