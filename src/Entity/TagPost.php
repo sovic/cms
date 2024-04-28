@@ -2,17 +2,18 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'post_tag')]
 #[ORM\Entity]
 class TagPost
 {
-    #[ORM\Column(name: 'posts_id', type: 'integer')]
+    #[ORM\Column(name: 'posts_id', type: Types::INTEGER)]
     #[ORM\Id]
     protected int $postId;
 
-    #[ORM\Column(name: 'tags_id', type: 'integer')]
+    #[ORM\Column(name: 'tags_id', type: Types::INTEGER)]
     #[ORM\Id]
     protected int $tagId;
 

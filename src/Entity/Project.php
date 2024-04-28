@@ -2,21 +2,22 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'project')]
 #[ORM\Entity]
 class Project
 {
-    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Column(name: 'id', type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'slug', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'slug', type: Types::STRING, length: 255, nullable: false)]
     protected string $slug;
 
     public function getId(): int

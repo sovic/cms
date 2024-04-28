@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Sovic\Cms\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,10 +15,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 180, nullable: true, options: ['default' => null])]
+    #[ORM\Column(type: Types::STRING, length: 180, nullable: true, options: ['default' => null])]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -26,43 +27,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true, nullable: false)]
     private string $email;
 
-    #[ORM\Column(name: 'created_date', type: 'datetime_immutable', nullable: false)]
+    #[ORM\Column(name: 'created_date', type: Types::DATE_IMMUTABLE, nullable: false)]
     private DateTimeImmutable $createdDate;
 
-    #[ORM\Column(name: 'active', type: 'smallint', nullable: false, options: ['default' => 0])]
-    private bool $active = false;
+    #[ORM\Column(name: 'is_active', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    private bool $isActive = false;
 
-    #[ORM\Column(name: 'activated_date', type: 'datetime_immutable', nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'activated_date', type: Types::DATE_IMMUTABLE, nullable: true, options: ['default' => null])]
     private ?DateTimeImmutable $activatedDate;
 
-    #[ORM\Column(name: 'activation_code', type: 'string', length: 32, unique: true, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'activation_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
     private ?string $activationCode;
 
-    #[ORM\Column(name: 'country_code', type: 'string', length: 2, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'country_code', type: Types::STRING, length: 2, nullable: true, options: ['default' => null])]
     private ?string $countryCode;
 
-    #[ORM\Column(name: 'default_currency', type: 'string', length: 3, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'currency', type: Types::STRING, length: 3, nullable: true, options: ['default' => null])]
     private ?string $defaultCurrency;
 
-    #[ORM\Column(name: 'geo_ip_limited', type: 'smallint', nullable: false, options: ['default' => 0])]
-    private bool $geoIpLimited = false;
+    #[ORM\Column(name: 'is_geo_ip_limited', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    private bool $isGeoIpLimited = false;
 
-    #[ORM\Column(name: 'emailing', type: 'smallint', nullable: false, options: ['default' => 1])]
+    #[ORM\Column(name: 'emailing', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
     private bool $emailing = true;
 
-    #[ORM\Column(name: 'logins', type: 'integer', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(name: 'logins', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $logins = 0;
 
-    #[ORM\Column(name: 'last_login_date', type: 'datetime_immutable', nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'last_login_date', type: Types::DATE_IMMUTABLE, nullable: true, options: ['default' => null])]
     private ?DateTimeImmutable $lastLoginDate;
 
-    #[ORM\Column(name: 'forgot_password_code', type: 'string', length: 32, unique: true, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'forgot_password_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
     private ?string $forgotPasswordCode;
 
     public function getId(): ?int
@@ -155,14 +156,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdDate = $createdDate;
     }
 
-    public function isActive(): bool
+    public function isIsActive(): bool
     {
-        return $this->active;
+        return $this->isActive;
     }
 
-    public function setActive(bool $active): void
+    public function setIsActive(bool $isActive): void
     {
-        $this->active = $active;
+        $this->isActive = $isActive;
     }
 
     public function getActivatedDate(): ?DateTimeImmutable
@@ -205,14 +206,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->defaultCurrency = $defaultCurrency;
     }
 
-    public function isGeoIpLimited(): bool
+    public function isIsGeoIpLimited(): bool
     {
-        return $this->geoIpLimited;
+        return $this->isGeoIpLimited;
     }
 
-    public function setGeoIpLimited(bool $geoIpLimited): void
+    public function setIsGeoIpLimited(bool $isGeoIpLimited): void
     {
-        $this->geoIpLimited = $geoIpLimited;
+        $this->isGeoIpLimited = $isGeoIpLimited;
     }
 
     public function isEmailing(): bool

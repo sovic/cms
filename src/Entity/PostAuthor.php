@@ -2,17 +2,18 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'post_author')]
 #[ORM\Entity]
 class PostAuthor
 {
-    #[ORM\Column(name: 'post_id', type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'post_id', type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
     protected int $postId;
 
-    #[ORM\Column(name: 'author_id', type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'author_id', type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
     protected int $authorId;
 

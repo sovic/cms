@@ -2,30 +2,31 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'tag')]
 #[ORM\Entity]
 class Tag
 {
-    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Column(name: 'id', type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: true)]
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
     protected string $name;
 
-    #[ORM\Column(name: 'raw_id', type: 'string', length: 100, nullable: true)]
+    #[ORM\Column(name: 'raw_id', type: Types::STRING, length: 100, nullable: true)]
     protected string $urlId;
 
-    #[ORM\Column(name: 'public', type: 'boolean', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $public = false;
 
-    #[ORM\Column(name: 'lang', length: 5, nullable: true, options: ['default' => 'cs'])]
+    #[ORM\Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
     protected ?string $lang = 'cs';
 
-    #[ORM\Column(name: 'group_id', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'group_id', type: Types::INTEGER, nullable: true)]
     protected int $groupId;
 
     public function getId(): int

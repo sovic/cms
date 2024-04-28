@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'author')]
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Author
 {
-    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Column(name: 'id', type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
@@ -19,16 +20,16 @@ class Author
     #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected Project $project;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'surname', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'surname', type: Types::STRING, length: 255, nullable: false)]
     protected string $surname;
 
-    #[ORM\Column(name: 'short_description', type: 'string', length: 1000, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'short_description', type: Types::STRING, length: 1000, nullable: true, options: ['default' => null])]
     protected ?string $shortDescription;
 
-    #[ORM\Column(name: 'user_id', type: 'integer', nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'user_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $userId;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]

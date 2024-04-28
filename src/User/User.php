@@ -31,7 +31,7 @@ class User extends AbstractEntityModel
     public function activate(): void
     {
         $entity = $this->getEntity();
-        $entity->setActive(true);
+        $entity->setIsActive(true);
         $entity->setActivatedDate(new DateTimeImmutable());
         $entity->setActivationCode(null);
         $this->flush();
@@ -56,7 +56,7 @@ class User extends AbstractEntityModel
             ->htmlTemplate('emails/signup.html.twig')
             ->subject($this->translator->trans('user.sign_up.email_subject'))
             ->context([
-                'activation_code' => !$entity->isActive() ? $entity->getActivationCode() : null,
+                'activation_code' => !$entity->isIsActive() ? $entity->getActivationCode() : null,
                 'expiration_date' => $createdDate->modify('+7 days'),
                 'password' => $password,
                 'subject' => $this->translator->trans('user.sign_up.email_subject'),

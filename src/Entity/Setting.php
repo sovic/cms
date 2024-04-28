@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
@@ -9,7 +10,7 @@ use InvalidArgumentException;
 #[ORM\Entity]
 class Setting
 {
-    private const TYPE_STRING = 'string';
+    private const TYPE_STRING = Types::STRING;
     private const TYPE_INT = 'int'; // number
     private const TYPE_BOOL = 'bool'; // 0|1
     private const TYPE_ARRAY = 'array'; // array of strings, each line one field
@@ -22,23 +23,23 @@ class Setting
     ];
 
     #[ORM\Id]
-    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Column(name: 'id', type: Types::INTEGER)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(name: '`group`', type: 'string', length: 100, nullable: false)]
+    #[ORM\Column(name: '`group`', type: Types::STRING, length: 100, nullable: false)]
     protected string $group;
 
-    #[ORM\Column(name: 'key', type: 'string', length: 100, nullable: false)]
+    #[ORM\Column(name: 'key', type: Types::STRING, length: 100, nullable: false)]
     protected string $key;
 
-    #[ORM\Column(name: 'value', type: 'text', length: 65535, nullable: false)]
+    #[ORM\Column(name: 'value', type: Types::TEXT, length: 65535, nullable: false)]
     protected string $value;
 
-    #[ORM\Column(name: 'description', type: 'text', length: 65535, nullable: false)]
+    #[ORM\Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
     protected string $description;
 
-    #[ORM\Column(name: 'type', type: 'string', length: 255, nullable: true, options: ['default' => null])]
+    #[ORM\Column(name: 'type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $type;
 
     public function getId(): int
