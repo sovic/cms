@@ -4,7 +4,9 @@ namespace Sovic\Cms\Controller;
 
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Sovic\Cms\Entity\Page;
+use Sovic\Cms\Project\ProjectFactory;
 use Sovic\Cms\Repository\PageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,21 +21,24 @@ abstract class SitemapController extends AbstractController
     /**
      * @Route("/sitemap", name="sitemap")
      * @Route("/sitemap.xml", name="sitemap_xml")
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param Request $request
-     * @param UrlHelper $urlHelper
-     * @return Response
      */
-    public function index(EntityManagerInterface $entityManager, Request $request, UrlHelper $urlHelper): Response
-    {
+    public function index(
+        EntityManagerInterface $entityManager,
+        ProjectFactory         $projectFactory,
+        Request                $request,
+        UrlHelper              $urlHelper
+    ): Response {
         $hostname = $request->getSchemeAndHttpHost();
         $baseUrl = $urlHelper->getAbsoluteUrl('/');
         $this->addUrl($baseUrl);
 
+        $project = $projectFactory->loadById(1); // TODO
+        if (!$project) {
+            throw new RuntimeException('Project not found');
+        }
         /** @var PageRepository $pagesRepo */
         $pagesRepo = $entityManager->getRepository(Page::class);
-        $pages = $pagesRepo->findPublic();
+        $pages = $pagesRepo->findPublic($project);
         foreach ($pages as $page) {
             if (!$page->isInSitemap()) {
                 continue;

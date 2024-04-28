@@ -9,6 +9,7 @@ use Sovic\Cms\Repository\PostRepository;
 #[ORM\Table(name: 'post')]
 #[ORM\Index(columns: ['raw_id', 'public'], name: 'public_post')]
 #[ORM\Index(columns: ['published'], name: 'published')]
+#[ORM\Index(columns: ['project_id'], name: 'project_id')]
 #[ORM\UniqueConstraint(name: 'url_id', columns: ['raw_id'])]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -17,6 +18,10 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     public int $id;
+
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected Project $project;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
     protected string $name;
@@ -108,6 +113,16 @@ class Post
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
     }
 
     public function getName(): string

@@ -3,17 +3,23 @@
 namespace Sovic\Cms\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Entity\TagPost;
+use Sovic\Cms\Project\Project;
 
 class PostRepository extends EntityRepository
 {
-    public function findPublic(int $limit = null, int $offset = null): array
+    public function findPublic(Project $project, int $limit = null, int $offset = null): array
     {
         return $this->findBy(
-            ['public' => true],
+            [
+                'project' => $project->getEntity(),
+                'public' => true,
+            ],
             ['publishDate' => 'DESC', 'id' => 'DESC'],
             $limit,
             $offset,
@@ -25,13 +31,15 @@ class PostRepository extends EntityRepository
         return $this->count(['public' => true]);
     }
 
-    public function findPublicByTag(Tag $tag, int $limit = null, int $offset = null): array
+    public function findPublicByTag(Project $project, Tag $tag, int $limit = null, int $offset = null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p')->from(Post::class, 'p');
         $qb->leftJoin(TagPost::class, 'tp', Join::WITH, 'tp.postId = p.id');
+        $qb->andWhere('p.project = :project');
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
+        $qb->setParameter(':project', $project->getEntity());
         $qb->setParameter(':tag_id', $tag->getId());
         $qb->addOrderBy('p.publishDate', 'DESC');
         $qb->addOrderBy('p.id', 'DESC');
@@ -45,16 +53,23 @@ class PostRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countPublicByTag(Tag $tag): int
+    public function countPublicByTag(Project $project, Tag $tag): int
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('count(p.id)')->from(Post::class, 'p');
         $qb->leftJoin(TagPost::class, 'tp', Join::WITH, 'tp.postId = p.id');
+        $qb->andWhere('p.project = :project');
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
+        $qb->setParameter(':project', $project->getEntity());
         $qb->setParameter(':tag_id', $tag->getId());
 
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return $qb->getQuery()->getSingleScalarResult();
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException) {
+            // TODO log
+
+            return 0;
+        }
     }
 }

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'author')]
 #[ORM\Index(columns: ['surname'], name: 'surname', options: ['lengths' => [191]])]
+#[ORM\Index(columns: ['project_id'], name: 'project_id')]
 #[ORM\Entity]
 class Author
 {
@@ -13,6 +14,10 @@ class Author
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
+
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected Project $project;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
     protected string $name;
@@ -38,6 +43,17 @@ class Author
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
     }
 
     public function getName(): string

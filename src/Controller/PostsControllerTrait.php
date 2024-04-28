@@ -8,6 +8,7 @@ use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
+use Sovic\Cms\Project\Project;
 use Sovic\Cms\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 trait PostsControllerTrait
 {
+    private Project $project;
     private PostFactory $postFactory;
     private PostResultSetFactory $postResultSetFactory;
 
@@ -25,6 +27,11 @@ trait PostsControllerTrait
     private ?string $postGalleryBaseUrl = null;
     private bool $addAuthors = false;
     private bool $addCovers = true;
+
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
+    }
 
     public function setPostFactory(PostFactory $postFactory): void
     {
@@ -58,9 +65,11 @@ trait PostsControllerTrait
 
     protected function loadPostIndex(int $pageNr, int $perPage): ?Response
     {
+
+
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
-        $posts = $repo->findPublic($perPage, ($pageNr - 1) * $perPage);
+        $posts = $repo->findPublic($this->project, $perPage, ($pageNr - 1) * $perPage);
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
@@ -91,7 +100,7 @@ trait PostsControllerTrait
 
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
-        $posts = $repo->findPublicByTag($tag, $perPage, ($pageNr - 1) * $perPage);
+        $posts = $repo->findPublicByTag($this->project, $tag, $perPage, ($pageNr - 1) * $perPage);
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
@@ -99,7 +108,7 @@ trait PostsControllerTrait
             $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
         }
 
-        $pagination = new Pagination($repo->countPublicByTag($tag), $perPage);
+        $pagination = new Pagination($repo->countPublicByTag($this->project, $tag), $perPage);
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('pagination', $pagination);

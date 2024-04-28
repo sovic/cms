@@ -7,7 +7,7 @@ use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Entity\Post as PostEntity;
 use Sovic\Cms\Entity\PostAuthor;
 
-class PostResultSetFactory
+readonly class PostResultSetFactory
 {
     public function __construct(private EntityManagerInterface $entityManager, private PostFactory $postFactory)
     {

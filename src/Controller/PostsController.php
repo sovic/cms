@@ -3,8 +3,10 @@
 namespace Sovic\Cms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
+use Sovic\Cms\Project\ProjectFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,9 +19,16 @@ class PostsController extends FrontendController
     public function __construct(
         EntityManagerInterface $entityManager,
         PostFactory            $postFactory,
-        PostResultSetFactory   $postResultSetFactory
+        PostResultSetFactory   $postResultSetFactory,
+        ProjectFactory         $projectFactory,
     ) {
         parent::__construct($entityManager);
+
+        $project = $projectFactory->loadById(1); // TODO
+        if (!$project) {
+            throw new RuntimeException('Project not found');
+        }
+        $this->setProject($project);
         $this->setPostFactory($postFactory);
         $this->setPostResultSetFactory($postResultSetFactory);
     }

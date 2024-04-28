@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sovic\Cms\Repository\PageRepository;
 
 #[ORM\Table(name: 'page')]
+#[ORM\Index(columns: ['project_id'], name: 'project_id')]
 #[ORM\Entity(repositoryClass: PageRepository::class)]
 class Page
 {
@@ -14,6 +15,10 @@ class Page
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
+
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected Project $project;
 
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
     protected string $name;
@@ -86,6 +91,16 @@ class Page
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
     }
 
     public function getName(): string
