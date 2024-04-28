@@ -27,10 +27,6 @@ trait PageControllerTrait
      *     requirements={"urlId"="[a-zA-Z0-9\-]+"},
      *     priority="-10"
      * )
-     *
-     * @param string $urlId
-     * @param PageFactory $pageFactory
-     * @return Response
      */
     public function show(string $urlId, PageFactory $pageFactory): Response
     {

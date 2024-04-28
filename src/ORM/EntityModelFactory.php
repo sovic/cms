@@ -42,12 +42,6 @@ abstract class EntityModelFactory
         return $this->entityManager;
     }
 
-    /**
-     * @param string $entityClass
-     * @param string $modelClass
-     * @param int $id
-     * @return mixed
-     */
     protected function loadModelById(string $entityClass, string $modelClass, int $id): mixed
     {
         return $this->loadModelBy($entityClass, $modelClass, ['id' => $id]);

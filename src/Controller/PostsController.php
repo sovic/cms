@@ -40,9 +40,6 @@ class PostsController extends FrontendController
      *     requirements={"pageNr"="\d+"},
      *     defaults={"pageNr"=1}
      * )
-     *
-     * @param int $pageNr
-     * @return Response
      */
     public function index(int $pageNr): Response
     {
@@ -53,9 +50,6 @@ class PostsController extends FrontendController
 
     /**
      * @Route("/posts/{urlId}", name="posts_detail", defaults={})
-     *
-     * @param string $urlId
-     * @return Response
      */
     public function post(string $urlId): Response
     {
@@ -71,10 +65,6 @@ class PostsController extends FrontendController
      *     requirements={"pageNr"="\d+"},
      *     defaults={"pageNr"=1}
      * )
-     *
-     * @param string $tagName
-     * @param int $pageNr
-     * @return Response
      */
     public function tag(string $tagName, int $pageNr): Response
     {

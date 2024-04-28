@@ -15,7 +15,6 @@ readonly class PostResultSetFactory
 
     /**
      * @param PostEntity[] $posts
-     * @return PostResultSet
      */
     public function createFromEntities(array $posts): PostResultSet
     {
@@ -36,8 +35,6 @@ readonly class PostResultSetFactory
      * TODO limit per author, total limit ...
      *
      * @param Author[] $authors
-     * @param int|null $limitPerAuthor
-     * @return PostResultSet
      */
     public function loadByAuthors(array $authors, ?int $limitPerAuthor = null): PostResultSet
     {

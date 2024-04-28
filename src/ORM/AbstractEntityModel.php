@@ -34,7 +34,6 @@ abstract class AbstractEntityModel
 
     /**
      * @required
-     * @param RouterInterface $router
      */
     public function setRouter(RouterInterface $router): void
     {
@@ -43,7 +42,6 @@ abstract class AbstractEntityModel
 
     /**
      * @required
-     * @param TranslatorInterface $translator
      */
     public function setTranslator(TranslatorInterface $translator): void
     {

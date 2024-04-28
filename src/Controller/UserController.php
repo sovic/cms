@@ -15,12 +15,10 @@ use Sovic\Cms\Form\Type\SignUp;
 use Sovic\Cms\User\UserFactory;
 use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
 use LogicException;
 use Sovic\Cms\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -30,10 +28,6 @@ class UserController extends FrontendController
 {
     /**
      * @Route("/user/signin", name="user_sign_in")
-     *
-     * @param AuthenticationUtils $authenticationUtils
-     * @param TranslatorInterface $translator
-     * @return Response
      */
     public function signIn(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
@@ -63,15 +57,6 @@ class UserController extends FrontendController
 
     /**
      * @Route("/user/signup", name="user_sign_up")
-     *
-     * @param EmailManager $emailManager
-     * @param ManagerRegistry $registry
-     * @param Request $request
-     * @param UserFactory $userFactory
-     * @param UserPasswordHasherInterface $passwordHasher
-     * @param TranslatorInterface $translator
-     * @return Response
-     * @throws TransportExceptionInterface
      */
     public function signup(
         EmailManager                $emailManager,
@@ -121,11 +106,6 @@ class UserController extends FrontendController
 
     /**
      * @Route("/user/activate/{code}", name="user_activate", requirements={"code": "[A-Za-z0-9]{32}"})
-     *
-     * @param string $code
-     * @param UserFactory $userFactory
-     * @param TranslatorInterface $translator
-     * @return Response
      */
     public function activate(
         string              $code,
@@ -146,13 +126,6 @@ class UserController extends FrontendController
 
     /**
      * @Route("/user/forgot-password", name="user_forgot_password")
-     *
-     * @param EmailManager $emailManager
-     * @param Request $request
-     * @param UserFactory $userFactory
-     * @param TranslatorInterface $translator
-     * @return Response
-     * @throws TransportExceptionInterface
      */
     public function forgotPassword(
         EmailManager        $emailManager,
@@ -184,13 +157,6 @@ class UserController extends FrontendController
 
     /**
      * @Route("/user/new-password/{code}", name="user_new_password")
-     *
-     * @param string $code
-     * @param Request $request
-     * @param UserFactory $userFactory
-     * @param TranslatorInterface $translator
-     * @param UserPasswordHasherInterface $passwordHasher
-     * @return Response
      */
     public function newPassword(
         string                      $code,
@@ -229,7 +195,6 @@ class UserController extends FrontendController
 
     /**
      * @Route("/user/logout", name="user_logout", methods={"GET"})
-     * @throws Exception
      */
     public function logout(): void
     {

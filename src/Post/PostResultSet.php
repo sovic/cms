@@ -23,8 +23,6 @@ class PostResultSet
     private string $galleryBaseUrl = '';
 
     /**
-     * PostResultSet constructor.
-     * @param EntityManagerInterface $entityManager
      * @param Post[] $posts
      */
     public function __construct(EntityManagerInterface $entityManager, array $posts)
