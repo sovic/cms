@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class UserController extends FrontendController
+class UserController extends BaseController
 {
     #[Route('/user/signin', name: 'user_sign_in')]
     public function signIn(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response

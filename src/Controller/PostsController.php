@@ -10,7 +10,7 @@ use Sovic\Cms\Project\ProjectFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PostsController extends FrontendController
+class PostsController extends BaseController
 {
     private const PER_PAGE = 8;
 

@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class FrontendController extends AbstractController
+class BaseController extends AbstractController
 {
     use PageControllerTrait;
 
