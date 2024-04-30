@@ -12,6 +12,7 @@ class BaseController extends AbstractController
 
     private EntityManagerInterface $entityManager;
     private array $variables = [];
+    private string $locale = 'en';
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -21,6 +22,11 @@ class BaseController extends AbstractController
     public function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->locale = $locale;
     }
 
     protected function assign(string $key, mixed $val): void
@@ -34,12 +40,16 @@ class BaseController extends AbstractController
             $this->variables[$key] = $val;
         }
     }
-    
+
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
         foreach ($this->variables as $key => $val) {
             $parameters[$key] = $val;
         }
+        $locale = $this->locale;
+        $lang = explode('_', $locale)[0] ?? 'en';
+        $parameters['lang'] = $lang;
+        $parameters['locale'] = $locale;
 
         return parent::render($view, $parameters, $response);
     }
