@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 #[ORM\Table(name: 'setting')]
+#[ORM\Index(columns: ['project_id'], name: 'project_id')]
 #[ORM\Entity]
 class Setting
 {
@@ -27,6 +28,10 @@ class Setting
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected Project $project;
+
     #[ORM\Column(name: '`group`', type: Types::STRING, length: 100, nullable: false)]
     protected string $group;
 
@@ -45,6 +50,16 @@ class Setting
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
     }
 
     public function getGroup(): string
@@ -94,7 +109,7 @@ class Setting
 
     public function setType(?string $type): void
     {
-        if ($type !== null && !in_array($type, self::TYPES)) {
+        if ($type !== null && !in_array($type, self::TYPES, true)) {
             throw new InvalidArgumentException('invalid type');
         }
         $this->type = $type;

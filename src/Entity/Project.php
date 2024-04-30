@@ -20,6 +20,9 @@ class Project
     #[ORM\Column(name: 'slug', type: Types::STRING, length: 255, nullable: false)]
     protected string $slug;
 
+    #[ORM\Column(name: 'domains', type: Types::TEXT, length: 1000, nullable: false)]
+    protected string $domains;
+
     public function getId(): int
     {
         return $this->id;
@@ -48,5 +51,15 @@ class Project
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
+    }
+
+    public function getDomains(): string
+    {
+        return $this->domains;
+    }
+
+    public function setDomains(string $domains): void
+    {
+        $this->domains = $domains;
     }
 }
