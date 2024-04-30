@@ -30,6 +30,15 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
         return explode('/', $this->getEntity()->getHeading());
     }
 
+    public function getMetaTitle(): string
+    {
+        if ($this->entity->getMetaTitle()) {
+            return $this->entity->getMetaTitle();
+        }
+
+        return $this->entity->getHeading();
+    }
+
     public function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
@@ -70,10 +79,17 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
         $heroImage = $gallery->getHeroImage();
 
         return [
+            // meta
+            'meta_title' => $this->getMetaTitle(),
+            'meta_description' => $entity->getMetaDescription(),
+            'meta_keywords' => $entity->getMetaKeywords(),
+
+            //
             'gallery' => $gallery,
             'header' => $entity->getHeader(),
             'hero_image' => $heroImage,
             'menu_active' => '/' . $entity->getUrlId(),
+            'show_toc', $entity->hasToc(),
         ];
     }
 }
