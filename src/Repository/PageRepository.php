@@ -15,7 +15,7 @@ class PageRepository extends EntityRepository
     {
         return $this->findBy(
             [
-                'project' => $project->getEntity(),
+                'project' => $project->entity,
                 'public' => true,
             ],
             ['id' => 'DESC'],

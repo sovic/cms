@@ -8,18 +8,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class EntityModelFactory
 {
-    protected EntityManagerInterface $entityManager;
-    protected RouterInterface $router;
-    protected TranslatorInterface $translator;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        RouterInterface        $router,
-        TranslatorInterface    $translator
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RouterInterface        $router,
+        private readonly TranslatorInterface    $translator
     ) {
-        $this->entityManager = $entityManager;
-        $this->router = $router;
-        $this->translator = $translator;
     }
 
     protected function loadEntityModel(mixed $entity, string $modelClass): mixed
@@ -28,16 +21,18 @@ abstract class EntityModelFactory
             return null;
         }
 
+        /** @var AbstractEntityModel|mixed $model */
         $model = new $modelClass();
         $model->setEntityManager($this->entityManager);
         $model->setTranslator($this->translator);
         $model->setRouter($this->router);
-        $model->setEntity($entity);
+
+        $model->entity = $entity;
 
         return $model;
     }
 
-    public function getEntityManager(): EntityManagerInterface
+    protected function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
     }

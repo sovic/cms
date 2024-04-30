@@ -6,13 +6,13 @@ use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @method \Sovic\Cms\Entity\Page getEntity()
+ * @property \Sovic\Cms\Entity\Page entity
  */
 class Page extends AbstractEntityModel implements GalleryModelInterface
 {
     public function getId(): int
     {
-        return $this->getEntity()->getId();
+        return $this->entity->getId();
     }
 
     public function getGalleryModelName(): string
@@ -27,7 +27,7 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
 
     public function getHeading(): array
     {
-        return explode('/', $this->getEntity()->getHeading());
+        return explode('/', $this->entity->getHeading());
     }
 
     public function getMetaTitle(): string
@@ -42,8 +42,8 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
     public function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
-        $heading = array_map('trim', explode('/', $this->getEntity()->getHeading()));
-        $urlParts = array_map('trim', explode('/', $this->getEntity()->getUrlId()));
+        $heading = array_map('trim', explode('/', $this->entity->getHeading()));
+        $urlParts = array_map('trim', explode('/', $this->entity->getUrlId()));
 
         // auto-create breadcrumbs by heading parts (max. 2-parts)
         $i = 0;
@@ -69,11 +69,11 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
      */
     public function toArray(): array
     {
-        if (null === $this->getEntity()) {
+        if (null === $this->entity) {
             return [];
         }
 
-        $entity = $this->getEntity();
+        $entity = $this->entity;
         $galleryManager = $this->getGalleryManager();
         $gallery = $galleryManager->loadGallery('page');
         $heroImage = $gallery->getHeroImage();

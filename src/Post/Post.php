@@ -12,27 +12,27 @@ use Sovic\Cms\Entity\PostAuthor;
 use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @method \Sovic\Cms\Entity\Post getEntity()
+ * @property \Sovic\Cms\Entity\Post entity
  */
 class Post extends AbstractEntityModel implements GalleryModelInterface
 {
     public function getId(): int
     {
-        return $this->getEntity()->getId();
+        return $this->entity->getId();
     }
 
     public function getHeading(): string
     {
-        return $this->getEntity()->getHeading() ?: $this->getEntity()->getName();
+        return $this->entity->getHeading() ?: $this->entity->getName();
     }
 
     public function getIntroText(int $length = 250): ?string
     {
-        $perex = $this->getEntity()->getPerex();
+        $perex = $this->entity->getPerex();
         if ($perex) {
             return $perex;
         }
-        $content = $this->getEntity()->getContent();
+        $content = $this->entity->getContent();
         if (empty($content)) {
             return null;
         }
@@ -81,7 +81,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
 
     public function save(bool $publish = true): void
     {
-        $entity = $this->getEntity();
+        $entity = $this->entity;
 
         // if urlId missing
         if (!isset($entity->urlId)) {
@@ -115,7 +115,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $gallery->delete();
         }
 
-        $this->getEntityManager()->remove($this->getEntity());
+        $this->getEntityManager()->remove($this->entity);
         $this->getEntityManager()->flush();
     }
 }

@@ -15,7 +15,7 @@ abstract class AbstractEntityModel
     protected RouterInterface $router;
     protected TranslatorInterface $translator;
 
-    protected mixed $entity;
+    public mixed $entity;
 
     protected GalleryManager $galleryManager;
 
@@ -46,16 +46,6 @@ abstract class AbstractEntityModel
     public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
-    }
-
-    public function setEntity($entity): void
-    {
-        $this->entity = $entity;
-    }
-
-    public function getEntity()
-    {
-        return $this->entity;
     }
 
     protected function flush(): void

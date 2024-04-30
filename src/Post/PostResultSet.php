@@ -111,7 +111,7 @@ class PostResultSet
         $groupByAuthors = !empty($this->authorsIds);
         foreach ($this->getPosts() as $post) {
             $id = $post->getId();
-            $entity = $post->getEntity();
+            $entity = $post->entity;
 
             $item = [
                 'content' => $entity->getContent(),

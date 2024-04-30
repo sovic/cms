@@ -5,12 +5,12 @@ namespace Sovic\Cms\Project;
 use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @method \Sovic\Cms\Entity\Project getEntity()
+ * @property \Sovic\Cms\Entity\Project entity
  */
 class Project extends AbstractEntityModel
 {
     public function getId(): int
     {
-        return $this->getEntity()->getId();
+        return $this->entity->getId();
     }
 }

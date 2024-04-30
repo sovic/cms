@@ -26,7 +26,7 @@ final class PostFactory extends EntityModelFactory
         if (null === $model) {
             return null;
         }
-        if (!$allowNonPublished && !$model->getEntity()->isPublic()) {
+        if (!$allowNonPublished && !$model->entity->isPublic()) {
             return null;
         }
 

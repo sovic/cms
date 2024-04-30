@@ -24,7 +24,7 @@ final class PageFactory extends EntityModelFactory
         if (null === $model) {
             return null;
         }
-        if (!$allowPrivate && !$model->getEntity()->isPublic()) {
+        if (!$allowPrivate && !$model->entity->isPublic()) {
             return null;
         }
 

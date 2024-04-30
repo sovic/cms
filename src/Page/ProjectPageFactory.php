@@ -24,7 +24,7 @@ final class ProjectPageFactory extends EntityModelFactory
             Page::class,
             [
                 'id' => $id,
-                'project' => $project->getEntity(),
+                'project' => $project->entity,
             ]
         );
     }
@@ -37,13 +37,13 @@ final class ProjectPageFactory extends EntityModelFactory
             Page::class,
             [
                 'urlId' => $urlId,
-                'project' => $project->getEntity(),
+                'project' => $project->entity,
             ]
         );
         if (null === $model) {
             return null;
         }
-        if (!$allowPrivate && !$model->getEntity()->isPublic()) {
+        if (!$allowPrivate && !$model->entity->isPublic()) {
             return null;
         }
 

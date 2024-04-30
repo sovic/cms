@@ -17,7 +17,7 @@ class PostRepository extends EntityRepository
     {
         return $this->findBy(
             [
-                'project' => $project->getEntity(),
+                'project' => $project->entity,
                 'public' => true,
             ],
             ['publishDate' => 'DESC', 'id' => 'DESC'],
@@ -39,7 +39,7 @@ class PostRepository extends EntityRepository
         $qb->andWhere('p.project = :project');
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
-        $qb->setParameter(':project', $project->getEntity());
+        $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
         $qb->addOrderBy('p.publishDate', 'DESC');
         $qb->addOrderBy('p.id', 'DESC');
@@ -61,7 +61,7 @@ class PostRepository extends EntityRepository
         $qb->andWhere('p.project = :project');
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
-        $qb->setParameter(':project', $project->getEntity());
+        $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
 
         try {
