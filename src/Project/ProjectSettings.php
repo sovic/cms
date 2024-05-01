@@ -18,7 +18,8 @@ class ProjectSettings extends ParameterBag
     {
         $settings = [];
         foreach ($this->templateKeys as $key => $value) {
-            $settings[$key] = $this->get($key);
+            $templateKey = str_replace(['.', ' '], '_', $key);
+            $settings[$templateKey] = $this->get($key);
         }
 
         return $settings;
