@@ -24,7 +24,6 @@ trait PostsControllerTrait
     private ?Post $post = null;
     private ?Tag $tag = null;
 
-    private ?string $postGalleryBaseUrl = null;
     private bool $addAuthors = false;
     private bool $addCovers = true;
 
@@ -53,11 +52,6 @@ trait PostsControllerTrait
         return $this->tag;
     }
 
-    public function setPostGalleryBaseUrl(?string $postGalleryBaseUrl): void
-    {
-        $this->postGalleryBaseUrl = $postGalleryBaseUrl;
-    }
-
     public function setAddAuthors(bool $addAuthors): void
     {
         $this->addAuthors = $addAuthors;
@@ -65,17 +59,8 @@ trait PostsControllerTrait
 
     protected function loadPostIndex(int $pageNr, int $perPage): ?Response
     {
-
-
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
-        $posts = $repo->findPublic($this->project, $perPage, ($pageNr - 1) * $perPage);
-        $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
-        $postsResultSet->setAddAuthors($this->addAuthors);
-        $postsResultSet->setAddCovers($this->addCovers);
-        if ($this->postGalleryBaseUrl) {
-            $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
-        }
 
         $pagination = new Pagination($repo->countPublic(), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
@@ -83,8 +68,19 @@ trait PostsControllerTrait
         }
         $pagination->setCurrentPage($pageNr);
 
+        $posts = $repo->findPublic($this->project, $perPage, ($pageNr - 1) * $perPage);
+        $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
+        $postsResultSet->setAddAuthors($this->addAuthors);
+        $postsResultSet->setAddCovers($this->addCovers);
+
+        $settings = $this->project->getSettings();
+        $galleryBaseUrl = $settings->get('gallery.base_url');
+        if ($galleryBaseUrl) {
+            $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
+        }
+
         $this->assign('pagination', $pagination);
-        $this->assign('post_gallery_base_url', $this->postGalleryBaseUrl);
+        $this->assign('post_gallery_base_url', $galleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
 
         return null;
@@ -104,15 +100,18 @@ trait PostsControllerTrait
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
-        if ($this->postGalleryBaseUrl) {
-            $postsResultSet->setGalleryBaseUrl($this->postGalleryBaseUrl);
+
+        $settings = $this->project->getSettings();
+        $galleryBaseUrl = $settings->get('gallery.base_url');
+        if ($galleryBaseUrl) {
+            $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
         }
 
         $pagination = new Pagination($repo->countPublicByTag($this->project, $tag), $perPage);
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('pagination', $pagination);
-        $this->assign('post_gallery_base_url', $this->postGalleryBaseUrl);
+        $this->assign('post_gallery_base_url', $galleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
         $this->assign('tag', $tag);
 
@@ -127,12 +126,14 @@ trait PostsControllerTrait
         }
         $this->post = $post;
 
-        // galleries
         $galleryManager = $this->post->getGalleryManager();
         $gallery = $galleryManager->loadGallery('post');
         $resultSet = $gallery->getItemsResultSet();
-        if ($this->postGalleryBaseUrl) {
-            $resultSet->setBaseUrl($this->postGalleryBaseUrl);
+
+        $settings = $this->project->getSettings();
+        $galleryBaseUrl = $settings->get('gallery.base_url');
+        if ($galleryBaseUrl) {
+            $resultSet->setBaseUrl($galleryBaseUrl);
         }
 
         $this->assign('post', $post);

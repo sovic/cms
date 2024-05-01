@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Project extends AbstractEntityModel
 {
+    private static ProjectSettings $settings;
+
     public function getId(): int
     {
         return $this->entity->getId();
@@ -18,6 +20,10 @@ class Project extends AbstractEntityModel
 
     public function getSettings(): ParameterBag
     {
+        if (isset(self::$settings)) {
+            return self::$settings;
+        }
+
         $items = $this->entityManager
             ->getRepository(Setting::class)
             ->findBy(['project' => $this->entity]);
@@ -26,6 +32,8 @@ class Project extends AbstractEntityModel
             $parameters[$item->getGroup() . '.' . $item->getKey()] = $item->getValue();
         }
 
-        return new ProjectSettings($parameters);
+        self::$settings = new ProjectSettings($parameters);
+
+        return self::$settings;
     }
 }
