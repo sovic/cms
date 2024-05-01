@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
+use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Project\ProjectFactory;
@@ -65,14 +66,14 @@ class PostsController extends BaseController
             return $response;
         }
 
+        $this->assign('project', $project->entity->getSlug());
+        $this->assignArray($settings->getTemplateData());
+
         $template = 'post/index.html.twig';
         $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/index.html.twig';
         if ($twig->getLoader()->exists($projectTemplate)) {
             $template = $projectTemplate;
         }
-
-        $this->assign('project', $project->entity->getSlug());
-        $this->assignArray($settings->getTemplateData());
 
         return $this->render($template);
     }
@@ -114,12 +115,6 @@ class PostsController extends BaseController
         $project = $this->project;
         $settings = $project->getSettings();
 
-        $template = 'post/detail.html.twig';
-        $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/detail.html.twig';
-        if ($twig->getLoader()->exists($projectTemplate)) {
-            $template = $projectTemplate;
-        }
-
         $cover = $post->getGalleryManager()->getGallery('post')?->getCoverImage();
         if ($cover) {
             // TODO add gallery->setBaseUrl() method
@@ -134,6 +129,47 @@ class PostsController extends BaseController
         $this->assign('has_parallax', $cover !== null);
         $this->assign('project', $project->entity->getSlug());
         $this->assignArray($settings->getTemplateData());
+
+        $template = 'post/detail.html.twig';
+        $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/detail.html.twig';
+        if ($twig->getLoader()->exists($projectTemplate)) {
+            $template = $projectTemplate;
+        }
+
+        return $this->render($template);
+    }
+
+    #[Route('/authors', name: 'authors')]
+    public function authors(Environment $twig, PostResultSetFactory $postResultSetFactory): Response
+    {
+        $authors = $this
+            ->getEntityManager()
+            ->getRepository(Author::class)
+            ->findBy(
+                [
+                    'project' => $this->project->entity,
+                ],
+                ['surname' => 'ASC'],
+                100, // TODO pagination
+                0,
+            );
+
+        $prs = $postResultSetFactory->loadByAuthors($authors);
+
+        $project = $this->project;
+        $settings = $project->getSettings();
+
+        $this->assign('authors', $authors);
+        $this->assign('posts_by_authors', $prs->toArray());
+        $this->assign('project', $project->entity->getSlug());
+        $this->assignArray($settings->getTemplateData());
+
+        $template = 'post/authors.html.twig';
+        $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/authors.html.twig';
+
+        if ($twig->getLoader()->exists($projectTemplate)) {
+            $template = $projectTemplate;
+        }
 
         return $this->render($template);
     }
