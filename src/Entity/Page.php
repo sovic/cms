@@ -32,19 +32,19 @@ class Page
     protected ?string $metaTitle = null;
 
     #[ORM\Column(name: 'meta_description', type: Types::STRING, length: 200, nullable: true)]
-    protected string $metaDescription;
+    protected ?string $metaDescription = null;
 
     #[ORM\Column(name: 'meta_keywords', type: Types::STRING, length: 200, nullable: true)]
-    protected string $metaKeywords;
+    protected ?string $metaKeywords = null;
 
     #[ORM\Column(name: 'heading', type: Types::STRING, length: 150, nullable: true)]
-    protected string $heading;
+    protected ?string $heading = null;
 
     #[ORM\Column(name: 'perex', type: Types::TEXT, length: 16383, nullable: true, options: ['default' => null])]
-    protected ?string $perex;
+    protected ?string $perex = null;
 
     #[ORM\Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
-    protected ?string $content;
+    protected ?string $content = null;
 
     #[ORM\Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
     protected int $sequence;
@@ -135,32 +135,32 @@ class Page
         $this->metaTitle = $metaTitle;
     }
 
-    public function getMetaDescription(): string
+    public function getMetaDescription(): ?string
     {
         return $this->metaDescription;
     }
 
-    public function setMetaDescription(string $metaDescription): void
+    public function setMetaDescription(?string $metaDescription): void
     {
         $this->metaDescription = $metaDescription;
     }
 
-    public function getMetaKeywords(): string
+    public function getMetaKeywords(): ?string
     {
         return $this->metaKeywords;
     }
 
-    public function setMetaKeywords(string $metaKeywords): void
+    public function setMetaKeywords(?string $metaKeywords): void
     {
         $this->metaKeywords = $metaKeywords;
     }
 
-    public function getHeading(): string
+    public function getHeading(): ?string
     {
         return $this->heading;
     }
 
-    public function setHeading(string $heading): void
+    public function setHeading(?string $heading): void
     {
         $this->heading = $heading;
     }
