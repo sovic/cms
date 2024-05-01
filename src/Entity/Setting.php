@@ -46,6 +46,8 @@ class Setting
 
     #[ORM\Column(name: 'type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $type;
+    #[ORM\Column(name: 'is_template_enabled', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    protected bool $isTemplateEnabled = false;
 
     public function getId(): int
     {
@@ -113,5 +115,15 @@ class Setting
             throw new InvalidArgumentException('invalid type');
         }
         $this->type = $type;
+    }
+
+    public function isTemplateEnabled(): bool
+    {
+        return $this->isTemplateEnabled;
+    }
+
+    public function setIsTemplateEnabled(bool $isTemplateEnabled): void
+    {
+        $this->isTemplateEnabled = $isTemplateEnabled;
     }
 }
