@@ -19,6 +19,7 @@ trait PageControllerTrait
     ): void {
         $manager = $page->getGalleryManager();
         $gallery = $manager->loadGallery($galleryName);
+
         $resultSet = $gallery->getItemsResultSet();
         if ($galleryBaseUrl) {
             $resultSet->setBaseUrl($galleryBaseUrl);

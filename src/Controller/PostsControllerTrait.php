@@ -12,9 +12,6 @@ use Sovic\Cms\Project\Project;
 use Sovic\Cms\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Requires PostFactory, PostResultSetFactory
- */
 trait PostsControllerTrait
 {
     private Project $project;
@@ -97,6 +94,7 @@ trait PostsControllerTrait
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
         $posts = $repo->findPublicByTag($this->project, $tag, $perPage, ($pageNr - 1) * $perPage);
+
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
