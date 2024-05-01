@@ -94,13 +94,13 @@ class PostsController extends BaseController
         }
         $post = $this->getPost();
         if (null === $post) {
-            return $this->show404();
+            return $this->render404();
         }
 
         $secret = $request->get('secret');
         $isAuthorized = !empty($secret) && $secret === $post->entity->getSecret();
         if (!$isAuthorized && !$post->entity->isPublic()) {
-            return $this->show404();
+            return $this->render404();
         }
 
         $downloads = [];
