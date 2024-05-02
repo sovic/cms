@@ -21,4 +21,11 @@ trait ProjectControllerTrait
     ): void {
         $this->setProject($projectFactory->loadByRequest($request));
     }
+
+    public function assignProjectData(): void
+    {
+        $entity = $this->project->entity;
+
+        $this->assign('project', $entity->getSlug());
+    }
 }
