@@ -8,13 +8,11 @@ use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
-use Sovic\Cms\Project\Project;
 use Sovic\Cms\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 trait PostsControllerTrait
 {
-    private Project $project;
     private PostFactory $postFactory;
     private PostResultSetFactory $postResultSetFactory;
 
@@ -23,11 +21,6 @@ trait PostsControllerTrait
 
     private bool $addAuthors = false;
     private bool $addCovers = true;
-
-    public function setProject(Project $project): void
-    {
-        $this->project = $project;
-    }
 
     public function setPostFactory(PostFactory $postFactory): void
     {
