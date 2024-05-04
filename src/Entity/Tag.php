@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'tag')]
+#[ORM\Index(columns: ['project_id'], name: 'project_id')]
 #[ORM\Entity]
 class Tag
 {
@@ -13,6 +14,10 @@ class Tag
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
+
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected Project $project;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
     protected string $name;
@@ -37,6 +42,16 @@ class Tag
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
     }
 
     public function getName(): string
