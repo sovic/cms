@@ -59,7 +59,6 @@ class PostsController extends BaseController implements ProjectControllerInterfa
             return $response;
         }
 
-        $this->assign('project', $project->entity->getSlug());
         $this->assignArray($settings->getTemplateData());
 
         $template = 'post/index.html.twig';

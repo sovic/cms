@@ -20,6 +20,7 @@ trait ProjectControllerTrait
         Request        $request,
     ): void {
         $this->setProject($projectFactory->loadByRequest($request));
+        $this->assignProjectData();
     }
 
     public function assignProjectData(): void
