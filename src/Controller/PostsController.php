@@ -43,7 +43,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     }
 
     #[Route('/stories/{pageNr}', name: 'stories_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
-    #[Route('/posts/{pageNr}', name: 'blog_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
+    #[Route('/posts/{pageNr}', name: 'posts_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function index(int $pageNr, Environment $twig, ?string $tagName = null): Response
     {
         $project = $this->project;
