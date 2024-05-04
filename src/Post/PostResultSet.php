@@ -115,16 +115,19 @@ class PostResultSet
 
             $item = [
                 'content' => $entity->getContent(),
+                'cover_photo' => $covers[$id] ?? null,
                 'heading' => $post->getHeading(),
                 'id' => $id,
                 'intro_text' => $post->getIntroText(),
                 'is_featured' => $entity->isFeatured(),
                 'is_gallery_enabled' => $entity->isGalleryEnabled(),
                 'keywords' => $entity->getMetaKeywords(),
+                'meta_description' => $entity->getMetaDescription(),
+                'meta_title' => $entity->getMetaTitle() ?: $entity->getHeading(),
                 'perex' => $entity->getPerex(),
                 'publish_date' => $entity->getPublishDate(),
+                'subtitle' => $entity->getSubtitle(),
                 'tags' => [],
-                'cover_photo' => $covers[$id] ?? null,
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
                 'url_id' => $entity->getUrlId(),
             ];

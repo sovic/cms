@@ -117,6 +117,10 @@ trait PostsControllerTrait
         }
         $this->post = $post;
 
+        $postResultSet = $this->postResultSetFactory->createFromEntities([$post->entity]);
+        $array = $postResultSet->toArray();
+        $post = reset($array);
+
         $galleryManager = $this->post->getGalleryManager();
         $gallery = $galleryManager->loadGallery('post');
         $resultSet = $gallery->getItemsResultSet();
