@@ -19,7 +19,7 @@ trait PostsControllerTrait
     private ?Post $post = null;
     private ?Tag $tag = null;
 
-    private bool $addAuthors = false;
+    private bool $addAuthors = true;
     private bool $addCovers = true;
 
     public function setPostFactory(PostFactory $postFactory): void
