@@ -133,4 +133,10 @@ class PostsController extends BaseController implements ProjectControllerInterfa
 
         return $this->render($this->getProjectTemplatePath('post/authors'));
     }
+
+    #[Route('/posts/search', name: 'posts_search', priority: 1)]
+    public function search(): Response
+    {
+        return $this->render($this->getProjectTemplatePath('post/search'));
+    }
 }
