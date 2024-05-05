@@ -33,7 +33,7 @@
         "symfony/security-bundle": "^6.4",
         "symfony/twig-bundle": "^6.4",
         "symfony/validator": "^6.4",
-        "sovic/symfony-gallery": "^0.2.2"
+        "sovic/symfony-gallery": "^0.3.0"
     },
     "require-dev": {
         "rector/rector": "^1.0"
