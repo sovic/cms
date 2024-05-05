@@ -21,5 +21,5 @@ _instanceof:
     Sovic\Cms\Controller\ProjectControllerInterface:
         tags: [ 'controller.service_arguments' ]
         calls:
-            -   initializeProjectController: [ '@Sovic\Cms\Project\ProjectFactory', '@=service("request_stack").getCurrentRequest()' ] ]
+            -   initializeProjectController: [ '@Sovic\Cms\Project\ProjectFactory', '@=service("request_stack").getCurrentRequest()', '@twig' ] ]
 ```
