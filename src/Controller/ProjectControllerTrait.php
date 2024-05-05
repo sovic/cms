@@ -5,6 +5,7 @@ namespace Sovic\Cms\Controller;
 use Sovic\Cms\Project\Project;
 use Sovic\Cms\Project\ProjectFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
 trait ProjectControllerTrait
@@ -39,13 +40,23 @@ trait ProjectControllerTrait
     public function getProjectTemplatePath(string $templatePath): string
     {
         $templatePath = str_ends_with($templatePath, '.html.twig') ? $templatePath : $templatePath . '.html.twig';
+
+        return $this->tryProjectTemplate($templatePath) ?? $templatePath;
+    }
+
+    public function tryProjectTemplate(string $templatePath): ?string
+    {
+        $templatePath = str_ends_with($templatePath, '.html.twig') ? $templatePath : $templatePath . '.html.twig';
         $projectTemplatePath = 'projects/' . $this->project->getSlug() . '/' . $templatePath;
-
         $twig = $this->projectTwigEnvironment;
-        if ($twig->getLoader()->exists($projectTemplatePath)) {
-            $templatePath = $projectTemplatePath;
-        }
 
-        return $templatePath;
+        return $twig->getLoader()->exists($projectTemplatePath) ? $projectTemplatePath : null;
+    }
+
+    protected function render404(string $template = 'page/404', array $parameters = []): Response
+    {
+        $template = $this->getProjectTemplatePath($template);
+
+        return parent::render404($template, $parameters);
     }
 }
