@@ -17,6 +17,11 @@ class Project extends AbstractEntityModel
         return $this->entity->getId();
     }
 
+    public function getSlug(): string
+    {
+        return $this->entity->getSlug();
+    }
+
     public function getSettings(): ProjectSettings
     {
         if (isset(self::$settings)) {

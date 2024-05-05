@@ -9,7 +9,6 @@ use Sovic\Cms\Post\PostResultSetFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Twig\Environment;
 
 class PostsController extends BaseController implements ProjectControllerInterface
 {
@@ -44,7 +43,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
 
     #[Route('/stories/{pageNr}', name: 'stories_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     #[Route('/posts/{pageNr}', name: 'posts_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
-    public function index(int $pageNr, Environment $twig, ?string $tagName = null): Response
+    public function index(int $pageNr, ?string $tagName = null): Response
     {
         $project = $this->project;
         $settings = $project->getSettings();
@@ -55,31 +54,20 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         } else {
             $response = $this->loadPostIndex($pageNr, $perPage);
         }
-        if ($response !== null) {
-            return $response;
-        }
 
-        $this->assignArray($settings->getTemplateData());
-
-        $template = 'post/index.html.twig';
-        $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/index.html.twig';
-        if ($twig->getLoader()->exists($projectTemplate)) {
-            $template = $projectTemplate;
-        }
-
-        return $this->render($template);
+        return $response ?? $this->render($this->getProjectTemplatePath('post/index'));
     }
 
     #[Route('/stories/tag/{tagName}/{pageNr}', name: 'stories_tag', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     #[Route('/posts/tag/{tagName}/{pageNr}', name: 'posts_tag', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
-    public function tag(string $tagName, int $pageNr, Environment $twig): Response
+    public function tag(string $tagName, int $pageNr): Response
     {
-        return $this->index($pageNr, $twig, $tagName);
+        return $this->index($pageNr, $tagName);
     }
 
     #[Route('/stories/{urlId}', name: 'stories_detail', defaults: [])]
     #[Route('/posts/{urlId}', name: 'posts_detail', defaults: [])]
-    public function post(string $urlId, Environment $twig, Request $request): Response
+    public function post(string $urlId, Request $request): Response
     {
         $response = $this->loadPost($urlId);
         if ($response !== null) {
@@ -119,20 +107,12 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         $this->assign('cover', $cover);
         $this->assign('downloads', $downloads);
         $this->assign('has_parallax', $cover !== null);
-        $this->assign('project', $project->entity->getSlug());
-        $this->assignArray($settings->getTemplateData());
 
-        $template = 'post/detail.html.twig';
-        $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/detail.html.twig';
-        if ($twig->getLoader()->exists($projectTemplate)) {
-            $template = $projectTemplate;
-        }
-
-        return $this->render($template);
+        return $this->render($this->getProjectTemplatePath('post/detail'));
     }
 
     #[Route('/authors', name: 'authors')]
-    public function authors(Environment $twig, PostResultSetFactory $postResultSetFactory): Response
+    public function authors(PostResultSetFactory $postResultSetFactory): Response
     {
         $authors = $this
             ->getEntityManager()
@@ -148,21 +128,9 @@ class PostsController extends BaseController implements ProjectControllerInterfa
 
         $prs = $postResultSetFactory->loadByAuthors($authors);
 
-        $project = $this->project;
-        $settings = $project->getSettings();
-
         $this->assign('authors', $authors);
         $this->assign('posts_by_authors', $prs->toArray());
-        $this->assign('project', $project->entity->getSlug());
-        $this->assignArray($settings->getTemplateData());
 
-        $template = 'post/authors.html.twig';
-        $projectTemplate = 'projects/' . $this->project->entity->getSlug() . '/post/authors.html.twig';
-
-        if ($twig->getLoader()->exists($projectTemplate)) {
-            $template = $projectTemplate;
-        }
-
-        return $this->render($template);
+        return $this->render($this->getProjectTemplatePath('post/authors'));
     }
 }
