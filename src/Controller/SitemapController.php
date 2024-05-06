@@ -53,7 +53,7 @@ class SitemapController extends BaseController implements ProjectControllerInter
             /** @var Post $post */
             foreach ($posts as $post) {
                 $url = $router->generate($this->postsRoute, ['urlId' => $post->getUrlId()]);
-                $this->addUrl($urlHelper->getAbsoluteUrl($url)); // TODO last modified
+                $this->addUrl($urlHelper->getAbsoluteUrl($url), $post->getLastModifiedDate());
             }
         }
 

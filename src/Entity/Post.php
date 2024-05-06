@@ -69,6 +69,9 @@ class Post
     #[ORM\Column(name: 'created', type: Types::INTEGER)]
     protected int $created;
 
+    #[ORM\Column(name: 'create_date', type: Types::DATETIME_IMMUTABLE)]
+    protected DateTimeImmutable $createDate;
+
     #[ORM\Column(name: 'title', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $title = null;
 
@@ -86,6 +89,9 @@ class Post
 
     #[ORM\Column(name: 'modified', type: Types::INTEGER, options: ['default' => 0])]
     protected int $modified = 0;
+
+    #[ORM\Column(name: 'last_modified_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    protected ?DateTimeImmutable $lastModifiedDate = null;
 
     #[ORM\Column(name: 'publishers_id', type: Types::INTEGER, options: ['default' => 0])]
     protected int $publishersId = 0;
@@ -414,6 +420,26 @@ class Post
     public function setIsGalleryEnabled(bool $isGalleryEnabled): void
     {
         $this->isGalleryEnabled = $isGalleryEnabled;
+    }
+
+    public function getCreateDate(): DateTimeImmutable
+    {
+        return $this->createDate;
+    }
+
+    public function setCreateDate(DateTimeImmutable $createDate): void
+    {
+        $this->createDate = $createDate;
+    }
+
+    public function getLastModifiedDate(): ?DateTimeImmutable
+    {
+        return $this->lastModifiedDate;
+    }
+
+    public function setLastModifiedDate(?DateTimeImmutable $lastModifiedDate): void
+    {
+        $this->lastModifiedDate = $lastModifiedDate;
     }
 }
 
