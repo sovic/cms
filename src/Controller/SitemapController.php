@@ -4,51 +4,64 @@ namespace Sovic\Cms\Controller;
 
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use RuntimeException;
 use Sovic\Cms\Entity\Page;
-use Sovic\Cms\Project\ProjectFactory;
+use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Repository\PageRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sovic\Cms\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\RouterInterface;
 
-abstract class SitemapController extends AbstractController
+class SitemapController extends BaseController implements ProjectControllerInterface
 {
-    private array $urls = [];
+    use ProjectControllerTrait;
 
-    #[Route('/sitemap', name: 'sitemap')]
+    private array $urls = [];
+    protected bool $addPages = true;
+    protected bool $addPosts = true;
+    protected string $postsRoute = 'posts_detail';
+
+    #[Route('/sitemap', name: 'sitemap_index')]
     #[Route('/sitemap.xml', name: 'sitemap_xml')]
-    public function index(
-        EntityManagerInterface $entityManager,
-        ProjectFactory         $projectFactory,
+    public function sitemap(
+        EntityManagerInterface $em,
         Request                $request,
+        RouterInterface        $router,
         UrlHelper              $urlHelper
     ): Response {
         $hostname = $request->getSchemeAndHttpHost();
         $baseUrl = $urlHelper->getAbsoluteUrl('/');
-        $this->addUrl($baseUrl);
 
-        $project = $projectFactory->loadById(1); // TODO
-        if (!$project) {
-            throw new RuntimeException('Project not found');
-        }
-        /** @var PageRepository $pagesRepo */
-        $pagesRepo = $entityManager->getRepository(Page::class);
-        $pages = $pagesRepo->findPublic($project);
-        foreach ($pages as $page) {
-            if (!$page->isInSitemap()) {
-                continue;
+        if ($this->addPages) {
+            /** @var PageRepository $repo */
+            $repo = $em->getRepository(Page::class);
+            $pages = $repo->findPublic($this->project);
+            foreach ($pages as $page) {
+                if (!$page->isInSitemap()) {
+                    continue;
+                }
+                $this->addUrl($baseUrl . $page->getUrlId(), $page->getLastUpdateDate());
             }
-            $this->addUrl($baseUrl . $page->getUrlId(), $page->getLastUpdateDate());
+        }
+
+        if ($this->addPosts) {
+            /** @var PostRepository $repo */
+            $repo = $em->getRepository(Post::class);
+            $posts = $repo->findPublic($this->project);
+            /** @var Post $post */
+            foreach ($posts as $post) {
+                $url = $router->generate($this->postsRoute, ['urlId' => $post->getUrlId()]);
+                $this->addUrl($urlHelper->getAbsoluteUrl($url)); // TODO last modified
+            }
         }
 
         $this->addSitemapUrls();
 
         // return response in XML format
         $response = new Response(
-            $this->renderView('@SovicCms/sitemap/sitemap.html.twig', [
+            $this->renderView('@Cms/sitemap/sitemap.html.twig', [
                 'urls' => $this->urls,
                 'hostname' => $hostname,
             ]),
@@ -72,5 +85,7 @@ abstract class SitemapController extends AbstractController
     }
 
     // override to add custom urls
-    abstract protected function addSitemapUrls();
+    protected function addSitemapUrls(): void
+    {
+    }
 }
