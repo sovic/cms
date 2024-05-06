@@ -28,12 +28,6 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         $this->setPostResultSetFactory($postResultSetFactory);
     }
 
-    #[Route('/stories/p/{pageNr}', name: 'stories_page_redirect', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
-    public function storiesPageRedirect(int $pageNr): Response
-    {
-        return $this->redirectToRoute('stories_index', ['pageNr' => $pageNr], 301);
-    }
-
     #[Route('/posts/p/{pageNr}', name: 'posts_page_redirect', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function postsPageRedirect(int $pageNr): Response
     {
@@ -41,7 +35,6 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         return $this->redirectToRoute('blog_index', ['pageNr' => $pageNr], 301);
     }
 
-    #[Route('/stories/{pageNr}', name: 'stories_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     #[Route('/posts/{pageNr}', name: 'posts_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function index(int $pageNr, ?string $tagName = null): Response
     {
@@ -58,14 +51,12 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         return $response ?? $this->render($this->getProjectTemplatePath('post/index'));
     }
 
-    #[Route('/stories/tag/{tagName}/{pageNr}', name: 'stories_tag', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     #[Route('/posts/tag/{tagName}/{pageNr}', name: 'posts_tag', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function tag(string $tagName, int $pageNr): Response
     {
         return $this->index($pageNr, $tagName);
     }
 
-    #[Route('/stories/{urlId}', name: 'stories_detail', defaults: [])]
     #[Route('/posts/{urlId}', name: 'posts_detail', defaults: [])]
     public function post(string $urlId, Request $request): Response
     {
