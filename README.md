@@ -23,3 +23,18 @@ _instanceof:
         calls:
             -   initializeProjectController: [ '@Sovic\Cms\Project\ProjectFactory', '@=service("request_stack").getCurrentRequest()', '@twig' ] ]
 ```
+
+Add to routes.yaml
+
+```shell
+cms_controllers:
+    resource: '../../vendor/sovic/symfony-cms/src/Controller'
+    type: attribute
+```
+
+Add to twig.yaml
+
+```shell
+paths:
+    '%kernel.project_dir%/vendor/sovic/symfony-cms/templates': Cms
+```
