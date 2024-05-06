@@ -16,8 +16,8 @@ class PostResultSet
     private array $postsList;
     /** @var array */
     private array $authorsIds = [];
-
     private bool $addAuthors = false;
+    private int $limitPerAuthor = 5;
     private bool $addCovers = false;
 
     private string $galleryBaseUrl = '';
@@ -52,6 +52,11 @@ class PostResultSet
     public function setAddAuthors(bool $addAuthors): void
     {
         $this->addAuthors = $addAuthors;
+    }
+
+    public function setLimitPerAuthor(int $limitPerAuthor): void
+    {
+        $this->limitPerAuthor = $limitPerAuthor;
     }
 
     public function setAddCovers(bool $addCovers): void
@@ -141,7 +146,9 @@ class PostResultSet
                     if (!isset($results[$authorId])) {
                         $results[$authorId] = [];
                     }
-                    $results[$authorId][$id] = $item;
+                    if (count($results[$authorId]) < $this->limitPerAuthor) {
+                        $results[$authorId][$id] = $item;
+                    }
                 }
             } else {
                 $results[$id] = $item;

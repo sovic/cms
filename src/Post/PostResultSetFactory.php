@@ -32,8 +32,6 @@ readonly class PostResultSetFactory
     }
 
     /**
-     * TODO limit per author, total limit ...
-     *
      * @param Author[] $authors
      */
     public function loadByAuthors(array $authors, ?int $limitPerAuthor = null): PostResultSet
@@ -62,6 +60,9 @@ readonly class PostResultSetFactory
 
         $prs = $this->createFromEntities($posts);
         $prs->setAuthorsIds($postIdAuthorId);
+        if ($limitPerAuthor) {
+            $prs->setLimitPerAuthor($limitPerAuthor);
+        }
 
         return $prs;
     }
