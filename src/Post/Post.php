@@ -88,13 +88,14 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $slugify = new Slugify();
             $slugify->activateRuleSet('default');
 
-            $urlId = $slugify->slugify($entity->getName()); // TODO normalize
+            $urlId = $slugify->slugify($entity->getName());
             $entity->setUrlId($urlId);
         }
 
         // if new entity
         if (!isset($entity->id)) {
             $entity->setCreated(new DateTimeImmutable());
+            $entity->setCreateDate(new DateTimeImmutable());
         }
 
         // publish
