@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\Author;
+use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,9 +103,24 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         return $this->render($this->getProjectTemplatePath('post/detail'));
     }
 
-    #[Route('/authors', name: 'authors')]
-    public function authors(PostResultSetFactory $postResultSetFactory): Response
+    #[Route('/authors/{pageNr}', name: 'authors', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
+    public function authors(int $pageNr, PostResultSetFactory $postResultSetFactory): Response
     {
+        $project = $this->project;
+        $settings = $project->getSettings();
+        $perPage = $settings->get('posts.per_page') ?? 24;
+
+        $total = $this
+            ->getEntityManager()
+            ->getRepository(Author::class)
+            ->count(['project' => $this->project->entity]);
+
+        $pagination = new Pagination($total, $perPage);
+        if ($pageNr > $pagination->getPageCount()) {
+            return $this->render404();
+        }
+        $pagination->setCurrentPage($pageNr);
+
         $authors = $this
             ->getEntityManager()
             ->getRepository(Author::class)
@@ -113,13 +129,14 @@ class PostsController extends BaseController implements ProjectControllerInterfa
                     'project' => $this->project->entity,
                 ],
                 ['surname' => 'ASC'],
-                100, // TODO pagination
-                0,
+                $perPage,
+                ($pageNr - 1) * $perPage,
             );
 
         $prs = $postResultSetFactory->loadByAuthors($authors);
 
         $this->assign('authors', $authors);
+        $this->assign('pagination', $pagination);
         $this->assign('posts_by_authors', $prs->toArray());
 
         return $this->render($this->getProjectTemplatePath('post/authors'));
