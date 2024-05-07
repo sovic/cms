@@ -47,7 +47,7 @@ trait ProjectControllerTrait
     public function tryProjectTemplate(string $templatePath): ?string
     {
         $templatePath = str_ends_with($templatePath, '.html.twig') ? $templatePath : $templatePath . '.html.twig';
-        $projectTemplatePath = 'projects/' . $this->project->getSlug() . '/' . $templatePath;
+        $projectTemplatePath = 'project/' . $this->project->getSlug() . '/' . $templatePath;
         $twig = $this->projectTwigEnvironment;
 
         return $twig->getLoader()->exists($projectTemplatePath) ? $projectTemplatePath : null;
