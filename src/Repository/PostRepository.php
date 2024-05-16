@@ -26,9 +26,14 @@ class PostRepository extends EntityRepository
         );
     }
 
-    public function countPublic(): int
+    public function countPublic(Project $project): int
     {
-        return $this->count(['public' => true]);
+        return $this->count(
+            [
+                'project' => $project->entity,
+                'public' => true,
+            ]
+        );
     }
 
     public function findPublicByTag(Project $project, Tag $tag, int $limit = null, int $offset = null): array
