@@ -29,6 +29,11 @@ class BaseController extends AbstractController
         $this->locale = $locale;
     }
 
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
     protected function assign(string $key, mixed $val): void
     {
         $this->variables[$key] = $val;

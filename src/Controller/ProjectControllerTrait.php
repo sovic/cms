@@ -26,6 +26,7 @@ trait ProjectControllerTrait
         $this->setProject($projectFactory->loadByRequest($request));
         $this->assignProjectData();
         $this->projectTwigEnvironment = $twig;
+        $this->setLocale($request->getLocale());
     }
 
     public function assignProjectData(): void
