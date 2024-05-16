@@ -49,6 +49,8 @@ class PostsController extends BaseController implements ProjectControllerInterfa
             $response = $this->loadPostIndex($pageNr, $perPage);
         }
 
+        $this->assign('active_item', '/posts');
+
         return $response ?? $this->render($this->getProjectTemplatePath('post/index'));
     }
 
@@ -56,6 +58,25 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     public function tag(string $tagName, int $pageNr): Response
     {
         return $this->index($pageNr, $tagName);
+    }
+
+    #[Route(
+        '/posts/archive/{year}/{month}/{pageNr}',
+        name: 'posts_monthly_archive',
+        requirements: ['year' => '\d{4}', 'month' => '\d{2}', 'pageNr' => '\d+'],
+        defaults: ['pageNr' => 1]
+    )]
+    public function monthlyArchive(int $year, int $month, int $pageNr): Response
+    {
+        $project = $this->project;
+        $settings = $project->getSettings();
+        $perPage = $settings->get('posts.per_page') ?? 9;
+
+        $this->loadMonthlyArchive($year, $month, $pageNr, $perPage);
+
+        $this->assign('active_item', '/posts');
+
+        return $this->render($this->getProjectTemplatePath('post/index'));
     }
 
     #[Route('/posts/{urlId}', name: 'posts_detail', defaults: [])]

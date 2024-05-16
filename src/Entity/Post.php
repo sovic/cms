@@ -64,7 +64,10 @@ class Post
     protected ?int $groupId = null;
 
     #[ORM\Column(name: 'published', type: Types::INTEGER, nullable: true, options: ['default' => null])]
-    protected ?int $publishDate = null;
+    protected ?int $published = null;
+
+    #[ORM\Column(name: 'publish_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    protected ?DateTimeImmutable $publishDate = null;
 
     #[ORM\Column(name: 'created', type: Types::INTEGER)]
     protected int $created;
@@ -264,12 +267,12 @@ class Post
 
     public function getPublishDate(): ?DateTimeImmutable
     {
-        return $this->publishDate ? (new DateTimeImmutable())->setTimestamp($this->publishDate) : null;
+        return $this->publishDate;
     }
 
     public function setPublishDate(?DateTimeImmutable $publishDate): void
     {
-        $this->publishDate = $publishDate?->getTimestamp();
+        $this->publishDate = $publishDate;
     }
 
     public function getCreated(): DateTimeImmutable

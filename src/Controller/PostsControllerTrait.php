@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller;
 
 use Sovic\Cms\Entity\Post as PostEntity;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Helpers\Date;
 use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
@@ -52,7 +53,7 @@ trait PostsControllerTrait
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
 
-        $pagination = new Pagination($repo->countPublic(), $perPage);
+        $pagination = new Pagination($repo->countPublic($this->project), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
             return $this->render404();
         }
@@ -72,6 +73,8 @@ trait PostsControllerTrait
         $this->assign('pagination', $pagination);
         $this->assign('post_gallery_base_url', $galleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
+        $this->assignMonthsArchiveData(null, null);
+        $this->assignTagsData();
 
         return null;
     }
@@ -105,8 +108,66 @@ trait PostsControllerTrait
         $this->assign('post_gallery_base_url', $galleryBaseUrl);
         $this->assign('posts', $postsResultSet->toArray());
         $this->assign('tag', $tag);
+        $this->assignMonthsArchiveData(null, null);
+        $this->assignTagsData();
 
         return null;
+    }
+
+    protected function loadMonthlyArchive(int $year, int $month, int $pageNr, int $perPage): null
+    {
+        $repo = $this->getEntityManager()->getRepository(PostEntity::class);
+        $posts = $repo->findPublicByMonth($this->project, $year, $month, $perPage, ($pageNr - 1) * $perPage);
+
+        $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
+        $postsResultSet->setAddAuthors($this->addAuthors);
+        $postsResultSet->setAddCovers($this->addCovers);
+
+        $settings = $this->project->getSettings();
+        $galleryBaseUrl = $settings->get('gallery.base_url');
+        if ($galleryBaseUrl) {
+            $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
+        }
+
+        $pagination = new Pagination($repo->countPublicByMonth($this->project, $year, $month), $perPage);
+        $pagination->setCurrentPage($pageNr);
+
+        $this->assign('pagination', $pagination);
+        $this->assign('post_gallery_base_url', $galleryBaseUrl);
+        $this->assign('posts', $postsResultSet->toArray());
+        $this->assignMonthsArchiveData($year, $month);
+        $this->assignTagsData();
+
+        return null;
+    }
+
+    protected function assignMonthsArchiveData(?int $year, ?int $month, int $lastMonths = 6): void
+    {
+        $lastMonthsData = Date::lastMonths($lastMonths, $this->getLocale());
+        if ($month && $year) {
+            foreach ($lastMonthsData as &$item) {
+                if ($item['year'] === $year && $item['month'] === $month) {
+                    $item['active'] = true;
+                }
+            }
+            unset($item);
+        }
+        $this->assign('last_months', $lastMonthsData);
+        $this->assign('month', $month);
+        $this->assign('year', $year);
+    }
+
+    public function assignTagsData(): void
+    {
+        $tags = $this->getEntityManager()
+            ->getRepository(Tag::class)->findBy(
+                [
+                    'project' => $this->project->entity,
+                ],
+                ['name' => 'ASC'],
+                10
+            );
+        $this->assign('suggested_tags', $tags);
     }
 
     protected function loadPost(string $urlId): ?Response
