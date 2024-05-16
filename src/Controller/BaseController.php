@@ -43,13 +43,15 @@ class BaseController extends AbstractController
 
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
-        foreach ($this->variables as $key => $val) {
-            $parameters[$key] = $val;
-        }
         $locale = $this->locale;
         $lang = explode('_', $locale)[0] ?? 'en';
         $parameters['lang'] = $lang;
         $parameters['locale'] = $locale;
+
+        foreach ($this->variables as $key => $val) {
+            $parameters[$key] = $val;
+        }
+
 
         return parent::render($view, $parameters, $response);
     }
