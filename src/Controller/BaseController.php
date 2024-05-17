@@ -46,7 +46,7 @@ class BaseController extends AbstractController
         }
     }
 
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    protected function getRenderParameters(array $parameters = []): array
     {
         $locale = $this->locale;
         $lang = explode('_', $locale)[0] ?? 'en';
@@ -57,8 +57,21 @@ class BaseController extends AbstractController
             $parameters[$key] = $val;
         }
 
+        return $parameters;
+    }
+
+    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    {
+        $parameters = $this->getRenderParameters($parameters);
 
         return parent::render($view, $parameters, $response);
+    }
+
+    protected function renderView(string $view, array $parameters = []): string
+    {
+        $parameters = $this->getRenderParameters($parameters);
+
+        return parent::renderView($view, $parameters);
     }
 
     protected function render404(string $template = 'page/404.html.twig', array $parameters = []): Response
