@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'post_tag')]
 #[ORM\Entity]
-class TagPost
+class PostTag
 {
     #[ORM\Column(name: 'posts_id', type: Types::INTEGER)]
     #[ORM\Id]

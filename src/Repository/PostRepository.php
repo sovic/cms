@@ -9,7 +9,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
-use Sovic\Cms\Entity\TagPost;
+use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Project\Project;
 
 class PostRepository extends EntityRepository
@@ -41,7 +41,7 @@ class PostRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p')->from(Post::class, 'p');
-        $qb->leftJoin(TagPost::class, 'tp', Join::WITH, 'tp.postId = p.id');
+        $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
         $qb->andWhere('p.project = :project');
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
@@ -63,7 +63,7 @@ class PostRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('count(p.id)')->from(Post::class, 'p');
-        $qb->leftJoin(TagPost::class, 'tp', Join::WITH, 'tp.postId = p.id');
+        $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
         $qb->andWhere('p.project = :project');
         $qb->andWhere('p.public = 1');
         $qb->andWhere('tp.tagId = :tag_id');
