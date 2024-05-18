@@ -11,6 +11,7 @@ use Sovic\Cms\Repository\PostRepository;
 #[ORM\Index(columns: ['url_id', 'public'], name: 'public_post')]
 #[ORM\Index(columns: ['published'], name: 'published')]
 #[ORM\Index(columns: ['project_id'], name: 'project_id')]
+#[ORM\Index(columns: ['import_service', 'import_id'], name: 'import_service_import_id')]
 #[ORM\UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
