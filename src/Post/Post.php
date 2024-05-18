@@ -5,6 +5,8 @@ namespace Sovic\Cms\Post;
 use Cocur\Slugify\Slugify;
 use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Join;
+use Sovic\Cms\Entity\PostTag;
+use Sovic\Cms\Entity\Tag;
 use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Gallery\Gallery\Gallery;
 use Sovic\Cms\Entity\Author;
@@ -118,5 +120,40 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
 
         $this->getEntityManager()->remove($this->entity);
         $this->getEntityManager()->flush();
+    }
+
+    public function addTag(Tag $tag): void
+    {
+        $postTag = $this->getEntityManager()
+            ->getRepository(PostTag::class)
+            ->findOneBy(
+                [
+                    'postId' => $this->getId(),
+                    'tagId' => $tag->getId(),
+                ]
+            );
+        if (!$postTag) {
+            $postTag = new PostTag();
+            $postTag->setPostId($this->getId());
+            $postTag->setTagId($tag->getId());
+            $this->getEntityManager()->persist($postTag);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function removeTag(Tag $tag): void
+    {
+        $postTag = $this->getEntityManager()
+            ->getRepository(PostTag::class)
+            ->findOneBy(
+                [
+                    'postId' => $this->getId(),
+                    'tagId' => $tag->getId(),
+                ]
+            );
+        if ($postTag) {
+            $this->getEntityManager()->remove($postTag);
+            $this->getEntityManager()->flush();
+        }
     }
 }
