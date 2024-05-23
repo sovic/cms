@@ -22,7 +22,8 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         EntityManagerInterface $entityManager,
         PostFactory            $postFactory,
         PostResultSetFactory   $postResultSetFactory
-    ) {
+    )
+    {
         parent::__construct($entityManager);
 
         $this->setPostFactory($postFactory);
@@ -32,8 +33,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     #[Route('/posts/p/{pageNr}', name: 'posts_page_redirect', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function postsPageRedirect(int $pageNr): Response
     {
-        /** @noinspection PhpRouteMissingInspection */
-        return $this->redirectToRoute('blog_index', ['pageNr' => $pageNr], 301);
+        return $this->redirectToRoute('posts_index', ['pageNr' => $pageNr], 301);
     }
 
     #[Route('/posts/{pageNr}', name: 'posts_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
@@ -117,6 +117,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
             $cover['full'] = $baseUrl . '/' . $cover['full'];
         }
 
+        $this->assign('active_item', '/posts');
         $this->assign('cover', $cover);
         $this->assign('downloads', $downloads);
         $this->assign('has_parallax', $cover !== null);
