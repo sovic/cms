@@ -55,7 +55,7 @@ trait PostsControllerTrait
 
         $pagination = new Pagination($repo->countPublic($this->project), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
-            return $this->render404();
+            return $this->renderProject404();
         }
         $pagination->setCurrentPage($pageNr);
 
@@ -83,7 +83,7 @@ trait PostsControllerTrait
     {
         $tag = $this->getEntityManager()->getRepository(Tag::class)->findOneBy(['urlId' => $tagName]);
         if (null === $tag) {
-            return $this->render404();
+            return $this->renderProject404();
         }
         $this->tag = $tag;
 
@@ -174,7 +174,7 @@ trait PostsControllerTrait
     {
         $post = $this->postFactory->loadByUrlId($urlId, true);
         if (null === $post) {
-            return $this->render404();
+            return $this->renderProject404();
         }
         $this->post = $post;
 

@@ -54,7 +54,7 @@ trait ProjectControllerTrait
         return $twig->getLoader()->exists($projectTemplatePath) ? $projectTemplatePath : null;
     }
 
-    protected function render404(string $template = 'page/404', array $parameters = []): Response
+    protected function renderProject404(string $template = 'page/404', array $parameters = []): Response
     {
         $template = $this->getProjectTemplatePath($template);
 

@@ -22,8 +22,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         EntityManagerInterface $entityManager,
         PostFactory            $postFactory,
         PostResultSetFactory   $postResultSetFactory
-    )
-    {
+    ) {
         parent::__construct($entityManager);
 
         $this->setPostFactory($postFactory);
@@ -88,13 +87,13 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         }
         $post = $this->getPost();
         if (null === $post) {
-            return $this->render404();
+            return $this->renderProject404();
         }
 
         $secret = $request->get('secret');
         $isAuthorized = !empty($secret) && $secret === $post->entity->getSecret();
         if (!$isAuthorized && !$post->entity->isPublic()) {
-            return $this->render404();
+            return $this->renderProject404();
         }
 
         $downloads = [];
@@ -139,7 +138,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
 
         $pagination = new Pagination($total, $perPage);
         if ($pageNr > $pagination->getPageCount()) {
-            return $this->render404();
+            return $this->renderProject404();
         }
         $pagination->setCurrentPage($pageNr);
 
