@@ -3,7 +3,7 @@
 ## Installation
 
 ```shell
-composer require sovic/symfony-cms
+composer require sovic/cms
 ```
 
 Add to .env
@@ -28,7 +28,7 @@ Add to routes.yaml
 
 ```shell
 cms_controllers:
-    resource: '../../vendor/sovic/symfony-cms/src/Controller'
+    resource: '../../vendor/sovic/cms/src/Controller'
     type: attribute
 ```
 
@@ -36,5 +36,5 @@ Add to twig.yaml
 
 ```shell
 paths:
-    '%kernel.project_dir%/vendor/sovic/symfony-cms/templates': Cms
+    '%kernel.project_dir%/vendor/sovic/cms/templates': Cms
 ```
