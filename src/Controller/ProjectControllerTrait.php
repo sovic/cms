@@ -23,8 +23,11 @@ trait ProjectControllerTrait
         Request        $request,
         ?Environment   $twig = null,
     ): void {
-        $this->setProject($projectFactory->loadByRequest($request));
-        $this->assignProjectData();
+        $project = $projectFactory->loadByRequest($request);
+        if ($project) {
+            $this->setProject($project);
+            $this->assignProjectData();
+        }
         $this->projectTwigEnvironment = $twig;
         $this->setLocale($request->getLocale());
     }
