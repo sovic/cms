@@ -1,6 +1,6 @@
 {
     "name": "sovic/cms",
-    "description": "Symfony web applications SDK",
+    "description": "Web applications SDK",
     "keywords": [
     ],
     "type": "library",
@@ -15,7 +15,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/sovic/symfony-gallery.git"
+            "url": "https://github.com/sovic/gallery.git"
         }
     ],
     "minimum-stability": "stable",
@@ -27,14 +27,14 @@
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/orm": "^2.10",
+        "sovic/gallery": "^0.3.0",
         "symfony/form": "^6.4",
         "symfony/framework-bundle": "^6.4",
         "symfony/http-foundation": "^6.4",
         "symfony/mailer": "^6.4",
         "symfony/security-bundle": "^6.4",
         "symfony/twig-bundle": "^6.4",
-        "symfony/validator": "^6.4",
-        "sovic/symfony-gallery": "^0.3.0"
+        "symfony/validator": "^6.4"
     },
     "require-dev": {
         "rector/rector": "^1.0"
