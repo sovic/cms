@@ -3,12 +3,19 @@
 namespace Sovic\Cms\Entity;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
 use InvalidArgumentException;
 
-#[ORM\Table(name: 'setting')]
-#[ORM\Index(columns: ['project_id'], name: 'project_id')]
-#[ORM\Entity]
+#[Table(name: 'setting')]
+#[Index(columns: ['project_id'], name: 'project_id')]
+#[Entity]
 class Setting
 {
     private const TYPE_STRING = Types::STRING;
@@ -23,30 +30,30 @@ class Setting
         self::TYPE_STRING,
     ];
 
-    #[ORM\Id]
-    #[ORM\Column(name: 'id', type: Types::INTEGER)]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Id]
+    #[Column(name: 'id', type: Types::INTEGER)]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
-    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ManyToOne(targetEntity: Project::class)]
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected Project $project;
 
-    #[ORM\Column(name: '`group`', type: Types::STRING, length: 100, nullable: false)]
+    #[Column(name: '`group`', type: Types::STRING, length: 100, nullable: false)]
     protected string $group;
 
-    #[ORM\Column(name: 'key', type: Types::STRING, length: 100, nullable: false)]
+    #[Column(name: 'key', type: Types::STRING, length: 100, nullable: false)]
     protected string $key;
 
-    #[ORM\Column(name: 'value', type: Types::TEXT, length: 65535, nullable: false)]
+    #[Column(name: 'value', type: Types::TEXT, length: 65535, nullable: false)]
     protected string $value;
 
-    #[ORM\Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
+    #[Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
     protected string $description;
 
-    #[ORM\Column(name: 'type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $type;
-    #[ORM\Column(name: 'is_template_enabled', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_template_enabled', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $isTemplateEnabled = false;
 
     public function getId(): int

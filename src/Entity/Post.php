@@ -4,121 +4,129 @@ namespace Sovic\Cms\Entity;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Repository\PostRepository;
 
-#[ORM\Table(name: 'post')]
-#[ORM\Index(columns: ['url_id', 'public'], name: 'public_post')]
-#[ORM\Index(columns: ['published'], name: 'published')]
-#[ORM\Index(columns: ['project_id'], name: 'project_id')]
-#[ORM\Index(columns: ['import_service', 'import_id'], name: 'import_service_import_id')]
-#[ORM\UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
-#[ORM\Entity(repositoryClass: PostRepository::class)]
+#[Table(name: 'post')]
+#[Index(columns: ['url_id', 'public'], name: 'public_post')]
+#[Index(columns: ['published'], name: 'published')]
+#[Index(columns: ['project_id'], name: 'project_id')]
+#[Index(columns: ['import_service', 'import_id'], name: 'import_service_import_id')]
+#[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
+#[Entity(repositoryClass: PostRepository::class)]
 class Post
 {
-    #[ORM\Column(name: 'id', type: Types::INTEGER)]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Column(name: 'id', type: Types::INTEGER)]
+    #[Id]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     public int $id;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
-    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ManyToOne(targetEntity: Project::class)]
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected Project $project;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'url_id', type: Types::STRING, length: 255, nullable: false)]
+    #[Column(name: 'url_id', type: Types::STRING, length: 255, nullable: false)]
     public string $urlId;
 
-    #[ORM\Column(name: 'meta_title', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'meta_title', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $metaTitle = null;
 
-    #[ORM\Column(name: 'meta_description', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'meta_description', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $metaDescription = null;
 
-    #[ORM\Column(name: 'meta_keywords', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'meta_keywords', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $metaKeywords = null;
 
-    #[ORM\Column(name: 'heading', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'heading', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $heading = null;
 
-    #[ORM\Column(name: 'subtitle', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'subtitle', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $subtitle = null;
 
-    #[ORM\Column(name: 'perex', type: Types::TEXT, length: 16383, nullable: true, options: ['default' => null])]
+    #[Column(name: 'perex', type: Types::TEXT, length: 16383, nullable: true, options: ['default' => null])]
     protected ?string $perex = null;
 
-    #[ORM\Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
+    #[Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
     protected ?string $content;
 
-    #[ORM\Column(name: '`index`', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: '`index`', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $index = null;
 
-    #[ORM\Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $public = false;
 
-    #[ORM\Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => null])]
+    #[Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => null])]
     protected ?string $lang;
 
-    #[ORM\Column(name: 'group_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'group_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $groupId = null;
 
-    #[ORM\Column(name: 'published', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'published', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $published = null;
 
-    #[ORM\Column(name: 'publish_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[Column(name: 'publish_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $publishDate = null;
 
-    #[ORM\Column(name: 'created', type: Types::INTEGER)]
+    #[Column(name: 'created', type: Types::INTEGER)]
     protected int $created;
 
-    #[ORM\Column(name: 'create_date', type: Types::DATETIME_IMMUTABLE)]
+    #[Column(name: 'create_date', type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $createDate;
 
-    #[ORM\Column(name: 'title', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'title', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $title = null;
 
-    #[ORM\Column(name: 'import_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'import_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $importId = null;
 
-    #[ORM\Column(name: 'import_service', type: Types::STRING, length: 50, nullable: true, options: ['default' => null])]
+    #[Column(name: 'import_service', type: Types::STRING, length: 50, nullable: true, options: ['default' => null])]
     protected ?string $importService = null;
 
-    #[ORM\Column(name: 'infobox', type: Types::TEXT, length: 1024, nullable: true)]
+    #[Column(name: 'infobox', type: Types::TEXT, length: 1024, nullable: true)]
     protected ?string $infoBox = null;
 
-    #[ORM\Column(name: 'signature', type: Types::STRING, length: 1024, nullable: true, options: ['default' => null])]
+    #[Column(name: 'signature', type: Types::STRING, length: 1024, nullable: true, options: ['default' => null])]
     protected ?string $signature = null;
 
-    #[ORM\Column(name: 'modified', type: Types::INTEGER, options: ['default' => 0])]
+    #[Column(name: 'modified', type: Types::INTEGER, options: ['default' => 0])]
     protected int $modified = 0;
 
-    #[ORM\Column(name: 'last_modified_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[Column(name: 'last_modified_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $lastModifiedDate = null;
 
-    #[ORM\Column(name: 'publishers_id', type: Types::INTEGER, options: ['default' => 0])]
+    #[Column(name: 'publishers_id', type: Types::INTEGER, options: ['default' => 0])]
     protected int $publishersId = 0;
 
-    #[ORM\Column(name: 'postsauthors_id', type: Types::INTEGER, options: ['default' => 0])]
+    #[Column(name: 'postsauthors_id', type: Types::INTEGER, options: ['default' => 0])]
     protected int $postsAuthorsId = 0;
 
-    #[ORM\Column(name: 'gallery', type: Types::BOOLEAN, options: ['default' => false])]
+    #[Column(name: 'gallery', type: Types::BOOLEAN, options: ['default' => false])]
     protected bool $gallery = false;
 
-    #[ORM\Column(name: 'media_id', type: Types::INTEGER, options: ['default' => 0])]
+    #[Column(name: 'media_id', type: Types::INTEGER, options: ['default' => 0])]
     protected int $mediaId = 0;
 
-    #[ORM\Column(name: 'authorsusers_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'authorsusers_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $authorsUsersId = null;
 
-    #[ORM\Column(name: 'secret', type: Types::STRING, length: 10, nullable: true)]
+    #[Column(name: 'secret', type: Types::STRING, length: 10, nullable: true)]
     protected ?string $secret = null;
 
-    #[ORM\Column(name: 'is_featured', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_featured', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $isFeatured = false;
 
-    #[ORM\Column(name: 'is_gallery_enabled', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
+    #[Column(name: 'is_gallery_enabled', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
     protected bool $isGalleryEnabled = true;
 
     public function getId(): int

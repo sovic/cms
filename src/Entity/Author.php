@@ -3,37 +3,45 @@
 namespace Sovic\Cms\Entity;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\Table;
 
-#[ORM\Table(name: 'author')]
-#[ORM\Index(columns: ['surname'], name: 'surname', options: ['lengths' => [191]])]
-#[ORM\Index(columns: ['project_id'], name: 'project_id')]
-#[ORM\Entity]
+#[Table(name: 'author')]
+#[Index(columns: ['surname'], name: 'surname', options: ['lengths' => [191]])]
+#[Index(columns: ['project_id'], name: 'project_id')]
+#[Entity]
 class Author
 {
-    #[ORM\Column(name: 'id', type: Types::INTEGER)]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Column(name: 'id', type: Types::INTEGER)]
+    #[Id]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
-    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ManyToOne(targetEntity: Project::class)]
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected Project $project;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'surname', type: Types::STRING, length: 255, nullable: false)]
+    #[Column(name: 'surname', type: Types::STRING, length: 255, nullable: false)]
     protected string $surname;
 
-    #[ORM\Column(name: 'short_description', type: Types::STRING, length: 1000, nullable: true, options: ['default' => null])]
+    #[Column(name: 'short_description', type: Types::STRING, length: 1000, nullable: true, options: ['default' => null])]
     protected ?string $shortDescription;
 
-    #[ORM\Column(name: 'user_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'user_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $userId;
 
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[OneToOne(targetEntity: User::class)]
     protected User $user;
 
     public function getId(): int

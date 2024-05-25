@@ -3,24 +3,28 @@
 namespace Sovic\Cms\Entity;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
-#[ORM\Table(name: 'project')]
-#[ORM\Entity]
+#[Table(name: 'project')]
+#[Entity]
 class Project
 {
-    #[ORM\Column(name: 'id', type: Types::INTEGER)]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Column(name: 'id', type: Types::INTEGER)]
+    #[Id]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'slug', type: Types::STRING, length: 255, nullable: false)]
+    #[Column(name: 'slug', type: Types::STRING, length: 255, nullable: false)]
     protected string $slug;
 
-    #[ORM\Column(name: 'domains', type: Types::TEXT, length: 1000, nullable: false)]
+    #[Column(name: 'domains', type: Types::TEXT, length: 1000, nullable: false)]
     protected string $domains;
 
     public function getId(): int

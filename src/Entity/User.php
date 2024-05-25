@@ -3,67 +3,70 @@
 namespace Sovic\Cms\Entity;
 
 use Doctrine\DBAL\Types\Types;
+use JetBrains\PhpStorm\Pure;
 use Sovic\Cms\Repository\UserRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
+    #[Id]
+    #[GeneratedValue]
+    #[Column(type: Types::INTEGER)]
     private int $id;
 
-    #[ORM\Column(type: Types::STRING, length: 180, nullable: true, options: ['default' => null])]
+    #[Column(type: Types::STRING, length: 180, nullable: true, options: ['default' => null])]
     private ?string $username = null;
 
-    #[ORM\Column]
+    #[Column]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(type: Types::STRING)]
+    #[Column(type: Types::STRING)]
     private string $password;
 
-    #[ORM\Column(type: Types::STRING, length: 180, unique: true, nullable: false)]
+    #[Column(type: Types::STRING, length: 180, unique: true, nullable: false)]
     private string $email;
 
-    #[ORM\Column(name: 'created_date', type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[Column(name: 'created_date', type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private DateTimeImmutable $createdDate;
 
-    #[ORM\Column(name: 'is_active', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     private bool $isActive = false;
 
-    #[ORM\Column(name: 'activated_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[Column(name: 'activated_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     private ?DateTimeImmutable $activatedDate;
 
-    #[ORM\Column(name: 'activation_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
+    #[Column(name: 'activation_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
     private ?string $activationCode;
 
-    #[ORM\Column(name: 'country_code', type: Types::STRING, length: 2, nullable: true, options: ['default' => null])]
+    #[Column(name: 'country_code', type: Types::STRING, length: 2, nullable: true, options: ['default' => null])]
     private ?string $countryCode;
 
-    #[ORM\Column(name: 'currency', type: Types::STRING, length: 3, nullable: true, options: ['default' => null])]
+    #[Column(name: 'currency', type: Types::STRING, length: 3, nullable: true, options: ['default' => null])]
     private ?string $defaultCurrency;
 
-    #[ORM\Column(name: 'is_geo_ip_limited', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_geo_ip_limited', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     private bool $isGeoIpLimited = false;
 
-    #[ORM\Column(name: 'emailing', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
+    #[Column(name: 'emailing', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
     private bool $emailing = true;
 
-    #[ORM\Column(name: 'logins', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
+    #[Column(name: 'logins', type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $logins = 0;
 
-    #[ORM\Column(name: 'last_login_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[Column(name: 'last_login_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     private ?DateTimeImmutable $lastLoginDate;
 
-    #[ORM\Column(name: 'forgot_password_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
+    #[Column(name: 'forgot_password_code', type: Types::STRING, length: 32, unique: true, nullable: true, options: ['default' => null])]
     private ?string $forgotPasswordCode;
 
     public function getId(): ?int

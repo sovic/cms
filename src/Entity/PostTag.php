@@ -3,18 +3,21 @@
 namespace Sovic\Cms\Entity;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
-#[ORM\Table(name: 'post_tag')]
-#[ORM\Entity]
+#[Table(name: 'post_tag')]
+#[Entity]
 class PostTag
 {
-    #[ORM\Column(name: 'posts_id', type: Types::INTEGER)]
-    #[ORM\Id]
+    #[Column(name: 'posts_id', type: Types::INTEGER)]
+    #[Id]
     protected int $postId;
 
-    #[ORM\Column(name: 'tags_id', type: Types::INTEGER)]
-    #[ORM\Id]
+    #[Column(name: 'tags_id', type: Types::INTEGER)]
+    #[Id]
     protected int $tagId;
 
     public function getPostId(): int

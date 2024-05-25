@@ -4,85 +4,93 @@ namespace Sovic\Cms\Entity;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Repository\PageRepository;
 
-#[ORM\Table(name: 'page')]
-#[ORM\Index(columns: ['project_id'], name: 'project_id')]
-#[ORM\UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
-#[ORM\Entity(repositoryClass: PageRepository::class)]
+#[Table(name: 'page')]
+#[Index(columns: ['project_id'], name: 'project_id')]
+#[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
+#[Entity(repositoryClass: PageRepository::class)]
 class Page
 {
-    #[ORM\Column(name: 'id', type: Types::INTEGER)]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Column(name: 'id', type: Types::INTEGER)]
+    #[Id]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
-    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ManyToOne(targetEntity: Project::class)]
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected Project $project;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'name', type: Types::STRING, length: 200, nullable: true)]
     protected string $name;
 
-    #[ORM\Column(name: 'url_id', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'url_id', type: Types::STRING, length: 200, nullable: true)]
     protected string $urlId;
 
-    #[ORM\Column(name: 'head_title', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'head_title', type: Types::STRING, length: 200, nullable: true)]
     protected ?string $metaTitle = null;
 
-    #[ORM\Column(name: 'meta_description', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'meta_description', type: Types::STRING, length: 200, nullable: true)]
     protected ?string $metaDescription = null;
 
-    #[ORM\Column(name: 'meta_keywords', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'meta_keywords', type: Types::STRING, length: 200, nullable: true)]
     protected ?string $metaKeywords = null;
 
-    #[ORM\Column(name: 'heading', type: Types::STRING, length: 150, nullable: true)]
+    #[Column(name: 'heading', type: Types::STRING, length: 150, nullable: true)]
     protected ?string $heading = null;
 
-    #[ORM\Column(name: 'perex', type: Types::TEXT, length: 16383, nullable: true, options: ['default' => null])]
+    #[Column(name: 'perex', type: Types::TEXT, length: 16383, nullable: true, options: ['default' => null])]
     protected ?string $perex = null;
 
-    #[ORM\Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
+    #[Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
     protected ?string $content = null;
 
-    #[ORM\Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
+    #[Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
     protected int $sequence;
 
-    #[ORM\Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $public = false;
 
-    #[ORM\Column(name: 'lang', length: 5, nullable: true, options: ['default' => null])]
+    #[Column(name: 'lang', length: 5, nullable: true, options: ['default' => null])]
     protected ?string $lang = null;
 
-    #[ORM\Column(name: 'group_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
+    #[Column(name: 'group_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $groupId = null;
 
-    #[ORM\Column(name: 'toc', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'toc', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $toc = false;
 
-    #[ORM\Column(name: 'cta_link', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'cta_link', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $ctaLink = null;
 
-    #[ORM\Column(name: 'cta_text', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'cta_text', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $ctaText = null;
 
-    #[ORM\Column(name: 'content_type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'content_type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $contentType = null;
 
-    #[ORM\Column(name: 'header', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'header', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $header = null;
 
-    #[ORM\Column(name: 'theme', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'theme', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $theme = null;
 
-    #[ORM\Column(name: 'in_sitemap', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
+    #[Column(name: 'in_sitemap', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
     protected bool $inSitemap = true;
 
-    #[ORM\Column(name: 'last_update_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
+    #[Column(name: 'last_update_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $lastUpdateDate = null;
 
-    #[ORM\Column(name: 'side_menu_id', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'side_menu_id', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $sideMenuId = null;
 
     public function getId(): int

@@ -3,35 +3,42 @@
 namespace Sovic\Cms\Entity;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
 
-#[ORM\Table(name: 'tag')]
-#[ORM\Index(columns: ['project_id'], name: 'project_id')]
-#[ORM\Entity]
+#[Table(name: 'tag')]
+#[Index(columns: ['project_id'], name: 'project_id')]
+#[Entity]
 class Tag
 {
-    #[ORM\Column(name: 'id', type: Types::INTEGER)]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Column(name: 'id', type: Types::INTEGER)]
+    #[Id]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
-    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ManyToOne(targetEntity: Project::class)]
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected Project $project;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
+    #[Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
     protected string $name;
 
-    #[ORM\Column(name: 'url_id', type: Types::STRING, length: 100, nullable: true)]
+    #[Column(name: 'url_id', type: Types::STRING, length: 100, nullable: true)]
     protected string $urlId;
 
-    #[ORM\Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $public = false;
 
-    #[ORM\Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
+    #[Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
     protected ?string $lang = 'cs';
 
-    #[ORM\Column(name: 'group_id', type: Types::INTEGER, nullable: true)]
+    #[Column(name: 'group_id', type: Types::INTEGER, nullable: true)]
     protected int $groupId;
 
     public function getId(): int
