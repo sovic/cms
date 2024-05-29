@@ -3,33 +3,24 @@
 namespace Sovic\Cms\Controller;
 
 use Sovic\Cms\Project\Project;
-use Sovic\Cms\Project\ProjectFactory;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Service\Attribute\Required;
 use Twig\Environment;
 
 trait ProjectControllerTrait
 {
     private Project $project;
-    private ?Environment $projectTwigEnvironment = null;
+    private ?Environment $projectTwig = null;
 
+    #[Required]
     public function setProject(Project $project): void
     {
         $this->project = $project;
     }
 
-    public function initializeProjectController(
-        ProjectFactory $projectFactory,
-        Request        $request,
-        ?Environment   $twig = null,
-    ): void {
-        $project = $projectFactory->loadByRequest($request);
-        if ($project) {
-            $this->setProject($project);
-            $this->assignProjectData();
-        }
-        $this->projectTwigEnvironment = $twig;
-        $this->setLocale($request->getLocale());
+    public function setProjectTwig(?Environment $projectTwig): void
+    {
+        $this->projectTwig = $projectTwig;
     }
 
     public function assignProjectData(): void
@@ -52,9 +43,8 @@ trait ProjectControllerTrait
     {
         $templatePath = str_ends_with($templatePath, '.html.twig') ? $templatePath : $templatePath . '.html.twig';
         $projectTemplatePath = 'project/' . $this->project->getSlug() . '/' . $templatePath;
-        $twig = $this->projectTwigEnvironment;
 
-        return $twig->getLoader()->exists($projectTemplatePath) ? $projectTemplatePath : null;
+        return $this->projectTwig?->getLoader()->exists($projectTemplatePath) ? $projectTemplatePath : null;
     }
 
     protected function renderProject404(string $template = 'page/404', array $parameters = []): Response

@@ -17,11 +17,19 @@ PROJECT=
 Add to service.yaml
 
 ```shell
-_instanceof:
-    Sovic\Cms\Controller\ProjectControllerInterface:
-        tags: [ 'controller.service_arguments' ]
-        calls:
-            -   initializeProjectController: [ '@Sovic\Cms\Project\ProjectFactory', '@=service("request_stack").getCurrentRequest()', '@twig' ] ]
+    app.project:
+        class: Sovic\Cms\Project\Project
+        factory: [ '@Sovic\Cms\Project\ProjectFactory', loadByRequest ]
+        arguments: [ '@=service("request_stack").getCurrentRequest()' ]
+
+    _instanceof:
+        Sovic\Cms\Controller\ProjectControllerInterface:
+            tags: [ 'controller.service_arguments' ]
+            calls:
+                -   setLocale: [ '@=service("request_stack").getCurrentRequest().getLocale()' ]
+                -   setProject: [ '@app.project' ]
+                -   setProjectTwig: [ '@twig' ]
+                -   assignProjectData: [ ]
 ```
 
 Add to routes.yaml
