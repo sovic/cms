@@ -12,6 +12,11 @@
             "src/"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Sovic\\Cms\\Tests\\": "tests/"
+        }
+    },
     "repositories": [
         {
             "type": "git",
@@ -22,6 +27,7 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.2",
+        "ext-imagick": "*",
         "ext-intl": "*",
         "cocur/slugify": "^4.0",
         "doctrine/annotations": "^1.13",
