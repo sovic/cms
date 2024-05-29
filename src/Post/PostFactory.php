@@ -4,10 +4,14 @@ namespace Sovic\Cms\Post;
 
 use Sovic\Cms\Entity\Post as PostEntity;
 use Sovic\Cms\ORM\EntityModelFactory;
+use Sovic\Cms\Project\ProjectEntityModelFactoryInterface;
+use Sovic\Cms\Project\ProjectEntityModelFactoryTrait;
 use Sovic\Cms\Repository\PostRepository;
 
-final class PostFactory extends EntityModelFactory
+final class PostFactory extends EntityModelFactory implements ProjectEntityModelFactoryInterface
 {
+    use ProjectEntityModelFactoryTrait;
+
     public function loadByEntity(?PostEntity $entity = null): ?Post
     {
         return $this->loadEntityModel($entity, Post::class);
@@ -15,14 +19,20 @@ final class PostFactory extends EntityModelFactory
 
     public function loadById(int $id): ?Post
     {
-        return $this->loadModelById(PostEntity::class, Post::class, $id);
+        $criteria = $this->getProjectSelectCriteria();
+        $criteria['id'] = $id;
+
+        return $this->loadModelBy(PostEntity::class, Post::class, $criteria);
     }
 
     public function loadByUrlId(string $urlId, bool $allowNonPublished = false): ?Post
     {
+        $criteria = $this->getProjectSelectCriteria();
         $urlId = trim($urlId, '/\\'); // trim leading / trailing slashes
+        $criteria['urlId'] = $urlId;
+
         /** @var Post $model */
-        $model = $this->loadModelBy(PostEntity::class, Post::class, ['urlId' => $urlId]);
+        $model = $this->loadModelBy(PostEntity::class, Post::class, $criteria);
         if (null === $model) {
             return null;
         }

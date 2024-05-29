@@ -30,6 +30,14 @@ Add to service.yaml
                 -   setProject: [ '@app.project' ]
                 -   setProjectTwig: [ '@twig' ]
                 -   assignProjectData: [ ]
+
+    Sovic\Cms\Post\PostFactory:
+        calls:
+            - [ setProject, [ '@app.project' ] ]
+
+    Sovic\Cms\Page\PageFactory:
+        calls:
+            - [ setProject, [ '@app.project' ] ]
 ```
 
 Add to routes.yaml
