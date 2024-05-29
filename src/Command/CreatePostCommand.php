@@ -9,6 +9,7 @@ use Random\RandomException;
 use RuntimeException;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Post\PostFactory;
+use Sovic\Cms\Project\ProjectFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +22,7 @@ class CreatePostCommand extends Command
 {
     public function __construct(
         private readonly PostFactory        $postFactory,
+        private readonly ProjectFactory     $projectFactory,
         private readonly FilesystemOperator $galleryStorage
     ) {
         parent::__construct();
@@ -32,13 +34,27 @@ class CreatePostCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
-        $entity = new Post();
+
+        $question = new Question('Project slug: ');
+        $slug = $helper->ask($input, $output, $question);
+        if (empty($slug)) {
+            return Command::FAILURE;
+        }
+        $project = $this->projectFactory->loadBySlug($slug);
+        if (!$project) {
+            $output->writeln('Project not found');
+
+            return Command::FAILURE;
+        }
 
         $question = new Question('Post name: ');
         $name = $helper->ask($input, $output, $question);
         if (empty($name)) {
             return Command::FAILURE;
         }
+
+        $entity = new Post();
+        $entity->setProject($project->entity);
         $entity->setName($name);
 
         $question = new Question('Post heading (default: ' . $name . '): ', $name);
