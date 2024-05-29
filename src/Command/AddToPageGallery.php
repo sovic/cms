@@ -2,8 +2,6 @@
 
 namespace Sovic\Cms\Command;
 
-use ImagickException;
-use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Command\Trait\GalleryCommandTrait;
 use Sovic\Cms\Command\Trait\PageCommandTrait;
@@ -12,7 +10,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 #[AsCommand(name: 'page:add-to-gallery', description: 'Add items to page gallery')]
 class AddToPageGallery extends Command
