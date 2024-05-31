@@ -11,25 +11,15 @@ use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
-use InvalidArgumentException;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use Sovic\Cms\Project\SettingTypeId;
 
 #[Table(name: 'setting')]
 #[Index(columns: ['project_id'], name: 'project_id')]
+#[UniqueConstraint(name: 'project_group_key', columns: ['project_id', 'group', 'key'])]
 #[Entity]
 class Setting
 {
-    private const TYPE_STRING = Types::STRING;
-    private const TYPE_INT = 'int'; // number
-    private const TYPE_BOOL = 'bool'; // 0|1
-    private const TYPE_ARRAY = 'array'; // array of strings, each line one field
-
-    private const TYPES = [
-        self::TYPE_ARRAY,
-        self::TYPE_BOOL,
-        self::TYPE_INT,
-        self::TYPE_STRING,
-    ];
-
     #[Id]
     #[Column(name: 'id', type: Types::INTEGER)]
     #[GeneratedValue(strategy: 'IDENTITY')]
@@ -42,7 +32,7 @@ class Setting
     #[Column(name: '`group`', type: Types::STRING, length: 100, nullable: false)]
     protected string $group;
 
-    #[Column(name: 'key', type: Types::STRING, length: 100, nullable: false)]
+    #[Column(name: '`key`', type: Types::STRING, length: 100, nullable: false)]
     protected string $key;
 
     #[Column(name: 'value', type: Types::TEXT, length: 65535, nullable: false)]
@@ -51,8 +41,16 @@ class Setting
     #[Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
     protected string $description;
 
-    #[Column(name: 'type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $type;
+    #[Column(
+        name: 'type',
+        type: Types::STRING,
+        length: 255,
+        nullable: true,
+        enumType: SettingTypeId::class,
+        options: ['default' => null]
+    )]
+    protected ?SettingTypeId $type;
+
     #[Column(name: 'is_template_enabled', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $isTemplateEnabled = false;
 
@@ -111,16 +109,13 @@ class Setting
         $this->description = $description;
     }
 
-    public function getType(): ?string
+    public function getType(): ?SettingTypeId
     {
         return $this->type;
     }
 
-    public function setType(?string $type): void
+    public function setType(?SettingTypeId $type): void
     {
-        if ($type !== null && !in_array($type, self::TYPES, true)) {
-            throw new InvalidArgumentException('invalid type');
-        }
         $this->type = $type;
     }
 
