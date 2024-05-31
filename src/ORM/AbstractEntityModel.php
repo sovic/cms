@@ -7,7 +7,6 @@ use RuntimeException;
 use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Gallery\Gallery\GalleryManager;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractEntityModel
@@ -20,7 +19,6 @@ abstract class AbstractEntityModel
 
     protected GalleryManager $galleryManager;
 
-    #[Required]
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
@@ -31,13 +29,11 @@ abstract class AbstractEntityModel
         return $this->entityManager;
     }
 
-    #[Required]
     public function setRouter(RouterInterface $router): void
     {
         $this->router = $router;
     }
 
-    #[Required]
     public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
