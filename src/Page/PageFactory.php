@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Page;
 
+use Cocur\Slugify\Slugify;
 use Sovic\Cms\ORM\EntityModelFactory;
 use Sovic\Cms\Entity\Page as PageEntity;
 use Sovic\Cms\Project\ProjectEntityModelFactoryInterface;
@@ -39,5 +40,34 @@ final class PageFactory extends EntityModelFactory implements ProjectEntityModel
         }
 
         return $model;
+    }
+
+    public function createDefault(
+        string  $name,
+        string  $heading,
+        ?string $urlId = null,
+        ?string $content = null,
+    ): Page {
+        $page = new PageEntity();
+        if ($this->project) {
+            $page->setProject($this->project->entity);
+        }
+        $page->setName($name);
+        if (null === $urlId) {
+            $slugify = new Slugify();
+            $slugify->activateRuleSet('default');
+
+            $urlId = $slugify->slugify($name);
+        }
+        $page->setUrlId($urlId);
+
+        $page->setHeading($heading);
+        $page->setMetaTitle($heading);
+        $page->setMetaDescription($heading);
+
+        $page->setContent($content);
+        $page->setPublic(true);
+
+        return $this->loadByEntity($page);
     }
 }
