@@ -18,8 +18,17 @@ final class ProjectFactory extends EntityModelFactory
         return $this->loadModelBy(ProjectEntity::class, Project::class, ['slug' => $slug]);
     }
 
-    public function loadByRequest(Request $request): ?Project
+    public function loadByRequest(?Request $request = null): ?Project
     {
+        if (!$request) {
+            $envProject = $_SERVER['PROJECT'] ?? null;
+            if ($envProject) {
+                return $this->loadModelBy(ProjectEntity::class, Project::class, ['slug' => $envProject]);
+            }
+
+            return null;
+        }
+
         $envProject = $request->server->get('PROJECT');
         if ($envProject) {
             return $this->loadModelBy(ProjectEntity::class, Project::class, ['slug' => $envProject]);
