@@ -2,7 +2,6 @@
 
 namespace Sovic\Cms\Command;
 
-use InvalidArgumentException;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Gallery\Gallery\GalleryFactory;
@@ -28,21 +27,26 @@ class DeleteGalleryItemCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
-        $question = new Question('Gallery item ID: ');
+        $question = new Question('Gallery item ID (or multiple IDs separate by spaces): ');
         $id = $helper->ask($input, $output, $question);
         if (empty($id)) {
             return Command::FAILURE;
         }
 
-        $gallery = $this->galleryFactory->loadByGalleryItemId($id);
-        if (!$gallery) {
-            throw new InvalidArgumentException('Gallery not found');
+        $ids = explode(' ', $id);
+        foreach ($ids as $id) {
+            $gallery = $this->galleryFactory->loadByGalleryItemId($id);
+            if (!$gallery) {
+                $output->writeln('Gallery item with ID: ' . $id . ' not found');
+                continue;
+            }
+
+            $gallery->setFilesystemOperator($this->galleryStorage);
+            $gallery->deleteItem($id);
+
+            $output->writeln('Gallery item deleted with ID: ' . $id);
         }
 
-        $gallery->setFilesystemOperator($this->galleryStorage);
-        $gallery->deleteItem($id);
-
-        $output->writeln('Gallery item deleted with ID: ' . $id);
 
         return Command::SUCCESS;
     }
