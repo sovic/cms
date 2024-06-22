@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Controller;
 
 use Cocur\Slugify\Slugify;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Controller\Trait\PostsControllerTrait;
@@ -22,10 +23,11 @@ class GalleryController extends BaseController
 
     #[Route('/gallery/{id}/zip', name: 'gallery_download', defaults: [])]
     public function galleryZip(
-        string             $id,
-        FilesystemOperator $galleryStorage,
-        GalleryFactory     $galleryFactory,
-        Request            $request,
+        string                 $id,
+        EntityManagerInterface $em,
+        FilesystemOperator     $galleryStorage,
+        GalleryFactory         $galleryFactory,
+        Request                $request,
     ): Response {
         $gallery = $galleryFactory->loadById($id);
         if (!$gallery || !$gallery->entity->isDownloadEnabled()) {
@@ -40,8 +42,9 @@ class GalleryController extends BaseController
         /** @noinspection DegradedSwitchInspection */
         switch ($gallery->entity->getModel()) {
             case 'post':
-                $em = $this->getEntityManager();
-                $post = $em->find(Post::class, $gallery->entity->getModelId());
+                $post = $em
+                    ->getRepository(Post::class)
+                    ->find($gallery->entity->getModelId());
                 if (null === $post) {
                     return $this->renderProject404();
                 }
