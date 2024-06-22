@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller;
 
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Trait\ProjectControllerTrait;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Repository\PageRepository;

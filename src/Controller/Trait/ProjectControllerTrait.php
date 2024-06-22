@@ -1,6 +1,6 @@
 <?php
 
-namespace Sovic\Cms\Controller;
+namespace Sovic\Cms\Controller\Trait;
 
 use Sovic\Cms\Project\Project;
 use Symfony\Component\HttpFoundation\Response;

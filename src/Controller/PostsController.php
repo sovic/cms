@@ -6,6 +6,8 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
+use Sovic\Cms\Controller\Trait\PostsControllerTrait;
+use Sovic\Cms\Controller\Trait\ProjectControllerTrait;
 use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\PostFactory;

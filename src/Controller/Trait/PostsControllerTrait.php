@@ -1,6 +1,6 @@
 <?php
 
-namespace Sovic\Cms\Controller;
+namespace Sovic\Cms\Controller\Trait;
 
 use LogicException;
 use Sovic\Cms\Entity\Post as PostEntity;
