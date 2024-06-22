@@ -7,6 +7,7 @@ use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Controller\Trait\PostsControllerTrait;
 use Sovic\Cms\Controller\Trait\ProjectControllerTrait;
+use Sovic\Cms\Entity\Post;
 use Sovic\Common\Controller\Trait\DownloadTrait;
 use Sovic\Gallery\Gallery\GalleryFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,12 +40,13 @@ class GalleryController extends BaseController
         /** @noinspection DegradedSwitchInspection */
         switch ($gallery->entity->getModel()) {
             case 'post':
-                $post = $this->postFactory->loadById($gallery->entity->getModelId());
+                $em = $this->getEntityManager();
+                $post = $em->find(Post::class, $gallery->entity->getModelId());
                 if (null === $post) {
                     return $this->renderProject404();
                 }
                 $secret = $request->query->get('secret');
-                if ($secret !== $post->entity->getSecret()) {
+                if ($secret !== $post->getSecret()) {
                     return $this->renderProject404();
                 }
                 break;
