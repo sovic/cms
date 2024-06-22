@@ -225,36 +225,4 @@ trait PostsControllerTrait
 
         return $gallery;
     }
-
-    protected function isAccessEnabled(?string $secret = null): bool
-    {
-        if (!$this->post) {
-            throw new LogicException('Post not loaded');
-        }
-
-        $post = $this->post;
-        if ($post->entity->isPublic()) {
-            return true;
-        }
-
-        return !empty($secret) && $secret === $post->entity->getSecret();
-    }
-
-    protected function isGalleryDownloadEnabled(?string $secret = null): bool
-    {
-        if (!$this->post) {
-            throw new LogicException('Post not loaded');
-        }
-
-        if (!$this->isAccessEnabled($secret)) {
-            return false;
-        }
-        if (empty($secret) || $secret !== $this->post->entity->getSecret()) {
-            return false;
-        }
-
-        $gallery = $this->getGallery('post');
-
-        return $gallery && $gallery->getEntity()->isDownloadEnabled();
-    }
 }

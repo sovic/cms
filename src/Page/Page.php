@@ -2,9 +2,9 @@
 
 namespace Sovic\Cms\Page;
 
-use Sovic\Cms\Model\Trait\GalleryModelTrait;
 use Sovic\Common\Model\AbstractEntityModel;
 use Sovic\Gallery\Entity\GalleryModelInterface;
+use Sovic\Gallery\Model\Trait\GalleryModelTrait;
 
 /**
  * @property \Sovic\Cms\Entity\Page $entity

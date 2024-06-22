@@ -7,11 +7,11 @@ use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Entity\Tag;
-use Sovic\Cms\Model\Trait\GalleryModelTrait;
 use Sovic\Common\Model\AbstractEntityModel;
 use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Entity\PostAuthor;
+use Sovic\Gallery\Model\Trait\GalleryModelTrait;
 
 /**
  * @property \Sovic\Cms\Entity\Post $entity
@@ -142,5 +142,14 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $this->getEntityManager()->remove($postTag);
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function isAccessEnabled(?string $secret = null): bool
+    {
+        if ($this->entity->isPublic()) {
+            return true;
+        }
+
+        return !empty($secret) && $secret === $this->entity->getSecret();
     }
 }
