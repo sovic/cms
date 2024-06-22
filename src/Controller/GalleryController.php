@@ -70,7 +70,6 @@ class GalleryController extends BaseController
             $fileName = $slugify->slugify($fileName) . '.zip';
 
             $this->downloadFile($archivePath, $fileName);
-
         } catch (FilesystemException) {
             return $this->renderProject404();
         }
