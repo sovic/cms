@@ -3,7 +3,7 @@
 namespace Sovic\Cms\Project;
 
 use Sovic\Cms\Entity\Setting;
-use Sovic\Cms\ORM\EntityModelFactory;
+use Sovic\Common\Model\EntityModelFactory;
 
 final class SettingFactory extends EntityModelFactory
 {

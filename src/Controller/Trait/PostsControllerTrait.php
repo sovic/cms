@@ -5,12 +5,12 @@ namespace Sovic\Cms\Controller\Trait;
 use LogicException;
 use Sovic\Cms\Entity\Post as PostEntity;
 use Sovic\Cms\Entity\Tag;
-use Sovic\Cms\Helpers\Date;
-use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
+use Sovic\Common\Helpers\Date;
+use Sovic\Common\Pagination\Pagination;
 use Sovic\Gallery\Gallery\Gallery;
 use Symfony\Component\HttpFoundation\Response;
 

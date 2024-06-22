@@ -7,17 +7,19 @@ use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Model\Trait\GalleryModelTrait;
+use Sovic\Common\Model\AbstractEntityModel;
 use Sovic\Gallery\Entity\GalleryModelInterface;
-use Sovic\Gallery\Gallery\Gallery;
 use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Entity\PostAuthor;
-use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @property \Sovic\Cms\Entity\Post entity
+ * @property \Sovic\Cms\Entity\Post $entity
  */
 class Post extends AbstractEntityModel implements GalleryModelInterface
 {
+    use GalleryModelTrait;
+
     public function getId(): int
     {
         return $this->entity->getId();
@@ -51,21 +53,6 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
     public function getGalleryModelId(): string
     {
         return $this->getId();
-    }
-
-    public function getCoverImage(): ?array
-    {
-        return $this->getGallery()->getCoverImage();
-    }
-
-    public function getGallery(): Gallery
-    {
-        return $this->getGalleryManager()->loadGallery();
-    }
-
-    public function getGalleries(): array
-    {
-        return $this->getGalleryManager()->getGalleries();
     }
 
     public function getAuthors(): array

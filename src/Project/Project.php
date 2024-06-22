@@ -3,7 +3,7 @@
 namespace Sovic\Cms\Project;
 
 use Sovic\Cms\Entity\Setting;
-use Sovic\Cms\ORM\AbstractEntityModel;
+use Sovic\Common\Model\AbstractEntityModel;
 
 /**
  * @property \Sovic\Cms\Entity\Project entity

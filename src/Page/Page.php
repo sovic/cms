@@ -2,14 +2,17 @@
 
 namespace Sovic\Cms\Page;
 
+use Sovic\Cms\Model\Trait\GalleryModelTrait;
+use Sovic\Common\Model\AbstractEntityModel;
 use Sovic\Gallery\Entity\GalleryModelInterface;
-use Sovic\Cms\ORM\AbstractEntityModel;
 
 /**
- * @property \Sovic\Cms\Entity\Page entity
+ * @property \Sovic\Cms\Entity\Page $entity
  */
 class Page extends AbstractEntityModel implements GalleryModelInterface
 {
+    use GalleryModelTrait;
+
     public function getId(): int
     {
         return $this->entity->getId();

@@ -9,9 +9,10 @@ use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Controller\Trait\PostsControllerTrait;
 use Sovic\Cms\Controller\Trait\ProjectControllerTrait;
 use Sovic\Cms\Entity\Author;
-use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
+use Sovic\Common\Controller\Trait\DownloadTrait;
+use Sovic\Common\Pagination\Pagination;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,6 +21,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
 {
     private const PER_PAGE = 8;
 
+    use DownloadTrait;
     use PostsControllerTrait;
     use ProjectControllerTrait;
 
@@ -145,25 +147,12 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         $gallery->setFilesystemOperator($galleryStorage);
         try {
             $archivePath = $gallery->createZipArchive();
-            $stream = fopen($archivePath, 'rb');
 
             $slugify = new Slugify();
             $slugify->activateRuleSet('default');
-
             $fileName = $slugify->slugify($this->post->entity->getName()) . '.zip';
-            $fileSize = filesize($archivePath);
 
-            header('Pragma: public');
-            header('Expires: -1');
-            header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
-            header('Content-Transfer-Encoding: binary');
-            header('Content-Disposition: attachment; filename="' . $fileName . '"');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Content-Length: ' . $fileSize);
-            header('Accept-Ranges: bytes');
-            fpassthru($stream);
-
-            exit;
+            $this->download($archivePath, $fileName);
         } catch (FilesystemException) {
             return $this->renderProject404();
         }

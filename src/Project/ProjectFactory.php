@@ -2,8 +2,8 @@
 
 namespace Sovic\Cms\Project;
 
-use Sovic\Cms\ORM\EntityModelFactory;
 use Sovic\Cms\Entity\Project as ProjectEntity;
+use Sovic\Common\Model\EntityModelFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ProjectFactory extends EntityModelFactory
