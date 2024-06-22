@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller;
 
+use LogicException;
 use Sovic\Cms\Entity\Post as PostEntity;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Helpers\Date;
@@ -10,6 +11,7 @@ use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
+use Sovic\Gallery\Gallery\Gallery;
 use Symfony\Component\HttpFoundation\Response;
 
 trait PostsControllerTrait
@@ -22,6 +24,9 @@ trait PostsControllerTrait
 
     private bool $addAuthors = true;
     private bool $addCovers = true;
+
+    /** @var Gallery[] */
+    private array $galleries = [];
 
     public function setPostFactory(PostFactory $postFactory): void
     {
@@ -197,5 +202,59 @@ trait PostsControllerTrait
         $this->assign('post_gallery', $resultSet->toArray());
 
         return null;
+    }
+
+    protected function getGallery(string $name): ?Gallery
+    {
+        if (!$this->post) {
+            throw new LogicException('Post not loaded');
+        }
+
+        $post = $this->post;
+
+        if (isset($this->galleries[$name])) {
+            return $this->galleries[$name];
+        }
+
+        $gallery = $post->getGalleryManager()->getGallery($name);
+        if (null === $gallery) {
+            return null;
+        }
+
+        $this->galleries[$name] = $gallery;
+
+        return $gallery;
+    }
+
+    protected function isAccessEnabled(?string $secret = null): bool
+    {
+        if (!$this->post) {
+            throw new LogicException('Post not loaded');
+        }
+
+        $post = $this->post;
+        if ($post->entity->isPublic()) {
+            return true;
+        }
+
+        return !empty($secret) && $secret === $post->entity->getSecret();
+    }
+
+    protected function isGalleryDownloadEnabled(?string $secret = null): bool
+    {
+        if (!$this->post) {
+            throw new LogicException('Post not loaded');
+        }
+
+        if (!$this->isAccessEnabled($secret)) {
+            return false;
+        }
+        if (empty($secret) || $secret !== $this->post->entity->getSecret()) {
+            return false;
+        }
+
+        $gallery = $this->getGallery('post');
+
+        return $gallery && $gallery->getEntity()->isDownloadEnabled();
     }
 }

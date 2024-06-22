@@ -33,7 +33,7 @@
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/orm": "^2.10",
-        "sovic/gallery": "^0.3.0",
+        "sovic/gallery": "^0.3.3",
         "symfony/form": "^6.4",
         "symfony/framework-bundle": "^6.4",
         "symfony/http-foundation": "^6.4",

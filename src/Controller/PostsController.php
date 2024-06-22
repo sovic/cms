@@ -2,7 +2,10 @@
 
 namespace Sovic\Cms\Controller;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Helpers\Pagination;
 use Sovic\Cms\Post\PostFactory;
@@ -85,29 +88,22 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         if ($response !== null) {
             return $response;
         }
-        $post = $this->getPost();
-        if (null === $post) {
-            return $this->renderProject404();
-        }
-
         $secret = $request->get('secret');
-        $isAuthorized = !empty($secret) && $secret === $post->entity->getSecret();
-        if (!$isAuthorized && !$post->entity->isPublic()) {
+        if (!$this->isAccessEnabled($secret)) {
             return $this->renderProject404();
         }
 
         $downloads = [];
-        if ($isAuthorized) {
-            $gallery = $post->getGalleryManager()->getGallery('downloads');
-            if ($gallery) {
-                $downloads = $gallery->getItems();
-            }
+        $gallery = $this->getGallery('downloads');
+        if ($gallery) {
+            $downloads = $gallery->getItems();
         }
 
         $project = $this->project;
         $settings = $project->getSettings();
 
-        $cover = $post->getGalleryManager()->getGallery('post')?->getCoverImage();
+        $gallery = $this->getGallery('post');
+        $cover = $gallery?->getCoverImage();
         if ($cover) {
             // TODO add gallery->setBaseUrl() method
             $baseUrl = $settings->get('gallery.base_url');
@@ -120,8 +116,55 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         $this->assign('cover', $cover);
         $this->assign('downloads', $downloads);
         $this->assign('has_parallax', $cover !== null);
+        $this->assign('is_download_enabled', $this->isGalleryDownloadEnabled($secret));
+        $this->assign('secret', $secret); // for download url
+        $this->assign('url_id', $urlId); // for download url
 
         return $this->render($this->getProjectTemplatePath('post/detail'));
+    }
+
+    #[Route('/posts/{urlId}/download-gallery/{secret}', name: 'posts_download_gallery', defaults: [])]
+    public function downloadGallery(string $urlId, string $secret, FilesystemOperator $galleryStorage): Response
+    {
+        $response = $this->loadPost($urlId);
+        if ($response !== null) {
+            return $response;
+        }
+
+        if (!$this->isGalleryDownloadEnabled($secret)) {
+            return $this->renderProject404();
+        }
+
+        $gallery = $this->getGallery('post');
+        if (!$gallery) {
+            return $this->renderProject404();
+        }
+
+        $gallery->setFilesystemOperator($galleryStorage);
+        try {
+            $archivePath = $gallery->createZipArchive();
+            $stream = fopen($archivePath, 'rb');
+
+            $slugify = new Slugify();
+            $slugify->activateRuleSet('default');
+
+            $fileName = $slugify->slugify($this->post->entity->getName()) . '.zip';
+            $fileSize = filesize($archivePath);
+
+            header('Pragma: public');
+            header('Expires: -1');
+            header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
+            header('Content-Transfer-Encoding: binary');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Content-Length: ' . $fileSize);
+            header('Accept-Ranges: bytes');
+            fpassthru($stream);
+
+            exit;
+        } catch (FilesystemException) {
+            return $this->renderProject404();
+        }
     }
 
     #[Route('/authors/{pageNr}', name: 'authors', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
