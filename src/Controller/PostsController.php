@@ -99,6 +99,10 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         $gallery = $this->getGallery('downloads');
         if ($gallery) {
             $downloads = $gallery->getItems();
+            foreach ($downloads as &$download) {
+                $download['url'] = $router->generate('gallery_item_download', ['id' => $download['id']]);
+            }
+            unset($download);
         }
 
         $project = $this->project;
@@ -113,6 +117,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
             $cover['big'] = $baseUrl . '/' . $cover['big'];
             $cover['full'] = $baseUrl . '/' . $cover['full'];
         }
+
         $isGalleryDownloadEnabled = $gallery->entity->isDownloadEnabled()
             && $secret === $this->post->entity->getSecret();
         $galleryDownloadUrl = $router->generate('gallery_download', ['id' => $gallery->getId()])
