@@ -134,7 +134,7 @@ class MigratePostsCommand extends Command
             $tag->setProject($project);
             $tag->setName($item['name']);
             $tag->setUrlId($item['raw_id']);
-            $tag->setPublic((bool) $item['public']);
+            $tag->setIsPublic((bool) $item['public']);
             $em->persist($tag);
         }
 
