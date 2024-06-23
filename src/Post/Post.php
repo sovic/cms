@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Model\Trait\PrivateSlugTrait;
 use Sovic\Common\Model\AbstractEntityModel;
 use Sovic\Gallery\Entity\GalleryModelInterface;
 use Sovic\Cms\Entity\Author;
@@ -19,6 +20,7 @@ use Sovic\Gallery\Model\Trait\GalleryModelTrait;
 class Post extends AbstractEntityModel implements GalleryModelInterface
 {
     use GalleryModelTrait;
+    use PrivateSlugTrait;
 
     public function getId(): int
     {
