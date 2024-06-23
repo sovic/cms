@@ -86,15 +86,21 @@ trait PostsControllerTrait
 
     protected function loadPostTagIndex(string $tagName, int $pageNr, int $perPage): ?Response
     {
-        $tag = $this->getEntityManager()->getRepository(Tag::class)->findOneBy(['urlId' => $tagName]);
+        $em = $this->getEntityManager();
+        $tagRepo = $em->getRepository(Tag::class);
+        $tag = $tagRepo->findOneBy(['urlId' => $tagName, 'isPublic' => true]);
         if (null === $tag) {
-            return $this->renderProject404();
+            $tag = $tagRepo->findOneBy(['privateSlug' => $tagName, 'isPublic' => false]);
+            if (null === $tag) {
+                return $this->renderProject404();
+            }
         }
         $this->tag = $tag;
 
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
         $posts = $repo->findPublicByTag($this->project, $tag, $perPage, ($pageNr - 1) * $perPage);
+        $total = $repo->countPublicByTag($this->project, $tag);
 
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);
@@ -106,7 +112,7 @@ trait PostsControllerTrait
             $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
         }
 
-        $pagination = new Pagination($repo->countPublicByTag($this->project, $tag), $perPage);
+        $pagination = new Pagination($total, $perPage);
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('pagination', $pagination);
