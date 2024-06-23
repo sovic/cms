@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
 use Sovic\Cms\Repository\PostRepository;
 
 #[Table(name: 'post')]
@@ -24,6 +25,8 @@ use Sovic\Cms\Repository\PostRepository;
 #[Entity(repositoryClass: PostRepository::class)]
 class Post
 {
+    use PrivateSlugTrait;
+
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
     #[GeneratedValue(strategy: 'IDENTITY')]
@@ -454,4 +457,3 @@ class Post
         $this->lastModifiedDate = $lastModifiedDate;
     }
 }
-

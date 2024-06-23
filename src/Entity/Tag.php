@@ -11,12 +11,15 @@ use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
+use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
 
 #[Table(name: 'tag')]
 #[Index(columns: ['project_id'], name: 'project_id')]
 #[Entity]
 class Tag
 {
+    use PrivateSlugTrait;
+
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
     #[GeneratedValue(strategy: 'IDENTITY')]
