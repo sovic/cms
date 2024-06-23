@@ -34,7 +34,7 @@ class SetPostPrivateCommand extends Command
 
         $slug = $post->generateUniqueSlug(32);
         $post->entity->setPrivateSlug($slug);
-        $post->entity->setPublic(0);
+        $post->entity->setPublic(false);
         $post->save();
 
         $url = $this->router->generate(

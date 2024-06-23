@@ -70,7 +70,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         return $qb->getQuery()->getResult();
     }
 
-    public function save(bool $publish = true): void
+    public function save(bool $publish = false): void
     {
         $entity = $this->entity;
 

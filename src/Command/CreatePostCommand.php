@@ -75,7 +75,7 @@ class CreatePostCommand extends Command
         if (!$post) {
             throw new RuntimeException('Unable to create post');
         }
-        $post->save(false);
+        $post->save();
 
         $gm = $post->getGalleryManager();
         $gm->setFilesystemOperator($this->galleryStorage);
@@ -95,7 +95,7 @@ class CreatePostCommand extends Command
 
         $question = new ConfirmationQuestion('Publish post? (y/n)', true);
         if ($helper->ask($input, $output, $question)) {
-            $post->save();
+            $post->save(true);
         }
 
         $output->writeln('Post created with ID: ' . $post->getId());
