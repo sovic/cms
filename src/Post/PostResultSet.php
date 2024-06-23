@@ -118,6 +118,11 @@ class PostResultSet
             $id = $post->getId();
             $entity = $post->entity;
 
+            $slug = $entity->getUrlId();
+            if (!$entity->isPublic() && $entity->getPrivateSlug()) {
+                $slug = $entity->getPrivateSlug();
+            }
+
             $item = [
                 'content' => $entity->getContent(),
                 'cover_photo' => $covers[$id] ?? null,
@@ -134,8 +139,9 @@ class PostResultSet
                 'subtitle' => $entity->getSubtitle(),
                 'tags' => [],
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
-                'url_id' => $entity->getUrlId(),
+                'url_id' => $slug,
             ];
+
             if ($this->addAuthors) {
                 $item['authors'] = $post->getAuthors();
             }
