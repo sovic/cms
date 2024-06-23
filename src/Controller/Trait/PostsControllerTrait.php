@@ -8,6 +8,7 @@ use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
+use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Helpers\Date;
 use Sovic\Common\Pagination\Pagination;
@@ -89,18 +90,28 @@ trait PostsControllerTrait
         $em = $this->getEntityManager();
         $tagRepo = $em->getRepository(Tag::class);
         $tag = $tagRepo->findOneBy(['urlId' => $tagName, 'isPublic' => true]);
+        $privateTag = false;
         if (null === $tag) {
             $tag = $tagRepo->findOneBy(['privateSlug' => $tagName, 'isPublic' => false]);
             if (null === $tag) {
                 return $this->renderProject404();
             }
+            $privateTag = true;
         }
         $this->tag = $tag;
 
         /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
-        $posts = $repo->findPublicByTag($this->project, $tag, $perPage, ($pageNr - 1) * $perPage);
-        $total = $repo->countPublicByTag($this->project, $tag);
+
+        $search = new PostSearchRequest();
+        $search->project = $this->project;
+        $search->tag = $tag;
+        if ($privateTag) {
+            $search->includePrivate = true;
+        }
+
+        $posts = $repo->findByRequest($search, $perPage, ($pageNr - 1) * $perPage);
+        $total = $repo->countByRequest($search);
 
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
         $postsResultSet->setAddAuthors($this->addAuthors);

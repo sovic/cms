@@ -7,9 +7,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Entity\PostTag;
+use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Cms\Project\Project;
 
 class PostRepository extends EntityRepository
@@ -122,6 +124,54 @@ class PostRepository extends EntityRepository
             return $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException|NonUniqueResultException) {
             return 0;
+        }
+    }
+
+    public function findByRequest(PostSearchRequest $request, int $limit = null, int $offset = null)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('p')->from(Post::class, 'p');
+        $this->updateCriteria($qb, $request);
+
+        $qb->addOrderBy('p.publishDate', 'DESC');
+        $qb->addOrderBy('p.id', 'DESC');
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countByRequest(PostSearchRequest $request): int
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('count(p.id)')->from(Post::class, 'p');
+        $this->updateCriteria($qb, $request);
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException) {
+            return 0;
+        }
+    }
+
+    private function updateCriteria(QueryBuilder $qb, PostSearchRequest $request): void
+    {
+        if ($request->project) {
+            $qb->andWhere('p.project = :project');
+            $qb->setParameter(':project', $request->project->entity);
+        }
+        if (!$request->includePrivate) {
+            $qb->andWhere('p.public = 1');
+        }
+        if ($request->tag) {
+            $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
+            $qb->andWhere('tp.tagId = :tag_id');
+            $qb->setParameter(':tag_id', $request->tag->getId());
         }
     }
 }
