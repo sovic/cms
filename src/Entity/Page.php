@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Repository\PageRepository;
 
 #[Table(name: 'page')]
@@ -21,6 +22,8 @@ use Sovic\Cms\Repository\PageRepository;
 #[Entity(repositoryClass: PageRepository::class)]
 class Page
 {
+    use MetaColumnsTrait;
+
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
     #[GeneratedValue(strategy: 'IDENTITY')]
@@ -35,15 +38,6 @@ class Page
 
     #[Column(name: 'url_id', type: Types::STRING, length: 200, nullable: true)]
     protected string $urlId;
-
-    #[Column(name: 'head_title', type: Types::STRING, length: 200, nullable: true)]
-    protected ?string $metaTitle = null;
-
-    #[Column(name: 'meta_description', type: Types::STRING, length: 200, nullable: true)]
-    protected ?string $metaDescription = null;
-
-    #[Column(name: 'meta_keywords', type: Types::STRING, length: 200, nullable: true)]
-    protected ?string $metaKeywords = null;
 
     #[Column(name: 'heading', type: Types::STRING, length: 150, nullable: true)]
     protected ?string $heading = null;
@@ -131,36 +125,6 @@ class Page
     public function setUrlId(string $urlId): void
     {
         $this->urlId = $urlId;
-    }
-
-    public function getMetaTitle(): ?string
-    {
-        return $this->metaTitle;
-    }
-
-    public function setMetaTitle(?string $metaTitle): void
-    {
-        $this->metaTitle = $metaTitle;
-    }
-
-    public function getMetaDescription(): ?string
-    {
-        return $this->metaDescription;
-    }
-
-    public function setMetaDescription(?string $metaDescription): void
-    {
-        $this->metaDescription = $metaDescription;
-    }
-
-    public function getMetaKeywords(): ?string
-    {
-        return $this->metaKeywords;
-    }
-
-    public function setMetaKeywords(?string $metaKeywords): void
-    {
-        $this->metaKeywords = $metaKeywords;
     }
 
     public function getHeading(): ?string

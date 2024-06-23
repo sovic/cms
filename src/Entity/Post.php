@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
 use Sovic\Cms\Repository\PostRepository;
 
@@ -25,6 +26,7 @@ use Sovic\Cms\Repository\PostRepository;
 #[Entity(repositoryClass: PostRepository::class)]
 class Post
 {
+    use MetaColumnsTrait;
     use PrivateSlugTrait;
 
     #[Column(name: 'id', type: Types::INTEGER)]
@@ -41,15 +43,6 @@ class Post
 
     #[Column(name: 'url_id', type: Types::STRING, length: 255, nullable: false)]
     public string $urlId;
-
-    #[Column(name: 'meta_title', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $metaTitle = null;
-
-    #[Column(name: 'meta_description', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $metaDescription = null;
-
-    #[Column(name: 'meta_keywords', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $metaKeywords = null;
 
     #[Column(name: 'heading', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $heading = null;
@@ -165,36 +158,6 @@ class Post
     public function setUrlId(string $urlId): void
     {
         $this->urlId = $urlId;
-    }
-
-    public function getMetaTitle(): ?string
-    {
-        return $this->metaTitle;
-    }
-
-    public function setMetaTitle(?string $metaTitle): void
-    {
-        $this->metaTitle = $metaTitle;
-    }
-
-    public function getMetaDescription(): ?string
-    {
-        return $this->metaDescription;
-    }
-
-    public function setMetaDescription(?string $metaDescription): void
-    {
-        $this->metaDescription = $metaDescription;
-    }
-
-    public function getMetaKeywords(): ?string
-    {
-        return $this->metaKeywords;
-    }
-
-    public function setMetaKeywords(?string $metaKeywords): void
-    {
-        $this->metaKeywords = $metaKeywords;
     }
 
     public function getHeading(): ?string

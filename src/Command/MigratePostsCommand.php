@@ -89,8 +89,8 @@ class MigratePostsCommand extends Command
                 $post->setImportId($item['id']);
                 $post->setName($item['name']);
                 $post->setUrlId($item['raw_id']);
-                if (!empty($item['head_title'])) {
-                    $post->setMetaTitle($item['head_title']);
+                if (!empty($item['meta_title'])) {
+                    $post->setMetaTitle($item['meta_title']);
                 }
                 if (!empty($item['meta_description'])) {
                     $post->setMetaDescription($item['meta_description']);
