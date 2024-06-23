@@ -40,28 +40,40 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         return $this->redirectToRoute('posts_index', ['pageNr' => $pageNr], 301);
     }
 
-    #[Route('/posts/{pageNr}', name: 'posts_index', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
-    public function index(int $pageNr, ?string $tagName = null): Response
+    #[Route(
+        '/posts/{pageNr}',
+        name: 'posts_index',
+        requirements: ['pageNr' => '\d+'],
+        defaults: ['pageNr' => 1]
+    )]
+    public function index(int $pageNr): Response
     {
-        $project = $this->project;
-        $settings = $project->getSettings();
+        $settings = $this->project->getSettings();
         $perPage = $settings->get('posts.per_page') ?? 9;
 
-        if ($tagName) {
-            $response = $this->loadPostTagIndex($tagName, $pageNr, $perPage);
-        } else {
-            $response = $this->loadPostIndex($pageNr, $perPage);
-        }
+        $response = $this->loadPostIndex($pageNr, $perPage);
 
         $this->assign('active_item', '/posts');
 
         return $response ?? $this->render($this->getProjectTemplatePath('post/index'));
     }
 
-    #[Route('/posts/tag/{tagName}/{pageNr}', name: 'posts_tag', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
+    #[Route(
+        '/posts/tag/{tagName}/{pageNr}',
+        name: 'posts_tag',
+        requirements: ['pageNr' => '\d+'],
+        defaults: ['pageNr' => 1]
+    )]
     public function tag(string $tagName, int $pageNr): Response
     {
-        return $this->index($pageNr, $tagName);
+        $settings = $this->project->getSettings();
+        $perPage = $settings->get('posts.per_page') ?? 9;
+
+        $response = $this->loadPostTagIndex($tagName, $pageNr, $perPage);
+
+        $this->assign('active_item', '/posts');
+
+        return $response ?? $this->render($this->getProjectTemplatePath('post/index'));
     }
 
     #[Route(
