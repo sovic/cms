@@ -35,8 +35,8 @@ class Tag
     #[Column(name: 'url_id', type: Types::STRING, length: 100, nullable: true)]
     protected string $urlId;
 
-    #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
-    protected bool $public = false;
+    #[Column(name: 'is_public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    protected bool $isPublic = false;
 
     #[Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
     protected ?string $lang = 'cs';
@@ -84,14 +84,14 @@ class Tag
         $this->urlId = $urlId;
     }
 
-    public function isPublic(): bool
+    public function isIsPublic(): bool
     {
-        return $this->public;
+        return $this->isPublic;
     }
 
-    public function setPublic(bool $public): void
+    public function setIsPublic(bool $isPublic): void
     {
-        $this->public = $public;
+        $this->isPublic = $isPublic;
     }
 
     public function getLang(): ?string
