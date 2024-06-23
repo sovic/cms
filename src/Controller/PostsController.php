@@ -102,10 +102,6 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         if ($response !== null) {
             return $response;
         }
-        $secret = $request->get('secret');
-        if (!$this->post->isAccessEnabled($secret)) {
-            return $this->renderProject404();
-        }
 
         $downloads = [];
         $gallery = $this->getGallery('downloads');
@@ -130,6 +126,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
             $cover['full'] = $baseUrl . '/' . $cover['full'];
         }
 
+        $secret = $request->get('secret');
         $isGalleryDownloadEnabled = $gallery->entity->isDownloadEnabled()
             && $secret === $this->post->entity->getSecret();
         $galleryDownloadUrl = $router->generate('gallery_download', ['id' => $gallery->getId()])

@@ -145,13 +145,4 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $this->getEntityManager()->flush();
         }
     }
-
-    public function isAccessEnabled(?string $secret = null): bool
-    {
-        if ($this->entity->isPublic()) {
-            return true;
-        }
-
-        return !empty($secret) && $secret === $this->entity->getSecret();
-    }
 }

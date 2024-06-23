@@ -196,7 +196,10 @@ trait PostsControllerTrait
     {
         $post = $this->postFactory->loadByUrlId($urlId, true);
         if (null === $post) {
-            return $this->renderProject404();
+            $post = $this->postFactory->loadByPrivateSlug($urlId);
+            if (null === $post) {
+                return $this->renderProject404();
+            }
         }
         $this->post = $post;
 
