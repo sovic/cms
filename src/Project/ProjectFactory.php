@@ -18,6 +18,11 @@ final class ProjectFactory extends EntityModelFactory
         return $this->loadModelBy(ProjectEntity::class, Project::class, ['slug' => $slug]);
     }
 
+    public function loadByEntity(ProjectEntity $entity): Project
+    {
+        return $this->loadEntityModel($entity, Project::class);
+    }
+
     public function loadByRequest(?Request $request = null): ?Project
     {
         if (!$request) {
