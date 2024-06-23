@@ -192,9 +192,9 @@ trait PostsControllerTrait
         $this->assign('suggested_tags', $tags);
     }
 
-    protected function loadPost(string $urlId): ?Response
+    protected function loadPost(string $urlId, bool $includePrivate = false): ?Response
     {
-        $post = $this->postFactory->loadByUrlId($urlId, true);
+        $post = $this->postFactory->loadByUrlId($urlId, $includePrivate);
         if (null === $post) {
             $post = $this->postFactory->loadByPrivateSlug($urlId);
             if (null === $post) {

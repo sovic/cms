@@ -32,6 +32,12 @@ class SetPostPrivateCommand extends Command
             return Command::FAILURE;
         }
 
+        if ($post->entity->getPrivateSlug() !== null) {
+            $output->writeln('Post already has a private slug');
+
+            return Command::FAILURE;
+        }
+
         $slug = $post->generateUniqueSlug(32);
         $post->entity->setPrivateSlug($slug);
         $post->entity->setPublic(false);

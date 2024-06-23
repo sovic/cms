@@ -34,6 +34,12 @@ class SetTagPrivateCommand extends Command
             return Command::FAILURE;
         }
 
+        if ($tag->entity->getPrivateSlug() !== null) {
+            $output->writeln('Tag already has a private slug');
+
+            return Command::FAILURE;
+        }
+
         $slug = $tag->generateUniqueSlug(32);
         $tag->entity->setPrivateSlug($slug);
         $tag->entity->setIsPublic(0);

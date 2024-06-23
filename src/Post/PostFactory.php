@@ -25,7 +25,7 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
         return $this->loadModelBy(PostEntity::class, Post::class, $criteria);
     }
 
-    public function loadByUrlId(string $urlId, bool $allowNonPublished = false): ?Post
+    public function loadByUrlId(string $urlId, bool $includePrivate = false): ?Post
     {
         $criteria = $this->getProjectSelectCriteria();
         $urlId = trim($urlId, '/\\'); // trim leading / trailing slashes
@@ -36,7 +36,7 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
         if (null === $model) {
             return null;
         }
-        if (!$allowNonPublished && !$model->entity->isPublic()) {
+        if (!$includePrivate && !$model->entity->isPublic()) {
             return null;
         }
 
