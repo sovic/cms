@@ -40,6 +40,7 @@ final class ProjectFactory extends EntityModelFactory
         }
 
         $host = $request->getHost();
+        $host = trim($host, '.');
         $em = $this->getEntityManager();
         $result = $em->getRepository(ProjectEntity::class)
             ->createQueryBuilder('p')
