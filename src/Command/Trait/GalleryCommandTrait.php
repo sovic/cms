@@ -11,8 +11,12 @@ use Symfony\Component\Console\Question\Question;
 
 trait GalleryCommandTrait
 {
-    private function addToGallery(InputInterface $input, OutputInterface $output, GalleryModelInterface $model): void
-    {
+    private function addToGallery(
+        InputInterface        $input,
+        OutputInterface       $output,
+        GalleryModelInterface $model,
+        ?string               $defaultGalleryName = null,
+    ): void {
         $gm = $model->getGalleryManager();
         $gm->setFilesystemOperator($this->galleryStorage);
 
@@ -21,8 +25,11 @@ trait GalleryCommandTrait
         $galleryPath = $helper->ask($input, $output, $question);
 
         if ($galleryPath !== null) {
-            $question = new Question('Gallery name: ');
+            $question = new Question('Gallery name [default=' . $defaultGalleryName . ']: ');
             $galleryName = $helper->ask($input, $output, $question);
+            if (empty($galleryName)) {
+                $galleryName = $defaultGalleryName;
+            }
             $gallery = $gm->loadGallery($galleryName);
             try {
                 $gallery->uploadPath($galleryPath);

@@ -31,7 +31,7 @@ class AddToPageGallery extends Command
             return Command::FAILURE;
         }
 
-        $this->addToGallery($input, $output, $page);
+        $this->addToGallery($input, $output, $page, 'page');
 
         return Command::SUCCESS;
     }

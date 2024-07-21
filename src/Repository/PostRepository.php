@@ -14,6 +14,12 @@ use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Cms\Project\Project;
 
+/**
+ * @method Post|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Post|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Post[]    findAll()
+ * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 class PostRepository extends EntityRepository
 {
     public function findPublic(Project $project, int $limit = null, int $offset = null): array
@@ -127,13 +133,18 @@ class PostRepository extends EntityRepository
         }
     }
 
-    public function findByRequest(PostSearchRequest $request, int $limit = null, int $offset = null)
+    /**
+     * @return Post[]
+     */
+    public function findByRequest(PostSearchRequest $request, int $limit = null, int $offset = null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p')->from(Post::class, 'p');
         $this->updateCriteria($qb, $request);
 
-        $qb->addOrderBy('p.publishDate', 'DESC');
+        if (!$request->includePrivate) {
+            $qb->addOrderBy('p.publishDate', 'DESC');
+        }
         $qb->addOrderBy('p.id', 'DESC');
 
         if ($limit) {
