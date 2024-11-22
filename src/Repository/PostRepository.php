@@ -29,7 +29,10 @@ class PostRepository extends EntityRepository
                 'project' => $project->entity,
                 'public' => true,
             ],
-            ['publishDate' => 'DESC', 'id' => 'DESC'],
+            [
+                'publishDate' => 'DESC',
+                'id' => 'DESC',
+            ],
             $limit,
             $offset,
         );
