@@ -2,11 +2,11 @@
 
 namespace Sovic\Cms\Project;
 
-use Sovic\Cms\Entity\Setting;
+use Sovic\Common\Entity\Setting;
 use Sovic\Common\Model\AbstractEntityModel;
 
 /**
- * @property \Sovic\Cms\Entity\Project entity
+ * @property \Sovic\Common\Entity\Project entity
  */
 class Project extends AbstractEntityModel
 {

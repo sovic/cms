@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Repository\PageRepository;
+use Sovic\Common\Entity\Project;
 
 #[Table(name: 'page')]
 #[Index(columns: ['project_id'], name: 'project_id')]

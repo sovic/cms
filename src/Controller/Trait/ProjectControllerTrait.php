@@ -47,6 +47,7 @@ trait ProjectControllerTrait
         return $this->projectTwig?->getLoader()->exists($projectTemplatePath) ? $projectTemplatePath : null;
     }
 
+    /** @noinspection PhpMultipleClassDeclarationsInspection */
     protected function renderProject404(string $template = 'page/404', array $parameters = []): Response
     {
         $template = $this->getProjectTemplatePath($template);

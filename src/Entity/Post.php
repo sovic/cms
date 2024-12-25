@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
 use Sovic\Cms\Repository\PostRepository;
+use Sovic\Common\Entity\Project;
 
 #[Table(name: 'post')]
 #[Index(columns: ['url_id', 'public'], name: 'public_post')]

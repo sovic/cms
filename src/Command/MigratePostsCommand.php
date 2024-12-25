@@ -1,19 +1,17 @@
 <?php
 
-/** @noinspection SqlResolve */
-
 namespace Sovic\Cms\Command;
 
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Sovic\Cms\Entity\Post;
-use Sovic\Cms\Entity\Project;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Post\PostFactory;
+use Sovic\Common\Project\Project;
+use Sovic\Common\Project\ProjectFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,20 +29,18 @@ class MigratePostsCommand extends Command
     public function __construct(
         private readonly ManagerRegistry $registry,
         private readonly PostFactory     $postFactory,
+        private readonly ProjectFactory  $projectFactory,
     ) {
         parent::__construct();
     }
 
-    /**
-     * @throws Exception
-     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var EntityManagerInterface $importEm */
         $importEm = $this->registry->getManager('import');
         /** @var EntityManagerInterface $em */
         $em = $this->registry->getManager('default');
-        $project = $em->getRepository(Project::class)->findOneBy(['slug' => 'jana-cernochova']);
+        $project = $this->projectFactory->loadBySlug('jana-cernochova');
         if (!$project) {
             return Command::FAILURE;
         }
@@ -55,9 +51,6 @@ class MigratePostsCommand extends Command
         return Command::SUCCESS;
     }
 
-    /**
-     * @throws Exception
-     */
     private function importPosts(EntityManagerInterface $importEm, EntityManagerInterface $em, Project $project): void
     {
         $batch = 100;
@@ -84,7 +77,7 @@ class MigratePostsCommand extends Command
                     continue;
                 }
                 $post = new Post();
-                $post->setProject($project);
+                $post->setProject($project->entity);
                 $post->setImportService('janacernochova');
                 $post->setImportId($item['id']);
                 $post->setName($item['name']);
@@ -114,9 +107,6 @@ class MigratePostsCommand extends Command
         } while (count($result) > 0);
     }
 
-    /**
-     * @throws Exception
-     */
     private function importTags(EntityManagerInterface $importEm, EntityManagerInterface $em, Project $project): void
     {
         $sql = "
@@ -131,7 +121,7 @@ class MigratePostsCommand extends Command
                 continue;
             }
             $tag = new Tag();
-            $tag->setProject($project);
+            $tag->setProject($project->entity);
             $tag->setName($item['name']);
             $tag->setUrlId($item['raw_id']);
             $tag->setIsPublic((bool) $item['public']);

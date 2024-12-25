@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
+use Sovic\Common\Entity\Project;
 
 #[Table(name: 'tag')]
 #[Index(columns: ['project_id'], name: 'project_id')]
