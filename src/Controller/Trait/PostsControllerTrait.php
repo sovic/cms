@@ -138,6 +138,7 @@ trait PostsControllerTrait
 
     protected function loadMonthlyArchive(int $year, int $month, int $pageNr, int $perPage): null
     {
+        /** @var PostRepository $repo */
         $repo = $this->getEntityManager()->getRepository(PostEntity::class);
         $posts = $repo->findPublicByMonth($this->project, $year, $month, $perPage, ($pageNr - 1) * $perPage);
 

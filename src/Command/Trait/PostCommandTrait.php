@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Command\Trait;
 
 use Sovic\Cms\Post\Post;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -11,6 +12,7 @@ trait PostCommandTrait
 {
     private function loadPostById(InputInterface $input, OutputInterface $output): ?Post
     {
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $question = new Question('Post ID: ');
         $id = $helper->ask($input, $output, $question);

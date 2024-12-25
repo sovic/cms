@@ -7,6 +7,7 @@ use Sovic\Cms\Command\Trait\PostCommandTrait;
 use Sovic\Cms\Post\PostFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -30,6 +31,7 @@ class DeletePostCommand extends Command
             return Command::FAILURE;
         }
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('Delete post? (y/n)', true);
         if (!$helper->ask($input, $output, $question)) {

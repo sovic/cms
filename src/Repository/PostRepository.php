@@ -22,6 +22,9 @@ use Sovic\Cms\Project\Project;
  */
 class PostRepository extends EntityRepository
 {
+    /**
+     * @return Post[]
+     */
     public function findPublic(Project $project, int $limit = null, int $offset = null): array
     {
         return $this->findBy(
@@ -48,6 +51,9 @@ class PostRepository extends EntityRepository
         );
     }
 
+    /**
+     * @return Post[]
+     */
     public function findPublicByTag(Project $project, Tag $tag, int $limit = null, int $offset = null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -90,8 +96,16 @@ class PostRepository extends EntityRepository
         }
     }
 
-    public function findPublicByMonth(Project $project, int $year, int $month, int $limit = null, int $offset = null)
-    {
+    /**
+     * @return Post[]
+     */
+    public function findPublicByMonth(
+        Project $project,
+        int     $year,
+        int     $month,
+        int     $limit = null,
+        int     $offset = null
+    ): array {
         $startDate = new DateTimeImmutable("$year-$month-01T00:00:00");
         $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
 

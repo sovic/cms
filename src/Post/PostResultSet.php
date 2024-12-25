@@ -6,6 +6,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Gallery\Entity\GalleryItem;
 use Sovic\Gallery\Gallery\GalleryHelper;
+use Sovic\Gallery\Repository\GalleryItemRepository;
 
 class PostResultSet
 {
@@ -87,6 +88,7 @@ class PostResultSet
 
     private function loadCovers(): array
     {
+        /** @var GalleryItemRepository $repo */
         $repo = $this->getEntityManager()->getRepository(GalleryItem::class);
         $entities = $repo->findGalleriesCovers('post', $this->getPostsIdList(), 'post');
         $result = [];

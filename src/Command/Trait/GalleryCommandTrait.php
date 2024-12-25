@@ -5,6 +5,7 @@ namespace Sovic\Cms\Command\Trait;
 use ImagickException;
 use League\Flysystem\FilesystemException;
 use Sovic\Gallery\Entity\GalleryModelInterface;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -20,6 +21,7 @@ trait GalleryCommandTrait
         $gm = $model->getGalleryManager();
         $gm->setFilesystemOperator($this->galleryStorage);
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $question = new Question('Gallery items path: ');
         $galleryPath = $helper->ask($input, $output, $question);

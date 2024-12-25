@@ -51,7 +51,6 @@ class SitemapController extends BaseController implements ProjectControllerInter
             /** @var PostRepository $repo */
             $repo = $em->getRepository(Post::class);
             $posts = $repo->findPublic($this->project);
-            /** @var Post $post */
             foreach ($posts as $post) {
                 $url = $router->generate($this->postsRoute, ['urlId' => $post->getUrlId()]);
                 $this->addUrl($urlHelper->getAbsoluteUrl($url), $post->getLastModifiedDate());

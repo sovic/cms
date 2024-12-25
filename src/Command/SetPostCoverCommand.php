@@ -9,6 +9,7 @@ use Sovic\Cms\Post\PostFactory;
 use Sovic\Gallery\Entity\GalleryItem;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -33,6 +34,7 @@ class SetPostCoverCommand extends Command
             return Command::FAILURE;
         }
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $question = new Question('Gallery item ID: ');
         $id = $helper->ask($input, $output, $question);
