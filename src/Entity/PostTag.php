@@ -52,4 +52,24 @@ class PostTag
     {
         $this->tagId = $tagId;
     }
+
+    public function getPost(): Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(Post $post): void
+    {
+        $this->post = $post;
+    }
+
+    public function getTag(): Tag
+    {
+        return $this->tag;
+    }
+
+    public function setTag(Tag $tag): void
+    {
+        $this->tag = $tag;
+    }
 }

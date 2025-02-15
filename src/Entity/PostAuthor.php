@@ -60,5 +60,13 @@ class PostAuthor
         $this->post = $post;
     }
 
+    public function getAuthor(): Author
+    {
+        return $this->author;
+    }
 
+    public function setAuthor(Author $author): void
+    {
+        $this->author = $author;
+    }
 }
