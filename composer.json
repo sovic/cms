@@ -37,15 +37,15 @@
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/orm": "^2.10",
-        "sovic/gallery": "^0.3.3",
+        "sovic/common": "dev-master",
+        "sovic/gallery": "dev-master",
         "symfony/form": "^7.1",
         "symfony/framework-bundle": "^7.1",
         "symfony/http-foundation": "^7.1",
         "symfony/mailer": "^7.1",
         "symfony/security-bundle": "^7.1",
         "symfony/twig-bundle": "^7.1",
-        "symfony/validator": "^7.1",
-        "sovic/common": "dev-master"
+        "symfony/validator": "^7.1"
     },
     "require-dev": {
         "rector/rector": "^1.0",
