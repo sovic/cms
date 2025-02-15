@@ -9,7 +9,7 @@ use Random\RandomException;
 use RuntimeException;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Post\PostFactory;
-use Sovic\Cms\Project\ProjectFactory;
+use Sovic\Common\Project\ProjectFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;

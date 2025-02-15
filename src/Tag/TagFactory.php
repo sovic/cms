@@ -3,8 +3,8 @@
 namespace Sovic\Cms\Tag;
 
 use Sovic\Cms\Entity\Tag as TagEntity;
-use Sovic\Cms\Project\ProjectEntityModelFactoryInterface;
-use Sovic\Cms\Project\ProjectEntityModelFactoryTrait;
+use Sovic\Common\Project\ProjectEntityModelFactoryInterface;
+use Sovic\Common\Project\ProjectEntityModelFactoryTrait;
 use Sovic\Common\Model\EntityModelFactory;
 
 final class TagFactory extends EntityModelFactory implements ProjectEntityModelFactoryInterface

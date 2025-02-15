@@ -2,7 +2,7 @@
 
 namespace Sovic\Cms\Controller;
 
-use Sovic\Cms\Project\Project;
+use Sovic\Common\Project\Project;
 
 interface ProjectControllerInterface
 {

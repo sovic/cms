@@ -3,8 +3,8 @@
 namespace Sovic\Cms\Post;
 
 use Sovic\Cms\Entity\Post as PostEntity;
-use Sovic\Cms\Project\ProjectEntityModelFactoryInterface;
-use Sovic\Cms\Project\ProjectEntityModelFactoryTrait;
+use Sovic\Common\Project\ProjectEntityModelFactoryInterface;
+use Sovic\Common\Project\ProjectEntityModelFactoryTrait;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Model\EntityModelFactory;
 

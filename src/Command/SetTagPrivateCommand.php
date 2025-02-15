@@ -4,7 +4,7 @@ namespace Sovic\Cms\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Command\Trait\TagCommandTrait;
-use Sovic\Cms\Project\ProjectFactory;
+use Sovic\Common\Project\ProjectFactory;
 use Sovic\Cms\Tag\TagFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

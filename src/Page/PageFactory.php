@@ -4,8 +4,8 @@ namespace Sovic\Cms\Page;
 
 use Cocur\Slugify\Slugify;
 use Sovic\Cms\Entity\Page as PageEntity;
-use Sovic\Cms\Project\ProjectEntityModelFactoryInterface;
-use Sovic\Cms\Project\ProjectEntityModelFactoryTrait;
+use Sovic\Common\Project\ProjectEntityModelFactoryInterface;
+use Sovic\Common\Project\ProjectEntityModelFactoryTrait;
 use Sovic\Common\Model\EntityModelFactory;
 
 final class PageFactory extends EntityModelFactory implements ProjectEntityModelFactoryInterface

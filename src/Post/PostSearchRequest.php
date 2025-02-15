@@ -3,7 +3,7 @@
 namespace Sovic\Cms\Post;
 
 use Sovic\Cms\Entity\Tag;
-use Sovic\Cms\Project\Project;
+use Sovic\Common\Project\Project;
 
 class PostSearchRequest
 {

@@ -12,7 +12,7 @@ use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Post\PostSearchRequest;
-use Sovic\Cms\Project\Project;
+use Sovic\Common\Project\Project;
 
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)

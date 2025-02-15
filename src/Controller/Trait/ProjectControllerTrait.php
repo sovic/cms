@@ -2,7 +2,7 @@
 
 namespace Sovic\Cms\Controller\Trait;
 
-use Sovic\Cms\Project\Project;
+use Sovic\Common\Project\Project;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
 use Twig\Environment;

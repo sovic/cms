@@ -4,7 +4,7 @@ namespace Sovic\Cms\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Sovic\Cms\Entity\Page;
-use Sovic\Cms\Project\Project;
+use Sovic\Common\Project\Project;
 
 class PageRepository extends EntityRepository
 {
