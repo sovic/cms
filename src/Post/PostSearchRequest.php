@@ -12,4 +12,5 @@ class PostSearchRequest
     public ?string $search = null;
     public ?Tag $tag = null;
     public ?string $author = null;
+    public ?int $maxId = null;
 }

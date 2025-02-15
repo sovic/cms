@@ -201,5 +201,9 @@ class PostRepository extends EntityRepository
             $qb->andWhere('tp.tagId = :tag_id');
             $qb->setParameter(':tag_id', $request->tag->getId());
         }
+        if ($request->maxId) {
+            $qb->andWhere('p.id < :max_id');
+            $qb->setParameter(':max_id', $request->maxId);
+        }
     }
 }

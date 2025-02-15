@@ -218,9 +218,18 @@ trait PostsControllerTrait
             $resultSet->setBaseUrl($galleryBaseUrl);
         }
 
+        /** @var PostRepository $repo */
+        $repo = $this->getEntityManager()->getRepository(PostEntity::class);
+        $request = new PostSearchRequest();
+        $request->project = $this->project;
+        $request->maxId = $post['id'];
+        $nextPosts = $repo->findByRequest($request, 3);
+        $nextPostsResultSet = $this->postResultSetFactory->createFromEntities($nextPosts);
+
         $this->assign('post', $post);
         $this->assign('post_authors', $this->post->getAuthors());
         $this->assign('post_gallery', $resultSet->toArray());
+        $this->assign('next_posts', $nextPostsResultSet->toArray());
 
         return null;
     }
