@@ -124,7 +124,9 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         if (!$postTag) {
             $postTag = new PostTag();
             $postTag->setPostId($this->getId());
+            $postTag->setPost($this->entity);
             $postTag->setTagId($tag->getId());
+            $postTag->setTag($tag);
             $this->getEntityManager()->persist($postTag);
             $this->getEntityManager()->flush();
         }
