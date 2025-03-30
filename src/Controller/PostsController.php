@@ -10,6 +10,7 @@ use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Common\Controller\Trait\DownloadTrait;
 use Sovic\Common\Pagination\Pagination;
+use Sovic\Common\Project\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,9 +27,10 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     public function __construct(
         EntityManagerInterface $entityManager,
         PostFactory            $postFactory,
-        PostResultSetFactory   $postResultSetFactory
+        PostResultSetFactory   $postResultSetFactory,
+        Settings               $settings,
     ) {
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $settings);
 
         $this->setPostFactory($postFactory);
         $this->setPostResultSetFactory($postResultSetFactory);
@@ -149,8 +151,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         $settings = $project->getSettings();
         $perPage = $settings->get('posts.per_page') ?? 24;
 
-        $total = $this
-            ->getEntityManager()
+        $total = $this->entityManager
             ->getRepository(Author::class)
             ->count(['project' => $this->project->entity]);
 
@@ -160,8 +161,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
         }
         $pagination->setCurrentPage($pageNr);
 
-        $authors = $this
-            ->getEntityManager()
+        $authors = $this->entityManager
             ->getRepository(Author::class)
             ->findBy(
                 [

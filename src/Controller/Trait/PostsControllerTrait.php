@@ -57,7 +57,7 @@ trait PostsControllerTrait
     protected function loadPostIndex(int $pageNr, int $perPage): ?Response
     {
         /** @var PostRepository $repo */
-        $repo = $this->getEntityManager()->getRepository(PostEntity::class);
+        $repo = $this->entityManager->getRepository(PostEntity::class);
 
         $pagination = new Pagination($repo->countPublic($this->project), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
@@ -87,7 +87,7 @@ trait PostsControllerTrait
 
     protected function loadPostTagIndex(string $tagName, int $pageNr, int $perPage): ?Response
     {
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $tagRepo = $em->getRepository(Tag::class);
         $tag = $tagRepo->findOneBy(['urlId' => $tagName, 'isPublic' => true]);
         $privateTag = false;
@@ -101,7 +101,7 @@ trait PostsControllerTrait
         $this->tag = $tag;
 
         /** @var PostRepository $repo */
-        $repo = $this->getEntityManager()->getRepository(PostEntity::class);
+        $repo = $em->getRepository(PostEntity::class);
 
         $search = new PostSearchRequest();
         $search->project = $this->project;
@@ -139,7 +139,7 @@ trait PostsControllerTrait
     protected function loadMonthlyArchive(int $year, int $month, int $pageNr, int $perPage): null
     {
         /** @var PostRepository $repo */
-        $repo = $this->getEntityManager()->getRepository(PostEntity::class);
+        $repo = $this->entityManager->getRepository(PostEntity::class);
         $posts = $repo->findPublicByMonth($this->project, $year, $month, $perPage, ($pageNr - 1) * $perPage);
 
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
@@ -182,14 +182,14 @@ trait PostsControllerTrait
 
     public function assignTagsData(): void
     {
-        $tags = $this->getEntityManager()
-            ->getRepository(Tag::class)->findBy(
-                [
-                    'project' => $this->project->entity,
-                ],
-                ['name' => 'ASC'],
-                10
-            );
+        $repo = $this->entityManager->getRepository(Tag::class);
+        $tags = $repo->findBy(
+            [
+                'project' => $this->project->entity,
+            ],
+            ['name' => 'ASC'],
+            10
+        );
         $this->assign('suggested_tags', $tags);
     }
 
@@ -219,7 +219,7 @@ trait PostsControllerTrait
         }
 
         /** @var PostRepository $repo */
-        $repo = $this->getEntityManager()->getRepository(PostEntity::class);
+        $repo = $this->entityManager->getRepository(PostEntity::class);
         $request = new PostSearchRequest();
         $request->project = $this->project;
         $request->maxId = $post['id'];
