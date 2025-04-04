@@ -70,8 +70,7 @@ trait PostsControllerTrait
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
 
-        $settings = $this->project->getSettings();
-        $galleryBaseUrl = $settings->get('gallery.base_url');
+        $galleryBaseUrl = $this->settings->get('gallery', 'base_url');
         if ($galleryBaseUrl) {
             $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
         }
@@ -117,8 +116,7 @@ trait PostsControllerTrait
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
 
-        $settings = $this->project->getSettings();
-        $galleryBaseUrl = $settings->get('gallery.base_url');
+        $galleryBaseUrl = $this->settings->get('gallery', 'base_url');
         if ($galleryBaseUrl) {
             $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
         }
@@ -146,8 +144,7 @@ trait PostsControllerTrait
         $postsResultSet->setAddAuthors($this->addAuthors);
         $postsResultSet->setAddCovers($this->addCovers);
 
-        $settings = $this->project->getSettings();
-        $galleryBaseUrl = $settings->get('gallery.base_url');
+        $galleryBaseUrl = $this->settings->get('gallery', 'base_url');
         if ($galleryBaseUrl) {
             $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
         }
@@ -212,8 +209,7 @@ trait PostsControllerTrait
         $gallery = $galleryManager->loadGallery('post');
         $resultSet = $gallery->getItemsResultSet();
 
-        $settings = $this->project->getSettings();
-        $galleryBaseUrl = $settings->get('gallery.base_url');
+        $galleryBaseUrl = $this->settings->get('gallery', 'base_url');
         if ($galleryBaseUrl) {
             $resultSet->setBaseUrl($galleryBaseUrl);
         }

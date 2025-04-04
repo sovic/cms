@@ -22,6 +22,14 @@ Add to service.yaml
         factory: [ '@Sovic\Cms\Project\ProjectFactory', loadByRequest ]
         arguments: [ '@=service("request_stack").getCurrentRequest()' ]
 
+    app.settings:
+        class: Sovic\Cms\Project\Settings
+        arguments:
+            $cache: '@cache.app'
+            $em: '@doctrine.orm.entity_manager'
+            $ttl: 3600
+            $project: '@app.project'
+
     _instanceof:
         Sovic\Cms\Controller\ProjectControllerInterface:
             tags: [ 'controller.service_arguments' ]
@@ -30,6 +38,7 @@ Add to service.yaml
                 -   setProject: [ '@app.project' ]
                 -   setProjectTwig: [ '@twig' ]
                 -   assignProjectData: [ ]
+                -   setSettings: [ '@app.settings' ]
 
     Sovic\Cms\Post\PostFactory:
         calls:

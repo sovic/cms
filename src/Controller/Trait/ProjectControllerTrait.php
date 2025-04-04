@@ -3,14 +3,16 @@
 namespace Sovic\Cms\Controller\Trait;
 
 use Sovic\Common\Project\Project;
+use Sovic\Common\Project\Settings;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
 use Twig\Environment;
 
 trait ProjectControllerTrait
 {
-    private Project $project;
-    private ?Environment $projectTwig = null;
+    protected Project $project;
+    protected Settings $settings;
+    protected ?Environment $projectTwig = null;
 
     #[Required]
     public function setProject(Project $project): void
@@ -23,13 +25,18 @@ trait ProjectControllerTrait
         $this->projectTwig = $projectTwig;
     }
 
+    #[Required]
+    public function setSettings(Settings $settings): void
+    {
+        $this->settings = $settings;
+    }
+
     public function assignProjectData(): void
     {
         $project = $this->project;
-        $settings = $project->getSettings();
 
         $this->assign('project', $project->getSlug());
-        $this->assignArray($settings->getTemplateData());
+        $this->assignArray($this->settings->getTemplateData());
     }
 
     public function getProjectTemplatePath(string $templatePath): string

@@ -4,33 +4,29 @@ namespace Sovic\Cms\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Trait\PostsControllerTrait;
-use Sovic\Cms\Controller\Trait\ProjectControllerTrait;
 use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Common\Controller\Trait\DownloadTrait;
 use Sovic\Common\Pagination\Pagination;
-use Sovic\Common\Project\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-class PostsController extends BaseController implements ProjectControllerInterface
+class PostsController extends ProjectBaseController
 {
     private const PER_PAGE = 8;
 
     use DownloadTrait;
     use PostsControllerTrait;
-    use ProjectControllerTrait;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         PostFactory            $postFactory,
         PostResultSetFactory   $postResultSetFactory,
-        Settings               $settings,
     ) {
-        parent::__construct($entityManager, $settings);
+        parent::__construct($entityManager);
 
         $this->setPostFactory($postFactory);
         $this->setPostResultSetFactory($postResultSetFactory);
@@ -50,8 +46,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     )]
     public function index(int $pageNr): Response
     {
-        $settings = $this->project->getSettings();
-        $perPage = $settings->get('posts.per_page') ?? 9;
+        $perPage = $this->settings->get('posts', 'per_page', 9);
 
         $response = $this->loadPostIndex($pageNr, $perPage);
 
@@ -68,8 +63,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     )]
     public function tag(string $tagName, int $pageNr): Response
     {
-        $settings = $this->project->getSettings();
-        $perPage = $settings->get('posts.per_page') ?? 9;
+        $perPage = $this->settings->get('posts', 'per_page', 9);
 
         $response = $this->loadPostTagIndex($tagName, $pageNr, $perPage);
 
@@ -86,9 +80,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     )]
     public function monthlyArchive(int $year, int $month, int $pageNr): Response
     {
-        $project = $this->project;
-        $settings = $project->getSettings();
-        $perPage = $settings->get('posts.per_page') ?? 9;
+        $perPage = $this->settings->get('posts', 'per_page', 9);
 
         $this->loadMonthlyArchive($year, $month, $pageNr, $perPage);
 
@@ -115,14 +107,11 @@ class PostsController extends BaseController implements ProjectControllerInterfa
             unset($download);
         }
 
-        $project = $this->project;
-        $settings = $project->getSettings();
-
         $gallery = $this->getGallery('post');
         $cover = $gallery?->getCoverImage();
         if ($cover) {
             // TODO add gallery->setBaseUrl() method
-            $baseUrl = $settings->get('gallery.base_url');
+            $baseUrl = $this->settings->get('gallery', 'base_url');
             $cover['small'] = $baseUrl . '/' . $cover['small'];
             $cover['big'] = $baseUrl . '/' . $cover['big'];
             $cover['full'] = $baseUrl . '/' . $cover['full'];
@@ -147,9 +136,7 @@ class PostsController extends BaseController implements ProjectControllerInterfa
     #[Route('/authors/{pageNr}', name: 'authors', requirements: ['pageNr' => '\d+'], defaults: ['pageNr' => 1])]
     public function authors(int $pageNr, PostResultSetFactory $postResultSetFactory): Response
     {
-        $project = $this->project;
-        $settings = $project->getSettings();
-        $perPage = $settings->get('posts.per_page') ?? 24;
+        $perPage = $this->settings->get('posts', 'per_page', 24);
 
         $total = $this->entityManager
             ->getRepository(Author::class)
