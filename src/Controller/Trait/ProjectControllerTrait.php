@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller\Trait;
 
+use Sovic\Common\Controller\Trait\BaseControllerTrait;
 use Sovic\Common\Project\Project;
 use Sovic\Common\Project\Settings;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,8 @@ use Twig\Environment;
 
 trait ProjectControllerTrait
 {
+    use BaseControllerTrait;
+
     protected Project $project;
     protected Settings $settings;
     protected ?Environment $projectTwig = null;
@@ -59,6 +62,6 @@ trait ProjectControllerTrait
     {
         $template = $this->getProjectTemplatePath($template);
 
-        return parent::render404($template, $parameters);
+        return $this->render404($template, $parameters);
     }
 }
