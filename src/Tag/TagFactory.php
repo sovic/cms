@@ -24,6 +24,14 @@ final class TagFactory extends EntityModelFactory implements ProjectEntityModelF
         return $this->loadModelBy(TagEntity::class, Tag::class, $criteria);
     }
 
+    public function loadByName(string $name): ?Tag
+    {
+        $criteria = $this->getProjectSelectCriteria();
+        $criteria['name'] = $name;
+
+        return $this->loadModelBy(TagEntity::class, Tag::class, $criteria);
+    }
+
     /**
      * @param int[] $ids
      * @return Tag[]|null
