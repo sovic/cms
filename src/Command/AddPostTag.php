@@ -12,6 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 #[AsCommand(name: 'post:add-tag', description: 'Add tag to post')]
 class AddPostTag extends Command
@@ -35,13 +36,14 @@ class AddPostTag extends Command
             return Command::FAILURE;
         }
 
-        $tagName = $input->getArgument('tag');
+        $helper = $this->getHelper('question');
+        $question = new Question('Tag name: ');
+        $tagName = $helper->ask($input, $output, $question);
         if (empty($tagName)) {
             $output->writeln('<error>Tag name cannot be empty.</error>');
 
             return Command::FAILURE;
         }
-
 
         $tag = $this->tagFactory->loadByName($tagName);
         if (!$tag) {
