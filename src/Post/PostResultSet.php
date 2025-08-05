@@ -126,6 +126,7 @@ class PostResultSet
             }
 
             $item = [
+                'authors' => null,
                 'content' => $entity->getContent(),
                 'cover_photo' => $covers[$id] ?? null,
                 'heading' => $post->getHeading(),
@@ -133,8 +134,8 @@ class PostResultSet
                 'intro_text' => $post->getIntroText(),
                 'is_featured' => $entity->isFeatured(),
                 'is_gallery_enabled' => $entity->isGalleryEnabled(),
-                'keywords' => $entity->getMetaKeywords(),
                 'meta_description' => $entity->getMetaDescription(),
+                'meta_keywords' => $entity->getMetaKeywords(),
                 'meta_title' => $entity->getMetaTitle() ?: $entity->getHeading(),
                 'perex' => $entity->getPerex(),
                 'publish_date' => $entity->getPublishDate(),
