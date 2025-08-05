@@ -121,12 +121,21 @@ trait PostsControllerTrait
             $postsResultSet->setGalleryBaseUrl($galleryBaseUrl);
         }
 
+        $posts = $postsResultSet->toArray();
+        if (!empty($posts)) {
+            $firstPost = reset($posts);
+            $metaImage = $firstPost['cover_photo']['big'] ?? null;
+            if ($metaImage) {
+                $this->assign('meta_image', $metaImage);
+            }
+        }
+
         $pagination = new Pagination($total, $perPage);
         $pagination->setCurrentPage($pageNr);
 
         $this->assign('pagination', $pagination);
         $this->assign('post_gallery_base_url', $galleryBaseUrl);
-        $this->assign('posts', $postsResultSet->toArray());
+        $this->assign('posts', $posts);
         $this->assign('tag', $tag);
         $this->assignMonthsArchiveData(null, null);
         $this->assignTagsData();
