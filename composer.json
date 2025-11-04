@@ -24,6 +24,10 @@
         },
         {
             "type": "git",
+            "url": "https://github.com/sovic/common-ui.git"
+        },
+        {
+            "type": "git",
             "url": "https://github.com/sovic/gallery.git"
         }
     ],
@@ -34,18 +38,18 @@
         "ext-imagick": "*",
         "ext-intl": "*",
         "cocur/slugify": "^4.0",
-        "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/orm": "^2.10",
         "sovic/common": "dev-master",
         "sovic/gallery": "dev-master",
-        "symfony/form": "^7.1",
-        "symfony/framework-bundle": "^7.1",
-        "symfony/http-foundation": "^7.1",
-        "symfony/mailer": "^7.1",
-        "symfony/security-bundle": "^7.1",
-        "symfony/twig-bundle": "^7.1",
-        "symfony/validator": "^7.1"
+        "symfony/form": "^7.3",
+        "symfony/framework-bundle": "^7.3",
+        "symfony/http-foundation": "^7.3",
+        "symfony/mailer": "^7.3",
+        "symfony/security-bundle": "^7.3",
+        "symfony/twig-bundle": "^7.3",
+        "symfony/validator": "^7.3",
+        "sovic/common-ui": "dev-master"
     },
     "require-dev": {
         "rector/rector": "^1.0",

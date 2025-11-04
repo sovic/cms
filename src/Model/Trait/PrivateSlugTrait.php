@@ -13,7 +13,6 @@ trait PrivateSlugTrait
 
     public function generateSlug(int $length): string
     {
-        /** @noinspection SpellCheckingInspection */
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charsLength = strlen($chars);
 
