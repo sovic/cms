@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Sovic\Cms\Email\Model\EmailModelInterface;
 use Sovic\Cms\Entity\Email;
 use Sovic\Common\Validator\EmailValidator;
+use Sovic\CommonUi\Email\EmailThemeInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -15,6 +16,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class EmailManager
 {
+    protected EmailThemeInterface $emailTheme;
     protected EntityManagerInterface $em;
     protected MailerInterface $mailer;
 
@@ -28,6 +30,12 @@ class EmailManager
     public function setMailer(MailerInterface $mailer): void
     {
         $this->mailer = $mailer;
+    }
+
+    #[Required]
+    public function setTheme(EmailThemeInterface $theme): void
+    {
+        $this->emailTheme = $theme;
     }
 
     public function send(
@@ -58,9 +66,18 @@ class EmailManager
         $data['body'] = $body;
         $data['subject'] = $subject;
 
+        $themeData = $this->emailTheme->getTheme();
+
+        // update links style
+        $linkStyle = $themeData['link_style'] ?? '';
+        $data['body'] = str_replace('<a ', '<a style="' . $linkStyle . '" ', $data['body']);
+        // update paragraph style
+        $paragraphStyle = $themeData['paragraph_style'] ?? '';
+        $data['body'] = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $data['body']);
+
         $fromAddress = new Address($email->getFromEmail(), $email->getFromName());
         $message = new TemplatedEmail();
-        $template = $template ?? '@CommonUi/emails/default.html.twig';
+        $template = $template ?? '@CommonUiBundle/email/default.html.twig';
         $message->htmlTemplate($template);
         $message->context($data);
         $message->from($fromAddress);
