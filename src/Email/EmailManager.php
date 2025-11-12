@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Sovic\Cms\Email\Model\EmailModelInterface;
 use Sovic\Cms\Entity\Email;
+use Sovic\Cms\Entity\EmailLog;
 use Sovic\Common\Validator\EmailValidator;
 use Sovic\CommonUi\Email\EmailThemeInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -43,6 +44,7 @@ class EmailManager
         string              $emailTo,
         ?string             $replyTo = null,
         ?string             $template = null,
+        ?bool               $log = false,
     ): bool {
         if (EmailValidator::validate($emailTo) !== true) {
             throw new InvalidArgumentException('Invalid email address: ' . $emailTo);
@@ -88,12 +90,31 @@ class EmailManager
         $message->subject($email->getSubject());
         $message->html($body);
 
+        $sent = false;
+        $error = null;
         try {
             $this->mailer->send($message);
-        } catch (TransportExceptionInterface) {
-            return false;
+            $sent = true;
+        } catch (TransportExceptionInterface $e) {
+            $error = 'Transport error [' . $e->getCode() . ']: ' . $e->getMessage();
+        }
+        if ($log) {
+            $this->log($model->getId(), $message, $error);
         }
 
-        return true;
+        return $sent;
+    }
+
+    public function log(EmailIdInterface $emailId, \Symfony\Component\Mime\Email $message, ?string $error = null): void
+    {
+        $log = new EmailLog();
+        $log->setEmailTo($message->getTo()[0]->getAddress());
+        $log->setEmailName($emailId->getLabel());
+        $log->setEmailId($emailId->getId());
+        $log->setSubject($message->getSubject());
+        $log->setError($error);
+
+        $this->em->persist($log);
+        $this->em->flush();
     }
 }
