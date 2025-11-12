@@ -1,0 +1,108 @@
+{% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
+{% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.default.card_class }}">
+            <div class="{{ theme.default.card_header_class }}">
+                <h2 class="mb-0">
+                    {% if email %}
+                        Editace emailu
+                    {% else %}
+                        Založení nového emailu
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+
+        {{ block('edit_form') }}
+    </div>
+{% endblock %}
+
+{% block edit_form %}
+    <div class="{{ theme.default.card_class }}">
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+
+            <div class="row">
+                <div class="col-12">
+                    {{ form_row(form.name) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.subject) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.fromName) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.fromEmail) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.emailId) }}
+                    <div class="alert alert-info d-none">
+                        Dostupné proměnné:
+                        <div></div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.body) }}
+                </div>
+
+                <div class="col-12">
+                    {% if form._token is defined %}
+                        {{ form_row(form._token) }}
+                    {% endif %}
+                    {% if form.save is defined %}
+                        {{ form_row(form.save) }}
+                    {% endif %}
+                </div>
+            </div>
+            {{ form_end(form, {render_rest: false}) }}
+        </div>
+    </div>
+
+    <script src="{{ asset('bundles/commonui/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#email_body'), {
+                toolbar: {
+                    items: [
+                        'undo', 'redo', '|',
+                        'heading', '|',
+                        'bold', 'italic', 'link', 'bulletedList', 'blockQuote',
+                    ]
+                },
+            })
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let $emailIdEl = document.querySelector('#email_emailId');
+            $emailIdEl.addEventListener('change', e => {
+                let selectedOption = e.target.options[e.target.selectedIndex];
+                let availableVariables = selectedOption.getAttribute('data-variables');
+                let alertBox = $emailIdEl.parentElement.parentElement.querySelector('.alert');
+                if (!availableVariables) {
+                    alertBox.classList.add('d-none');
+                    alertBox.innerHTML = '';
+                    return;
+                }
+
+                let variables = 'Dostupné proměnné: <br><ul class="mb-0">';
+                let varsArray = availableVariables.split(',');
+                varsArray.forEach(v => {
+                    variables += "<li>\{" + v.trim() + "\}</li>";
+                });
+                variables += '</ul>';
+                alertBox.innerHTML = variables;
+                alertBox.classList.remove('d-none');
+            });
+            $emailIdEl.dispatchEvent(new Event('change'));
+        });
+    </script>
+{% endblock %}

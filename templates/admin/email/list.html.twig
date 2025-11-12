@@ -1,0 +1,192 @@
+{% extends '@CommonUiBundle/admin/layout/data-list.html.twig' %}
+
+{% import '@CommonUiBundle/admin/macros/data-list.html.twig' as data_list %}
+
+{% block title %}Přehled emailů{% endblock %}
+
+{# {% block filters %} #}
+{#    {% if access_manager.hasRole('Admin') %} #}
+{#        {{ data_list.list_filter_id_name_select('Oblast', 'region_id', regions, query.region_id) }} #}
+{#    {% else %} #}
+{#        <div class="clearfix mb-5"></div> #}
+{#    {% endif %} #}
+{#    {{ data_list.list_filter_inactive(visibility) }} #}
+{# {% endblock %} #}
+
+{% set allow_add = true %}
+{% set is_search_enabled = false %}
+{% set is_filters_enabled = false %}
+{% set is_group_actions_enabled = false %}
+{% set is_all_allowed = true %}
+{# {% set can_write = access_manager.hasRole('Admin') %} #}
+
+{% block data_list_title %}
+    <h2>Seznam emailů</h2>
+{% endblock %}
+
+{% block add_item %}
+    {% if allow_add %}
+        <a class="btn btn-flex btn-light-primary"
+           href="{{ path('admin:email:edit') }}">
+            <i class="ki-outline ki-message-add fs-3"></i>
+            Nový email
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block data_list_table %}
+    <table class="{{ theme.default.table_class }} dataTable">
+        <colgroup>
+            {% if is_group_actions_enabled %}
+                <col data-dt-column="0" style="width: 2%;">
+            {% endif %}
+            <col data-dt-column="1" style="width: auto;">
+            <col data-dt-column="2" style="" class="d-md-none d-xl-table-cell">
+            <col data-dt-column="3" style="">
+            <col data-dt-column="4" style="">
+            <col data-dt-column="5" style="" class="d-md-none d-xl-table-cell">
+            <col data-dt-column="6" style="">
+            <col data-dt-column="7" style="">
+        </colgroup>
+        <thead>
+        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+
+            {% if is_group_actions_enabled %}
+                {{ data_list.checkbox_all() }}
+            {% endif %}
+
+            {% set class = 'text-start min-w-200px' %}
+            {% set label = 'Název emailu' %}
+            <th class="w-200px" data-dt-column="1">
+                <span class="dt-column-title">Vytvořen</span>
+            </th>
+            <th class="min-w-100px" data-dt-column="2">
+                <span class="dt-column-title">Název emailu</span>
+            </th>
+            {#            {{ data_list.sortable_column('name', 1, label, class, sort_options, query) }} #}
+
+            {#            {% set class = 'text-start min-w-200px d-md-none d-xl-table-cell' %} #}
+            {#            {% set label = 'Zobr. jméno' %} #}
+            {#            {{ data_list.sortable_column('display_name', 2, label, class, sort_options, query) }} #}
+
+            {#            {% set class = '' %} #}
+            {#            {% set label = 'Oblast' %} #}
+            {#            {{ data_list.sortable_column('region_association_id', 3, label, class, sort_options, query) }} #}
+
+            {#            {% set class = 'text-end min-w-70px dt-type-date' %} #}
+            {#            {% set label = 'Reg.' %} #}
+            {#            {{ data_list.sortable_column('created_at', 4, label, class, sort_options, query) }} #}
+
+            {#            <th class="text-end min-w-70px dt-type-date d-md-none d-xl-table-cell" data-dt-column="5"> #}
+            {#                <span class="dt-column-title">Přihlášení</span> #}
+            {#            </th> #}
+
+            {#            <th class="text-end min-w-100px" data-dt-column="6"> #}
+            {#                <span class="dt-column-title">Stav účtu</span> #}
+            {#            </th> #}
+
+            <th class="text-end min-w-70px" data-dt-column="7" aria-label="Akce">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.default.tbody_class }}">
+        {% for item in emails %}
+            {% set detail_url = path('admin:email:edit', {'id': item.id}) %}
+            {#            {% set ww = false %} #}
+            {#            {% if access_manager.canWriteRegion(u.region_association_id) %} #}
+            {#                {% set ww = true %} #}
+            {#            {% endif %} #}
+            <tr>
+                {% if is_group_actions_enabled %}
+                    <td>
+                        {{ data_list.checkbox(item.id) }}
+                    </td>
+                {% endif %}
+                <td>
+                    <span class="fw-bold small">{{ item.createdAt|date('j.n.Y H:i')|raw }}</span>
+                </td>
+                <td>
+                    <a href="{{ detail_url }}"
+                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                        {{ item.name }}
+                    </a>
+                </td>
+                {#                <td class="text-start pe-3 d-lg-none d-xl-table-cell"> #}
+                {#                    {{ u.display_name }} #}
+                {#                </td> #}
+                {#                <td class="text-start pe-0" title="{{ u.region_association_id ? '#' ~ u.region_association_id : '' }}"> #}
+                {#                    <span class="fw-bold small">{{ u.region_association ? u.region_association : '-' }}</span> #}
+                {#                </td> #}
+                {#                <td class="text-end pe-0 dt-type-date"> #}
+                {#                    <span class="fw-bold ms-3 small">{{ u.create_date|date('j.n.Y H:i')|raw }}</span> #}
+                {#                </td> #}
+                {#                <td class="text-end pe-0 dt-type-date"> #}
+                {#                    {% set last_login_date = u.last_login_date ? u.last_login_date|date('j.n.Y H:i')|raw : '-' %} #}
+                {#                    <span class="fw-bold ms-3 small">{{ last_login_date }}</span> #}
+                {#                </td> #}
+                {#                <td class="text-end pe-0"> #}
+                {#                    {% if u.is_deleted %} #}
+                {#                        <div class="badge badge-light-danger">Smazaný</div> #}
+                {#                    {% elseif u.is_enabled %} #}
+                {#                        <div class="badge badge-light-success">Aktivní</div> #}
+                {#                    {% else %} #}
+                {#                        <div class="badge badge-light-warning">Neaktivní</div> #}
+                {#                    {% endif %} #}
+                {#                </td> #}
+                <td class="text-end">
+
+                    {% set actions = [] %}
+
+                    {#                    {% if ww %} #}
+                    {#                        {% if not u.email_verification_date %} #}
+                    {#                            {% set actions = actions|merge([ #}
+                    {#                                { #}
+                    {#                                    'url': '#', #}
+                    {#                                    'title': 'Ověřit e-mail', #}
+                    {#                                    'method': 'user/' ~ u.id ~ '/verify-email', #}
+                    {#                                } #}
+                    {#                            ]) %} #}
+                    {#                        {% endif %} #}
+                    {#                    {% endif %} #}
+
+                    {#                    {% if ww %} #}
+                    {#                        {% if not u.is_enabled %} #}
+                    {#                            {% set actions = actions|merge([ #}
+                    {#                                { #}
+                    {#                                    'url': '#', #}
+                    {#                                    'title': 'Aktivovat', #}
+                    {#                                    'method': 'user/' ~ u.id ~ '/enable', #}
+                    {#                                    'class': 'text-success' #}
+                    {#                                } #}
+                    {#                            ]) %} #}
+                    {#                        {% else %} #}
+                    {#                            {% set actions = actions|merge([ #}
+                    {#                                { #}
+                    {#                                    'url': '#', #}
+                    {#                                    'title': 'Deaktivovat', #}
+                    {#                                    'method': 'user/' ~ u.id ~ '/disable', #}
+                    {#                                    'class': 'text-warning' #}
+                    {#                                } #}
+                    {#                            ]) %} #}
+                    {#                        {% endif %} #}
+                    {#                    {% endif %} #}
+
+                    {% if is_admin %}
+                        {% set actions = actions|merge([
+                            {
+                                'url': '#',
+                                'title': 'Smazat',
+                                'method': 'email/' ~ item.id ~ '/delete',
+                                'class': 'text-danger'
+                            }
+                        ]) %}
+                    {% endif %}
+                    {{ data_list.actions(actions) }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+{% endblock %}
