@@ -25,7 +25,7 @@ trait EmailControllerTrait
 
         $this->assign('emails', $emails);
 
-        return $this->render('admin/email/list.html.twig');
+        return $this->render('@CmsBundle/admin/email/list.html.twig');
     }
 
     #[Route(
@@ -67,6 +67,6 @@ trait EmailControllerTrait
         $this->assign('email', $email);
         $this->assign('form', $form->createView());
 
-        return $this->render('admin/email/edit.html.twig');
+        return $this->render('@CmsBundle/admin/email/edit.html.twig');
     }
 }
