@@ -1,3 +1,0 @@
-twig:
-    paths:
-        '%kernel.project_dir%/vendor/sovic/cms/templates': CmsBundle

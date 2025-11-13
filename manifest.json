@@ -1,8 +1,0 @@
-{
-    "bundles": {
-        "Sovic\\Cms\\CmsBundle": ["all"]
-    },
-    "copy-from-recipe": {
-        "config/": "%CONFIG_DIR%/"
-    }
-}
