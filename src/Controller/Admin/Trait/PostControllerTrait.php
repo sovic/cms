@@ -45,7 +45,7 @@ trait PostControllerTrait
 
         $this->assign('posts', $postsResultSet->toArray());
 
-        return $this->render('admin/post/list.html.twig');
+        return $this->render('@CmsBundle/admin/post/list.html.twig');
     }
 
     #[Route(
@@ -58,6 +58,6 @@ trait PostControllerTrait
 
         $this->assign('auth_user', $this->getUser());
 
-        return $this->render('admin/post/edit.html.twig');
+        return $this->render('@CmsBundle/admin/post/edit.html.twig');
     }
 }
