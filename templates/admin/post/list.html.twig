@@ -1,0 +1,114 @@
+{% extends '@CommonUiBundle/admin/layout/data-list.html.twig' %}
+
+{% import '@CommonUiBundle/admin/macros/data-list.html.twig' as data_list %}
+
+{% block title %}Přehled příspěvků{% endblock %}
+
+{% set allow_add = true %}
+{% set is_search_enabled = true %}
+{% set is_filters_enabled = false %}
+{% set is_group_actions_enabled = true %}
+
+{% block add_item %}
+    {% if allow_add %}
+        <a class="btn btn-flex btn-light-primary"
+           href="{{ path('admin:post:edit') }}">
+            <i class="ki-outline ki-message-add fs-3"></i>
+            Nový příspěvek
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block data_list_table %}
+    <table class="{{ theme.default.table_class }} dataTable">
+        <colgroup>
+            {% if is_group_actions_enabled %}
+                <col data-dt-column="0" style="width: 2%;">
+            {% endif %}
+            <col data-dt-column="1" style="">
+            <col data-dt-column="2" style="">
+            <col data-dt-column="3" style="">
+            <col data-dt-column="4" style="">
+        </colgroup>
+        <thead>
+        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+            {% if is_group_actions_enabled %}
+                {{ data_list.checkbox_all() }}
+            {% endif %}
+            <th class="w-150px" data-dt-column="1">
+                <span class="dt-column-title">Náhled</span>
+            </th>
+            <th class="w-200px text-end pe-5" data-dt-column="2">
+                <span class="dt-column-title">Publikování</span>
+            </th>
+            <th class="min-w-100px" data-dt-column="3">
+                <span class="dt-column-title">Název</span>
+            </th>
+            <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.default.tbody_class }}">
+        {% for post in posts %}
+            {% set detail_url = path('admin:post:edit', {'id': post.id}) %}
+            <tr>
+                {% if is_group_actions_enabled %}
+                    <td>
+                        {{ data_list.checkbox(post.id) }}
+                    </td>
+                {% endif %}
+                <td>
+                    {% if post.cover_photo %}
+                        <div class="d-flex align-items-center">
+                            <a href="{{ detail_url }}" class="symbol symbol-125px">
+                                <span class="symbol-label"
+                                      style="background-image:url({{ post.cover_photo.big }});"></span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="symbol symbol-125px">
+                            <span class="symbol-label bg-gray-100 text-warning rounded">
+                                <i class="bi bi-image fs-2"></i>
+                            </span>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="text-end dt-type-date pe-5">
+                    {% if post.is_published %}
+                        <span class="badge badge-light-success mb-1">Publikovaný</span>
+                        <br>
+                        <span class="fw-bold">{{ post.publish_date|format_date_time }}</span>
+                    {% else %}
+                        <span class="badge badge-light-warning">Nepublikovaný</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ detail_url }}"
+                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                        {{ post.heading }}
+                    </a>
+                    {% if post.intro_text %}
+                        <div class="text-muted fs-6 mt-2">
+                            {{ post.intro_text }}
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    {% set actions = [] %}
+                    {% set actions = actions|merge([
+                        {
+                            'url': '#',
+                            'title': 'Smazat',
+                            'method': 'email/' ~ post.id ~ '/delete',
+                            'class': 'text-danger'
+                        }
+                    ]) %}
+                    {{ data_list.actions(actions) }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+{% endblock %}
