@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Post;
 
 use Cocur\Slugify\Slugify;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Gallery\Entity\GalleryItem;
 use Sovic\Gallery\Gallery\GalleryHelper;
@@ -134,6 +135,7 @@ class PostResultSet
                 'intro_text' => $post->getIntroText(),
                 'is_featured' => $entity->isFeatured(),
                 'is_gallery_enabled' => $entity->isGalleryEnabled(),
+                'is_published' => $entity->isPublic() && $entity->getPublishDate() && $entity->getPublishDate() <= new DateTimeImmutable(),
                 'meta_description' => $entity->getMetaDescription(),
                 'meta_keywords' => $entity->getMetaKeywords(),
                 'meta_title' => $entity->getMetaTitle() ?: $entity->getHeading(),
