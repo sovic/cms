@@ -45,6 +45,8 @@
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/orm": "^2.10",
         "sovic/common": "dev-master",
+        "sovic/common-ui": "dev-master",
+        "sovic/user-bundle": "dev-master",
         "sovic/gallery": "dev-master",
         "symfony/form": "^7.3",
         "symfony/framework-bundle": "^7.3",
@@ -52,9 +54,7 @@
         "symfony/mailer": "^7.3",
         "symfony/security-bundle": "^7.3",
         "symfony/twig-bundle": "^7.3",
-        "symfony/validator": "^7.3",
-        "sovic/common-ui": "dev-master",
-        "sovic/user-bundle": "^0.2.18"
+        "symfony/validator": "^7.3"
     },
     "require-dev": {
         "rector/rector": "^1.0",
