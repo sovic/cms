@@ -29,6 +29,10 @@
         {
             "type": "git",
             "url": "https://github.com/sovic/gallery.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/sovic/user-bundle.git"
         }
     ],
     "minimum-stability": "dev",
@@ -49,7 +53,8 @@
         "symfony/security-bundle": "^7.3",
         "symfony/twig-bundle": "^7.3",
         "symfony/validator": "^7.3",
-        "sovic/common-ui": "dev-master"
+        "sovic/common-ui": "dev-master",
+        "sovic/user-bundle": "^0.2.18"
     },
     "require-dev": {
         "rector/rector": "^1.0",

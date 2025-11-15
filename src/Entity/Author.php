@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Sovic\Common\Entity\Project;
+use UserBundle\Entity\User;
 
 #[Table(name: 'author')]
 #[Index(columns: ['surname'], name: 'surname', options: ['lengths' => [191]])]
