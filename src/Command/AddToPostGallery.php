@@ -40,7 +40,7 @@ class AddToPostGallery extends Command
 
         $output->writeln('Latest published posts:');
         foreach ($latestPosts as $post) {
-            $output->writeln("{$post->getId()} {$post->getName()}");
+            $output->writeln("{$post->getId()} {$post->getHeading()}");
         }
         $output->writeln('');
 

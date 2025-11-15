@@ -29,7 +29,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
 
     public function getHeading(): string
     {
-        return $this->entity->getHeading() ?: $this->entity->getName();
+        return $this->entity->getHeading();
     }
 
     public function getIntroText(int $length = 250): ?string
@@ -79,7 +79,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $slugify = new Slugify();
             $slugify->activateRuleSet('default');
 
-            $urlId = $slugify->slugify($entity->getName());
+            $urlId = $slugify->slugify($entity->getHeading());
             $entity->setUrlId($urlId);
         }
 

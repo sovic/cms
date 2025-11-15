@@ -35,8 +35,20 @@ class Post extends AbstractType
             'name',
             TextType::class,
             [
-                'label' => 'Název',
+                'label' => 'Titulek',
                 'required' => true,
+                'attr' => [
+                    'length' => 255,
+                ],
+            ]
+        );
+
+        $builder->add(
+            'subtitle',
+            TextType::class,
+            [
+                'label' => 'Podtitulek',
+                'required' => false,
                 'attr' => [
                     'length' => 255,
                 ],
@@ -47,7 +59,7 @@ class Post extends AbstractType
             'public',
             CheckboxType::class,
             [
-                'label' => 'Veřejný',
+                'label' => 'Publikováno',
                 'required' => false,
             ]
         );
@@ -57,6 +69,16 @@ class Post extends AbstractType
             [
                 'label' => 'Datum publikování',
                 'required' => false,
+            ]
+        );
+
+        $builder->add(
+            'createDate',
+            DateType::class,
+            [
+                'label' => 'Datum vytvoření',
+                'required' => false,
+                'disabled' => true,
             ]
         );
 
@@ -72,6 +94,18 @@ class Post extends AbstractType
                 'attr' => [
                     'class' => 'rich-text-editor',
                     'rows' => 20,
+                ],
+            ]
+        );
+
+        $builder->add(
+            'perex',
+            TextareaType::class,
+            [
+                'required' => false,
+                'label' => 'Anotace / perex (nepovinné)',
+                'attr' => [
+                    'rows' => 5,
                 ],
             ]
         );

@@ -45,8 +45,8 @@ class Post
     #[Column(name: 'url_id', type: Types::STRING, length: 255, nullable: false)]
     public string $urlId;
 
-    #[Column(name: 'heading', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $heading = null;
+    #[Column(name: 'heading', type: Types::STRING, length: 255, nullable: false)]
+    protected string $heading;
 
     #[Column(name: 'subtitle', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $subtitle = null;
@@ -148,7 +148,7 @@ class Post
 
     public function setName(string $name): void
     {
-        $this->name = $name;
+        $this->name = trim($name);
     }
 
     public function getUrlId(): string
@@ -161,14 +161,14 @@ class Post
         $this->urlId = $urlId;
     }
 
-    public function getHeading(): ?string
+    public function getHeading(): string
     {
         return $this->heading;
     }
 
-    public function setHeading(?string $heading): void
+    public function setHeading(string $heading): void
     {
-        $this->heading = $heading;
+        $this->heading = trim($heading);
     }
 
     public function getSubtitle(): ?string
@@ -178,7 +178,7 @@ class Post
 
     public function setSubtitle(?string $subtitle): void
     {
-        $this->subtitle = $subtitle;
+        $this->subtitle = $subtitle ? trim($subtitle) : null;
     }
 
     public function getPerex(): ?string

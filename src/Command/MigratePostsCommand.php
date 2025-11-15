@@ -91,7 +91,6 @@ class MigratePostsCommand extends Command
                 if (!empty($item['meta_keywords'])) {
                     $post->setMetaKeywords($item['meta_keywords']);
                 }
-                $post->setHeading($item['heading']);
                 if (!empty($item['subtitle'])) {
                     $post->setSubtitle($item['subtitle']);
                 }

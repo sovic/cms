@@ -21,8 +21,11 @@
 
     {{ form_macro.section_header('Základní informace') }}
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             {{ form_row(form.name) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.subtitle) }}
         </div>
         <div class="col-12">
             {{ form_row(form.public) }}
@@ -32,12 +35,18 @@
         <div class="col-12 col-md-6 col-lg-3">
             {{ form_row(form.publishDate) }}
         </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            {{ form_row(form.createDate) }}
+        </div>
     </div>
 
     {{ form_macro.section_header('Obsah příspěvku') }}
     <div class="row">
         <div class="col-12">
             {{ form_row(form.content) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.perex) }}
         </div>
     </div>
 

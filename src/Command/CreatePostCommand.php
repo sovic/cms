@@ -49,18 +49,15 @@ class CreatePostCommand extends Command
             return Command::FAILURE;
         }
 
-        $question = new Question('Post name: ');
-        $name = $helper->ask($input, $output, $question);
-        if (empty($name)) {
+        $question = new Question('Post heading: ');
+        $heading = $helper->ask($input, $output, $question);
+        if (empty($heading)) {
             return Command::FAILURE;
         }
 
         $entity = new Post();
         $entity->setProject($project->entity);
-        $entity->setName($name);
-
-        $question = new Question('Post heading (default: ' . $name . '): ', $name);
-        $heading = $helper->ask($input, $output, $question);
+        $entity->setName($heading);
         $entity->setHeading($heading);
 
         $question = new Question('Perex: ', null);

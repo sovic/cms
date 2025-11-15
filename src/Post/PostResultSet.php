@@ -138,12 +138,12 @@ class PostResultSet
                 'is_published' => $entity->isPublic() && $entity->getPublishDate() && $entity->getPublishDate() <= new DateTimeImmutable(),
                 'meta_description' => $entity->getMetaDescription(),
                 'meta_keywords' => $entity->getMetaKeywords(),
-                'meta_title' => $entity->getMetaTitle() ?: $entity->getHeading(),
+                'meta_title' => $entity->getMetaTitle() ?: $post->getHeading(),
                 'perex' => $entity->getPerex(),
                 'publish_date' => $entity->getPublishDate(),
                 'subtitle' => $entity->getSubtitle(),
                 'tags' => [],
-                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getName()),
+                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getHeading()),
                 'url_id' => $slug,
             ];
 
