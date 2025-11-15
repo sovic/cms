@@ -2,11 +2,13 @@
 
 namespace Sovic\Cms\Controller\Admin\Trait;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Pagination\Pagination;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -49,12 +51,47 @@ trait PostControllerTrait
     }
 
     #[Route(
-        '/admin/post/edit',
+        '/admin/post/edit/{id}',
         name: 'admin:post:edit',
+        requirements: ['id' => '\d+'],
+        defaults: ['id' => 0],
     )]
-    public function postEdit(): Response
-    {
+    public function postEdit(
+        ?int                   $id,
+        EntityManagerInterface $em,
+        Request                $request,
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->find($id);
+
+        if ($post === null) {
+            $post = new Post();
+        }
+
+        $form = $this->createForm(\Sovic\Cms\Form\Admin\Post::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($post->isPublic() && $post->getPublishDate() === null) {
+                    $post->setPublishDate(new DateTimeImmutable());
+                }
+
+                $em->persist($post);
+                $em->flush();
+
+                $this->addFlash('success', 'Příspěvek byl uložen.');
+
+                return $this->redirectToRoute('admin:post:edit', ['id' => $post->getId()]);
+            }
+
+            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+        }
+
+        $this->assign('post', $post);
+        $this->assign('form', $form->createView());
 
         $this->assign('auth_user', $this->getUser());
 

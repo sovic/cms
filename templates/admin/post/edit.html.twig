@@ -1,0 +1,71 @@
+{% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
+{% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
+{% import '@CmsBundle/macro/ckeditor.html.twig' as ckeditor %}
+{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.default.card_class }}">
+            {{ form_macro.card_header('Editace příspěvku', theme) }}
+
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block edit_form %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_macro.section_header('Základní informace') }}
+    <div class="row">
+        <div class="col-12">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.public) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-3">
+            {{ form_row(form.publishDate) }}
+        </div>
+    </div>
+
+    {{ form_macro.section_header('Obsah příspěvku') }}
+    <div class="row">
+        <div class="col-12">
+            {{ form_row(form.content) }}
+        </div>
+    </div>
+
+    {{ form_macro.section_header('Metadata') }}
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(form.urlId) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.metaTitle) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.metaDescription) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.metaKeywords) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mt-8">
+            {% if form.save is defined %}
+                {{ form_row(form.save) }}
+            {% endif %}
+        </div>
+    </div>
+
+    {{ form_end(form, {render_rest: true}) }}
+
+    {{ ckeditor.ckeditor_basic('#post_content') }}
+{% endblock %}

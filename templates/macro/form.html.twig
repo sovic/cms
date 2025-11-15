@@ -1,0 +1,15 @@
+{% macro card_header(title, theme) %}
+    <div class="{{ theme.default.card_header_class }}">
+        <h1 class="mb-0">
+            {{ title }}
+        </h1>
+    </div>
+{% endmacro %}
+
+{% macro section_header(title) %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4 mt-8">{{ title }}</h3>
+        </div>
+    </div>
+{% endmacro %}

@@ -1,5 +1,6 @@
 {% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
+{% import 'macro/ckeditor.html.twig' as ckeditor %}
 
 {% block content %}
     <div class="app-container container">
@@ -62,25 +63,9 @@
         </div>
     </div>
 
-    <script src="{{ asset('bundles/commonui/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#email_body'), {
-                toolbar: {
-                    items: [
-                        'undo', 'redo', '|',
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'blockQuote',
-                    ]
-                },
-            })
-            .then(editor => {
-                console.log(editor);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+    {{ ckeditor.ckeditor_basic('#email_body') }}
 
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             let $emailIdEl = document.querySelector('#email_emailId');
             $emailIdEl.addEventListener('change', e => {
