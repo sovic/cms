@@ -87,7 +87,7 @@ class EmailManager
         if ($replyTo && EmailValidator::validate($replyTo) === true) {
             $message->replyTo($replyTo);
         }
-        $message->subject($email->getSubject());
+        $message->subject($subject);
         $message->html($body);
 
         $sent = false;
