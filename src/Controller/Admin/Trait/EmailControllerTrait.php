@@ -8,9 +8,33 @@ use Sovic\Cms\Entity\Email;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 
 trait EmailControllerTrait
 {
+    protected function isAttributeGranted(string $attribute): bool
+    {
+        if (in_array($attribute, ['admin:email:list', 'admin:email:edit'])) {
+            return $this->isGranted('ROLE_ADMIN');
+        }
+
+        return false;
+    }
+
+    protected function getEmailAccessDecision(string $attribute): void
+    {
+        $accessDecision = new AccessDecision();
+        $accessDecision->isGranted = $this->isAttributeGranted($attribute);
+
+        if (!$accessDecision->isGranted) {
+            $e = $this->createAccessDeniedException($accessDecision->getMessage());
+            $e->setAttributes([$attribute]);
+            $e->setAccessDecision($accessDecision);
+
+            throw $e;
+        }
+    }
+
     #[Route(
         '/admin/email/list',
         name: 'admin:email:list',
@@ -18,7 +42,7 @@ trait EmailControllerTrait
     public function email(
         EntityManagerInterface $em,
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->getEmailAccessDecision('admin:email:list');
 
         $repo = $em->getRepository(Email::class);
         $emails = $repo->findBy([], ['id' => 'DESC']);
@@ -40,7 +64,7 @@ trait EmailControllerTrait
         EntityManagerInterface $em,
         Request                $request,
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->getEmailAccessDecision('admin:email:edit');
 
         $repo = $em->getRepository(Email::class);
         $email = $repo->find($id);
@@ -53,6 +77,8 @@ trait EmailControllerTrait
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $email->setEmailId($form->get('emailId')->getData()?->getId());
+
                 $em->persist($email);
                 $em->flush();
 

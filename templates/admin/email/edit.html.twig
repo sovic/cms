@@ -1,6 +1,6 @@
 {% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
-{% import '@CmsBundle/macro/ckeditor.html.twig' as ckeditor %}
+{% import '@CommonUiBundle/macros/content-editor.html.twig' as content_editor %}
 
 {% block content %}
     <div class="app-container container">
@@ -41,8 +41,12 @@
                 </div>
                 <div class="col-12">
                     {{ form_row(form.emailId) }}
-                    <div class="alert alert-info d-none">
-                        Dostupné proměnné:
+                    <div class="
+                        alert alert-dismissible bg-light-primary border border-primary border-dashed
+                        text-gray
+                        d-none
+                    ">
+                        Proměnné:
                         <div></div>
                     </div>
                 </div>
@@ -51,19 +55,16 @@
                 </div>
 
                 <div class="col-12">
-                    {% if form._token is defined %}
-                        {{ form_row(form._token) }}
-                    {% endif %}
                     {% if form.save is defined %}
                         {{ form_row(form.save) }}
                     {% endif %}
                 </div>
             </div>
-            {{ form_end(form, {render_rest: false}) }}
+            {{ form_end(form) }}
         </div>
     </div>
 
-    {{ ckeditor.ckeditor_basic('#email_body') }}
+    {{ content_editor.content_editor_basic('#email_body') }}
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

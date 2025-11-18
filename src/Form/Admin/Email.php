@@ -36,7 +36,7 @@ class Email extends AbstractType
             throw new InvalidArgumentException('Option "email_list" is required.');
         }
 
-        /** @var Email $email */
+        /** @var \Sovic\Cms\Entity\Email $email */
         $email = $builder->getData();
 
         /** @noinspection PhpUnusedLocalVariableInspection */
@@ -99,8 +99,8 @@ class Email extends AbstractType
             TextareaType::class,
             [
                 'label' => 'Tělo emailu',
-                'required' => true,
-
+                'required' => false,
+                'empty_data' => '',
                 'attr' => [
                     'length' => 16777215,
                     'rows' => 15,
@@ -116,10 +116,18 @@ class Email extends AbstractType
                 'label' => 'Systémové ID emailu',
                 'required' => false,
                 'choices' => $choices,
-                'choice_value' => static function (?EmailIdInterface $choice): ?string {
+                'choice_value' => static function (null|EmailIdInterface|string $choice): ?string {
+                    if (is_string($choice)) {
+                        return $choice;
+                    }
+
                     return $choice?->getId();
                 },
-                'choice_label' => static function (EmailIdInterface $choice): string {
+                'choice_label' => static function (EmailIdInterface|string $choice): string {
+                    if (is_string($choice)) {
+                        return $choice;
+                    }
+
                     return $choice->getLabel();
                 },
                 'placeholder' => '-- Vyberte --',
@@ -128,6 +136,8 @@ class Email extends AbstractType
                         'data-variables' => implode(', ', $choice->getVariables()),
                     ];
                 },
+                'data' => $email?->getEmailId(),
+                'mapped' => false,
             ],
         );
 
