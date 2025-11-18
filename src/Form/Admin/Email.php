@@ -109,11 +109,16 @@ class Email extends AbstractType
         );
 
         $choices = $emailList->getEmailIds();
+        // sort by value
+        usort($choices, static function (EmailIdInterface $a, EmailIdInterface $b): int {
+            return strcmp($a->getLabel(), $b->getLabel());
+        });
+
         $builder->add(
             'emailId',
             ChoiceType::class,
             [
-                'label' => 'Systémové ID emailu',
+                'label' => 'Systémový email',
                 'required' => false,
                 'choices' => $choices,
                 'choice_value' => static function (null|EmailIdInterface|string $choice): ?string {
