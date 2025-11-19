@@ -42,8 +42,7 @@ class EmailManager
     public function send(
         EmailModelInterface $model,
         string              $emailTo,
-        ?string             $from = null,
-        ?string             $fromName = null,
+        ?string             $sender = null,
         ?string             $replyTo = null,
         ?string             $template = null,
         ?bool               $log = false,
@@ -79,18 +78,20 @@ class EmailManager
         $paragraphStyle = $themeData['paragraph_style'] ?? '';
         $data['body'] = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $data['body']);
 
-        if ($from && EmailValidator::validate($from) === true) {
-            $email->setFromEmail($from);
+        $senderAddress = null;
+        if ($sender && EmailValidator::validate($sender) === true) {
+            $senderAddress = new Address($sender);
         }
-        if ($fromName) {
-            $email->setFromName($fromName);
-        }
+
         $fromAddress = new Address($email->getFromEmail(), $email->getFromName());
         $message = new TemplatedEmail();
         $template = $template ?? '@CommonUiBundle/email/default.html.twig';
         $message->htmlTemplate($template);
         $message->context($data);
         $message->from($fromAddress);
+        if ($senderAddress) {
+            $message->sender($senderAddress);
+        }
         $message->to($emailTo);
         if ($replyTo && EmailValidator::validate($replyTo) === true) {
             $message->replyTo($replyTo);
