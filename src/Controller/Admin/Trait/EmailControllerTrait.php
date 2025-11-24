@@ -7,8 +7,7 @@ use Sovic\Cms\Email\EmailListInterface;
 use Sovic\Cms\Entity\Email;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AccessDecision;
+use Symfony\Component\Routing\Attribute\Route;
 
 trait EmailControllerTrait
 {
@@ -19,20 +18,6 @@ trait EmailControllerTrait
         }
 
         return false;
-    }
-
-    protected function getEmailAccessDecision(string $attribute): void
-    {
-        $accessDecision = new AccessDecision();
-        $accessDecision->isGranted = $this->isAttributeGranted($attribute);
-
-        if (!$accessDecision->isGranted) {
-            $e = $this->createAccessDeniedException($accessDecision->getMessage());
-            $e->setAttributes([$attribute]);
-            $e->setAccessDecision($accessDecision);
-
-            throw $e;
-        }
     }
 
     #[Route(
