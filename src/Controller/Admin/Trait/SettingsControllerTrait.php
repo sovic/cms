@@ -32,7 +32,7 @@ trait SettingsControllerTrait
     public function list(
         EntityManagerInterface $em,
     ): Response {
-        $this->getAccessDecision('admin:email:list');
+        $this->getRouteAccessDecision('admin:email:list');
 
         $settings = $em
             ->getRepository(Setting::class)
@@ -57,7 +57,7 @@ trait SettingsControllerTrait
         EntityManagerInterface $em,
         Request                $request,
     ): Response {
-        $this->getAccessDecision('admin:email:list');
+        $this->getRouteAccessDecision('admin:email:list');
 
         $settings = $em
             ->getRepository(Setting::class)

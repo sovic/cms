@@ -30,7 +30,7 @@ trait EmailControllerTrait
     public function email(
         EntityManagerInterface $em,
     ): Response {
-        $this->getAccessDecision('admin:email:list');
+        $this->getRouteAccessDecision('admin:email:list');
 
         $repo = $em->getRepository(Email::class);
         $emails = $repo->findBy([], ['id' => 'DESC']);
@@ -52,7 +52,7 @@ trait EmailControllerTrait
         EntityManagerInterface $em,
         Request                $request,
     ): Response {
-        $this->getAccessDecision('admin:email:edit');
+        $this->getRouteAccessDecision('admin:email:edit');
 
         $repo = $em->getRepository(Email::class);
         $email = $repo->find($id);
