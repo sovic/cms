@@ -1,0 +1,39 @@
+{% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
+{% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
+{% import '@CommonUiBundle/admin/macros/content-editor.html.twig' as content_editor %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.default.card_class }}">
+            <div class="{{ theme.default.card_header_class }}">
+                <h2 class="mb-0">Editace nastavení</h2>
+            </div>
+
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block edit_form %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_row(form._token) }}
+
+    <div class="row">
+        <div class="col-12">
+            {{ form_row(form.groupId) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.description) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.value) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.submit) }}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

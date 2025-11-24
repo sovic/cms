@@ -1,0 +1,71 @@
+{% extends '@CommonUiBundle/admin/layout/data-list.html.twig' %}
+
+{% import '@CommonUiBundle/admin/macros/data-list.html.twig' as data_list %}
+
+{% set is_filters_enabled = false %}
+{% set is_search_enabled = false %}
+
+{% block title %}Přehled nastavení aplikace{% endblock %}
+{% block data_list_title %}
+    <h2 class="text-dark fw-bolder my-6">Nastavení aplikace</h2>
+{% endblock %}
+
+{% block data_list_table %}
+    <table class="{{ theme.default.table_class }} dataTable">
+        <colgroup>
+            <col data-dt-column="1" style="">
+            <col data-dt-column="2" style="width: 20%;">
+            <col data-dt-column="3" style="width: 50%;">
+            <col data-dt-column="4" style="">
+        </colgroup>
+        <thead>
+        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+            <th class="text-start w-200px" data-dt-column="1">
+                <span class="dt-column-title">Sekce</span>
+            </th>
+            <th class="text-start min-w-100px" data-dt-column="2">
+                <span class="dt-column-title">Popis nastavení</span>
+            </th>
+            <th class="text-start min-w-70px" data-dt-column="3">
+                <span class="dt-column-title">Hodnota</span>
+            </th>
+            <th class="text-end" data-dt-column="4">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.default.tbody_class }}">
+        {% if settings|length == 0 %}
+            <tr>
+                <td colspan="4" class="text-start">Žádné položky nebyly nalezeny.</td>
+            </tr>
+        {% endif %}
+        {% for s in settings %}
+            {% set detail_url = path('admin:settings:edit', {'id': s.id}) %}
+            <tr>
+                <td class="text-start">
+                    <span class="badge badge-light-primary">{{ s.groupId.trans }}</span>
+                </td>
+                <td class="text-start">
+                    {{ s.description }}
+                </td>
+                <td class="text-start">
+                    <a href="{{ detail_url }}">
+                        <strong>{{ s.value|nl2br }}</strong>
+                    </a>
+                </td>
+                <td class="text-end">
+                    {% set actions = [] %}
+                    {% set actions = actions|merge([
+                        {
+                            'url': detail_url,
+                            'title': 'Editovat',
+                        }
+                    ]) %}
+                    {{ data_list.actions_icons(actions) }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
