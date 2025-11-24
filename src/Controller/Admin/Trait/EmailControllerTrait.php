@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Controller\Admin\Trait;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
 use Sovic\Cms\Email\EmailListInterface;
 use Sovic\Cms\Entity\Email;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 trait EmailControllerTrait
 {
+    use ControllerAccessTrait;
+
     protected function isAttributeGranted(string $attribute): bool
     {
         if (in_array($attribute, ['admin:email:list', 'admin:email:edit'])) {
@@ -27,7 +30,7 @@ trait EmailControllerTrait
     public function email(
         EntityManagerInterface $em,
     ): Response {
-        $this->getEmailAccessDecision('admin:email:list');
+        $this->getAccessDecision('admin:email:list');
 
         $repo = $em->getRepository(Email::class);
         $emails = $repo->findBy([], ['id' => 'DESC']);
@@ -49,7 +52,7 @@ trait EmailControllerTrait
         EntityManagerInterface $em,
         Request                $request,
     ): Response {
-        $this->getEmailAccessDecision('admin:email:edit');
+        $this->getAccessDecision('admin:email:edit');
 
         $repo = $em->getRepository(Email::class);
         $email = $repo->find($id);

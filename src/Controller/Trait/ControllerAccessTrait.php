@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecision;
 
 trait ControllerAccessTrait
 {
-    protected function getEmailAccessDecision(string $attribute): void
+    protected function getAccessDecision(string $attribute): void
     {
         $accessDecision = new AccessDecision();
         $accessDecision->isGranted = $this->isAttributeGranted($attribute);

@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Controller\Admin\Trait;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
 use Sovic\Cms\Form\Admin\Settings;
 use Sovic\Common\Entity\Setting;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 trait SettingsControllerTrait
 {
+    use ControllerAccessTrait;
+
     protected function isAttributeGranted(string $attribute): bool
     {
         if (in_array($attribute, ['admin:settings:list', 'admin:settings:edit'])) {
@@ -21,7 +24,7 @@ trait SettingsControllerTrait
     }
 
     #[Route(
-        '/settings/list',
+        '/admin/settings/list',
         name: 'admin:settings:list',
         methods: ['GET'],
         priority: 1,
@@ -29,7 +32,7 @@ trait SettingsControllerTrait
     public function list(
         EntityManagerInterface $em,
     ): Response {
-        $this->getEmailAccessDecision('admin:email:list');
+        $this->getAccessDecision('admin:email:list');
 
         $settings = $em
             ->getRepository(Setting::class)
@@ -44,7 +47,7 @@ trait SettingsControllerTrait
     }
 
     #[Route(
-        '/settings/edit/{id}',
+        '/admin/settings/edit/{id}',
         name: 'admin:settings:edit',
         methods: ['GET', 'POST'],
         priority: 1,
@@ -54,7 +57,7 @@ trait SettingsControllerTrait
         EntityManagerInterface $em,
         Request                $request,
     ): Response {
-        $this->getEmailAccessDecision('admin:email:list');
+        $this->getAccessDecision('admin:email:list');
 
         $settings = $em
             ->getRepository(Setting::class)
