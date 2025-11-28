@@ -66,17 +66,8 @@ class EmailManager
             $body = str_replace('{' . $key . '}', $value, $body);
             $subject = str_replace('{' . $key . '}', $value, $subject);
         }
-        $data['body'] = $body;
+        $data['body'] = $this->getFormattedHtml($body);
         $data['subject'] = $subject;
-
-        $themeData = $this->emailTheme->getTheme();
-
-        // update links style
-        $linkStyle = $themeData['link_style'] ?? '';
-        $data['body'] = str_replace('<a ', '<a style="' . $linkStyle . '" ', $data['body']);
-        // update paragraph style
-        $paragraphStyle = $themeData['paragraph_style'] ?? '';
-        $data['body'] = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $data['body']);
 
         $senderAddress = null;
         if ($sender && EmailValidator::validate($sender) === true) {
@@ -112,6 +103,21 @@ class EmailManager
         }
 
         return $sent;
+    }
+
+    public function getFormattedHtml(string $html): string
+    {
+        $themeData = $this->emailTheme->getTheme();
+
+        // update links style
+        $linkStyle = $themeData['link_style'] ?? '';
+        $html = str_replace('<a ', '<a style="' . $linkStyle . '" ', $html);
+        // update paragraph style
+        $paragraphStyle = $themeData['paragraph_style'] ?? '';
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
+        $html = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $html);
+
+        return $html;
     }
 
     public function log(EmailIdInterface $emailId, \Symfony\Component\Mime\Email $message, ?string $error = null): void
