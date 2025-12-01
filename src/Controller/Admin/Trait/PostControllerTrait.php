@@ -32,7 +32,7 @@ trait PostControllerTrait
         $repo = $em->getRepository(Post::class);
 
         $pageNr = 1;
-        $pagination = new Pagination($repo->count([]), $perPage);
+        $pagination = new Pagination($repo->count(), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
             return $this->renderProject404();
         }

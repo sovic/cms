@@ -117,7 +117,7 @@ class PostsController extends ProjectBaseController
             $cover['full'] = $baseUrl . '/' . $cover['full'];
         }
 
-        $secret = $request->get('secret');
+        $secret = $request->query->get('secret');
         $isGalleryDownloadEnabled = $gallery->entity->isDownloadEnabled()
             && $secret === $this->post->entity->getSecret();
         $galleryDownloadUrl = $router->generate('gallery_download', ['id' => $gallery->getId()])

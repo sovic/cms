@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping\Table;
 use Sovic\Common\Entity\Trait\IdentityColumnTrait;
 
 #[Table(name: 'email_log')]
-#[Index(columns: ['email_id'], name: 'email_id', options: ['lengths' => [191]])]
-#[Index(columns: ['email_to'], name: 'email_to', options: ['lengths' => [191]])]
-#[Index(columns: ['send_date'], name: 'send_date')]
+#[Index(name: 'email_id', columns: ['email_id'], options: ['lengths' => [191]])]
+#[Index(name: 'email_to', columns: ['email_to'], options: ['lengths' => [191]])]
+#[Index(name: 'send_date', columns: ['send_date'])]
 #[Entity]
 class EmailLog
 {

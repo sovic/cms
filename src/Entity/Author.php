@@ -16,8 +16,8 @@ use Sovic\Common\Entity\Project;
 use UserBundle\Entity\User;
 
 #[Table(name: 'author')]
-#[Index(columns: ['surname'], name: 'surname', options: ['lengths' => [191]])]
-#[Index(columns: ['project_id'], name: 'project_id')]
+#[Index(name: 'surname', columns: ['surname'], options: ['lengths' => [191]])]
+#[Index(name: 'project_id', columns: ['project_id'])]
 #[Entity]
 class Author
 {

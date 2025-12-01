@@ -19,10 +19,10 @@ use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Entity\Project;
 
 #[Table(name: 'post')]
-#[Index(columns: ['url_id', 'public'], name: 'public_post')]
-#[Index(columns: ['published'], name: 'published')]
-#[Index(columns: ['project_id'], name: 'project_id')]
-#[Index(columns: ['import_service', 'import_id'], name: 'import_service_import_id')]
+#[Index(name: 'public_post', columns: ['url_id', 'public'])]
+#[Index(name: 'published', columns: ['published'])]
+#[Index(name: 'project_id', columns: ['project_id'])]
+#[Index(name: 'import_service_import_id', columns: ['import_service', 'import_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PostRepository::class)]
 class Post

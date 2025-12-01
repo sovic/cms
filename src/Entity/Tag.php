@@ -15,7 +15,7 @@ use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
 use Sovic\Common\Entity\Project;
 
 #[Table(name: 'tag')]
-#[Index(columns: ['project_id'], name: 'project_id')]
+#[Index(name: 'project_id', columns: ['project_id'])]
 #[Entity]
 class Tag
 {

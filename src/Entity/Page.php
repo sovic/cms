@@ -18,7 +18,7 @@ use Sovic\Cms\Repository\PageRepository;
 use Sovic\Common\Entity\Project;
 
 #[Table(name: 'page')]
-#[Index(columns: ['project_id'], name: 'project_id')]
+#[Index(name: 'project_id', columns: ['project_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PageRepository::class)]
 class Page

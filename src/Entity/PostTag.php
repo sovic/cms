@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 
 #[Table(name: 'post_tag')]
-#[Index(columns: ['post_id'], name: 'post_id')]
-#[Index(columns: ['tag_id'], name: 'tag_id')]
+#[Index(name: 'post_id', columns: ['post_id'])]
+#[Index(name: 'tag_id', columns: ['tag_id'])]
 #[Entity]
 class PostTag
 {
