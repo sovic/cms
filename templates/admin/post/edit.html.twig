@@ -1,6 +1,6 @@
 {% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
-{% import '@CmsBundle/macro/ckeditor.html.twig' as ckeditor %}
+{% import '@CommonUiBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/macro/form.html.twig' as form_macro %}
 
 {% block content %}
@@ -76,5 +76,5 @@
 
     {{ form_end(form, {render_rest: true}) }}
 
-    {{ ckeditor.ckeditor_basic('#post_content') }}
+    {{ content_editor.content_editor_basic('#post_content') }}
 {% endblock %}
