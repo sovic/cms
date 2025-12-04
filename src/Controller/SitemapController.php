@@ -61,7 +61,7 @@ class SitemapController extends BaseController implements ProjectControllerInter
 
         // return response in XML format
         $response = new Response(
-            $this->renderView('@Cms/sitemap/sitemap.html.twig', [
+            $this->renderView('@CmsBundle/sitemap/sitemap.html.twig', [
                 'urls' => $this->urls,
                 'hostname' => $hostname,
             ]),
