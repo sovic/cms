@@ -80,6 +80,10 @@ trait PostControllerTrait
                 if ($post->isPublic() && $post->getPublishDate() === null) {
                     $post->setPublishDate(new DateTimeImmutable());
                 }
+                if (!$em->contains($post)) {
+                    $post->setHeading($post->getName());
+                    $post->setProject($this->project->getEntity());
+                }
 
                 /** @var \Sovic\Cms\Post\Post $model */
                 $model = $postFactory->loadByEntity($post);
