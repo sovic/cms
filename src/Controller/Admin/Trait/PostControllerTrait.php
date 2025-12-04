@@ -5,6 +5,7 @@ namespace Sovic\Cms\Controller\Admin\Trait;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\Post;
+use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Pagination\Pagination;
@@ -59,6 +60,7 @@ trait PostControllerTrait
     public function postEdit(
         ?int                   $id,
         EntityManagerInterface $em,
+        PostFactory            $postFactory,
         Request                $request,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -79,8 +81,9 @@ trait PostControllerTrait
                     $post->setPublishDate(new DateTimeImmutable());
                 }
 
-                $em->persist($post);
-                $em->flush();
+                /** @var \Sovic\Cms\Post\Post $model */
+                $model = $postFactory->loadByEntity($post);
+                $model->save();
 
                 $this->addFlash('success', 'Příspěvek byl uložen.');
 
