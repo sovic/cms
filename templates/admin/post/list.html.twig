@@ -28,7 +28,6 @@
             <col data-dt-column="1" style="">
             <col data-dt-column="2" style="">
             <col data-dt-column="3" style="">
-            <col data-dt-column="4" style="">
         </colgroup>
         <thead>
         <tr class="{{ theme.default.thead_tr_class }}" role="row">
@@ -38,13 +37,10 @@
             <th class="w-150px" data-dt-column="1">
                 <span class="dt-column-title">Náhled</span>
             </th>
-            <th class="w-200px text-end pe-5" data-dt-column="2">
-                <span class="dt-column-title">Publikování</span>
-            </th>
-            <th class="min-w-100px" data-dt-column="3">
+            <th class="min-w-100px" data-dt-column="2">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce">
+            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>
@@ -74,41 +70,73 @@
                         </div>
                     {% endif %}
                 </td>
-                <td class="text-end dt-type-date pe-5">
-                    {% if post.is_published %}
-                        <span class="badge badge-light-success mb-1">Publikovaný</span>
-                        <br>
-                        <span class="fw-bold">{{ post.publish_date|format_date_time }}</span>
-                    {% else %}
-                        <span class="badge badge-light-warning">Nepublikovaný</span>
-                    {% endif %}
-                </td>
-                <td>
+                <td class="align-top">
                     <a href="{{ detail_url }}"
                        class="text-gray-800 text-hover-primary fs-5 fw-bold">
                         {{ post.heading }}
                     </a>
+                    <div class="mt-1">
+                        {% if post.is_published %}
+                            <span class="badge badge-light-success">
+                                Publikovaný {{ post.publish_date|format_date_time }}
+                            </span>
+                        {% else %}
+                            <span class="badge badge-light-warning">Nepublikovaný</span>
+                            {% if post.private_slug is not empty %}
+                                <span class="badge badge-light-info">Soukromý</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                     {% if post.intro_text %}
                         <div class="text-muted fs-6 mt-2">
-                            {{ post.intro_text }}
+                            {{ post.intro_text|raw }}
                         </div>
                     {% endif %}
+                    <div class="mt-3">
+                        {% if not post.is_published %}
+                            {{ data_list.action_button('Publikovat', 'post', post.id, 'publish', {}, 'btn btn-sm btn-outline btn-outline-dashed btn-outline-success fs-8 py-2 px-4', '', '', true) }}
+                        {% endif %}
+                    </div>
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}
                     {% set actions = actions|merge([
                         {
+                            'url': detail_url,
+                            'title': 'Upravit',
+                            'class': 'text-primary',
+                            'icon': 'ki-duotone ki-pencil',
+                        },
+                        {
                             'url': '#',
                             'title': 'Smazat',
-                            'method': 'email/' ~ post.id ~ '/delete',
-                            'class': 'text-danger'
+                            'method': 'post/' ~ post.id ~ '/delete',
+                            'class': 'text-danger',
+                            'icon': 'ki-duotone ki-trash',
                         }
                     ]) %}
-                    {{ data_list.actions(actions) }}
+
+                    <div class="actions d-none">
+                        {{ data_list.actions_icons(actions) }}
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
         <tfoot></tfoot>
     </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const $trEls = document.querySelectorAll('tr');
+            for (let i = 0; i < $trEls.length; i++) {
+                $trEls[i].addEventListener('mouseenter', function () {
+                    this.querySelector('.actions').classList.remove('d-none');
+                });
+                $trEls[i].addEventListener('mouseleave', function () {
+                    this.querySelector('.actions').classList.add('d-none');
+                });
+            }
+        });
+    </script>
 {% endblock %}
