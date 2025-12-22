@@ -140,6 +140,7 @@ class PostResultSet
                 'meta_keywords' => $entity->getMetaKeywords(),
                 'meta_title' => $entity->getMetaTitle() ?: $post->getHeading(),
                 'perex' => $entity->getPerex(),
+                'private_slug' => $entity->getPrivateSlug(),
                 'publish_date' => $entity->getPublishDate(),
                 'subtitle' => $entity->getSubtitle(),
                 'tags' => [],
