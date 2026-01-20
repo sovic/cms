@@ -14,55 +14,53 @@
                     {% endif %}
                 </h2>
             </div>
-        </div>
 
-        {{ block('edit_form') }}
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block edit_form %}
-    <div class="{{ theme.default.card_class }}">
-        <div class="card-body">
-            {{ form_start(form) }}
-            {{ form_errors(form) }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
 
-            <div class="row">
-                <div class="col-12">
-                    {{ form_row(form.name) }}
-                </div>
-                <div class="col-12">
-                    {{ form_row(form.subject) }}
-                </div>
-                <div class="col-md-6">
-                    {{ form_row(form.fromName) }}
-                </div>
-                <div class="col-md-6">
-                    {{ form_row(form.fromEmail) }}
-                </div>
-                <div class="col-12">
-                    {{ form_row(form.emailId) }}
-                    <div class="
+    <div class="row">
+        <div class="col-12">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.subject) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.fromName) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.fromEmail) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.emailId) }}
+            <div class="
                         alert alert-dismissible bg-light-primary border border-primary border-dashed
                         text-gray
                         d-none
                     ">
-                        Proměnné:
-                        <div></div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    {{ form_row(form.body) }}
-                </div>
-
-                <div class="col-12">
-                    {% if form.save is defined %}
-                        {{ form_row(form.save) }}
-                    {% endif %}
-                </div>
+                Proměnné:
+                <div></div>
             </div>
-            {{ form_end(form) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.body) }}
+        </div>
+
+        <div class="col-12">
+            {% if form.save is defined %}
+                {{ form_row(form.save) }}
+            {% endif %}
         </div>
     </div>
+    {{ form_end(form) }}
 
     {{ content_editor.content_editor_basic('#email_body') }}
 

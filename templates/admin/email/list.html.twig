@@ -21,7 +21,7 @@
 {# {% set can_write = access_manager.hasRole('Admin') %} #}
 
 {% block data_list_title %}
-    <h2>Seznam emailů</h2>
+    <h2>Emaily</h2>
 {% endblock %}
 
 {% block add_item %}
@@ -107,6 +107,11 @@
                     <span class="fw-bold small">{{ item.createdAt|date('j.n.Y H:i')|raw }}</span>
                 </td>
                 <td>
+                    {% if item.emailId %}
+                        <div class="mb-2">
+                            <span class="badge badge-light-info">Systémový email</span>
+                        </div>
+                    {% endif %}
                     <a href="{{ detail_url }}"
                        class="text-gray-800 text-hover-primary fs-5 fw-bold">
                         {{ item.name }}
