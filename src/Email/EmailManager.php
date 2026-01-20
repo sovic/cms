@@ -90,19 +90,25 @@ class EmailManager
         $message->subject($subject);
         $message->html($body);
 
-        $sent = false;
-        $error = null;
-        try {
-            $this->mailer->send($message);
-            $sent = true;
-        } catch (TransportExceptionInterface $e) {
-            $error = 'Transport error [' . $e->getCode() . ']: ' . $e->getMessage();
-        }
+        $error = $this->sendMessage($message);
+
         if ($log) {
             $this->log($model->getId(), $message, $error);
         }
 
-        return $sent;
+        return null === $error;
+    }
+
+    public function sendMessage(\Symfony\Component\Mime\Email $message): ?string
+    {
+        $error = null;
+        try {
+            $this->mailer->send($message);
+        } catch (TransportExceptionInterface $e) {
+            $error = 'Transport error [' . $e->getCode() . ']: ' . $e->getMessage();
+        }
+
+        return $error;
     }
 
     public function getFormattedHtml(string $html): string
