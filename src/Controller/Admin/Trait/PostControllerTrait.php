@@ -22,6 +22,7 @@ trait PostControllerTrait
     public function postList(
         EntityManagerInterface $em,
         PostResultSetFactory   $postResultSetFactory,
+        Request                $request,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -32,7 +33,8 @@ trait PostControllerTrait
         /** @var PostRepository $repo */
         $repo = $em->getRepository(Post::class);
 
-        $pageNr = 1;
+        $queryPage = $request->query->get('page');
+        $pageNr = $queryPage ?? 1;
         $pagination = new Pagination($repo->count(), $perPage);
         if ($pageNr > $pagination->getPageCount()) {
             return $this->renderProject404();
