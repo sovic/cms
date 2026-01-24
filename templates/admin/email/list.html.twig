@@ -64,6 +64,9 @@
                     <span class="fw-bold small">{{ item.createdAt|date('j.n.Y H:i')|raw }}</span>
                 </td>
                 <td>
+                    {% if item.emailId %}
+                        <span class="badge badge-light-info me-2">Systémový email</span>
+                    {% endif %}
                     <a href="{{ detail_url }}"
                        class="text-gray-800 text-hover-primary fs-5 fw-bold">
                         {{ item.name }}
