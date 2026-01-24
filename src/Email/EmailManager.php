@@ -15,7 +15,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Contracts\Service\Attribute\Required;
 
-class EmailManager
+class EmailManager implements EmailManagerInterface
 {
     protected EmailThemeInterface $emailTheme;
     protected EntityManagerInterface $em;
