@@ -60,14 +60,18 @@ class EmailManager implements EmailManagerInterface
             throw new InvalidArgumentException('Email not found for ID: ' . $model->getId()->getId());
         }
 
+        $theme = $this->emailTheme;
         $body = $email->getBody();
         $subject = $email->getSubject();
         foreach ($data as $key => $value) {
             $body = str_replace('{' . $key . '}', $value, $body);
             $subject = str_replace('{' . $key . '}', $value, $subject);
         }
-        $data['body'] = $this->getFormattedHtml($body);
+        $data['body'] = $theme->getFormattedHtml($body);
         $data['subject'] = $subject;
+        $data['theme'] = $theme->getTheme();
+        $data['recipient_email'] = $emailTo;
+        $data['email_signature'] = $theme->getFormattedFooterHtml($data['email_signature']);
 
         $senderAddress = null;
         if ($sender && EmailValidator::validate($sender) === true) {
@@ -76,8 +80,7 @@ class EmailManager implements EmailManagerInterface
 
         $fromAddress = new Address($email->getFromEmail(), $email->getFromName());
         $message = new TemplatedEmail();
-        $template = $template ?? '@CommonUiBundle/email/default.html.twig';
-        $message->htmlTemplate($template);
+        $message->htmlTemplate('@CommonUiBundle/email/default.html.twig');
         $message->context($data);
         $message->from($fromAddress);
         if ($senderAddress) {
@@ -109,21 +112,6 @@ class EmailManager implements EmailManagerInterface
         }
 
         return $error;
-    }
-
-    public function getFormattedHtml(string $html): string
-    {
-        $themeData = $this->emailTheme->getTheme();
-
-        // update links style
-        $linkStyle = $themeData['link_style'] ?? '';
-        $html = str_replace('<a ', '<a style="' . $linkStyle . '" ', $html);
-        // update paragraph style
-        $paragraphStyle = $themeData['paragraph_style'] ?? '';
-        /** @noinspection PhpUnnecessaryLocalVariableInspection */
-        $html = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $html);
-
-        return $html;
     }
 
     public function log(EmailIdInterface $emailId, \Symfony\Component\Mime\Email $message, ?string $error = null): void
