@@ -68,7 +68,7 @@ class EmailManager implements EmailManagerInterface
             $body = str_replace('{' . $key . '}', $value, $body);
             $subject = str_replace('{' . $key . '}', $value, $subject);
         }
-        $data['body'] = $theme->getFormattedHtml($body);
+        $data['body'] = $this->formatHtml($body);
         $data['subject'] = $subject;
         $data['theme'] = $theme->getTheme();
         $data['recipient_email'] = $emailTo;
@@ -116,6 +116,11 @@ class EmailManager implements EmailManagerInterface
         }
 
         return $error;
+    }
+
+    public function formatHtml(string $html): string
+    {
+        return $this->emailTheme->getFormattedHtml($html);
     }
 
     public function log(EmailIdInterface $emailId, \Symfony\Component\Mime\Email $message, ?string $error = null): void
