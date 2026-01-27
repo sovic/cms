@@ -72,7 +72,9 @@ class EmailManager implements EmailManagerInterface
         $data['subject'] = $subject;
         $data['theme'] = $theme->getTheme();
         $data['recipient_email'] = $emailTo;
-        $data['email_signature'] = (!empty($data['email_signature']) ? $theme->getFormattedFooterHtml($data['email_signature']) : '');
+        if (!empty($data['email_signature'])) {
+            $data['email_signature'] = $theme->getFormattedFooterHtml($data['email_signature']);
+        }
 
         $senderAddress = null;
         if ($sender && EmailValidator::validate($sender) === true) {
