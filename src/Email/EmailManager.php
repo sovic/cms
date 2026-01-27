@@ -46,6 +46,7 @@ class EmailManager implements EmailManagerInterface
         ?string             $replyTo = null,
         ?string             $template = null,
         ?bool               $log = false,
+        ?string             $transportId = null,
     ): bool {
         if (EmailValidator::validate($emailTo) !== true) {
             throw new InvalidArgumentException('Invalid email address: ' . $emailTo);
@@ -71,7 +72,7 @@ class EmailManager implements EmailManagerInterface
         $data['subject'] = $subject;
         $data['theme'] = $theme->getTheme();
         $data['recipient_email'] = $emailTo;
-        $data['email_signature'] = $theme->getFormattedFooterHtml($data['email_signature']);
+        $data['email_signature'] = (!empty($data['email_signature']) ? $theme->getFormattedFooterHtml($data['email_signature']) : '');
 
         $senderAddress = null;
         if ($sender && EmailValidator::validate($sender) === true) {
@@ -93,7 +94,7 @@ class EmailManager implements EmailManagerInterface
         $message->subject($subject);
         $message->html($body);
 
-        $error = $this->sendMessage($message);
+        $error = $this->sendMessage($message, $transportId);
 
         if ($log) {
             $this->log($model->getId(), $message, $error);
@@ -102,10 +103,13 @@ class EmailManager implements EmailManagerInterface
         return null === $error;
     }
 
-    public function sendMessage(\Symfony\Component\Mime\Email $message): ?string
+    public function sendMessage(\Symfony\Component\Mime\Email $message, ?string $transportId = null): ?string
     {
         $error = null;
         try {
+            if ($transportId) {
+                $message->getHeaders()->addTextHeader('X-Transport', $transportId);
+            }
             $this->mailer->send($message);
         } catch (TransportExceptionInterface $e) {
             $error = 'Transport error [' . $e->getCode() . ']: ' . $e->getMessage();
