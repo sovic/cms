@@ -5,7 +5,9 @@ namespace Sovic\Cms\Controller\Admin\Trait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
 use Sovic\Cms\Email\EmailListInterface;
+use Sovic\Cms\Email\EmailSearchRequest;
 use Sovic\Cms\Entity\Email;
+use Sovic\Common\DataList\Enum\VisibilityId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -29,13 +31,25 @@ trait EmailControllerTrait
     )]
     public function email(
         EntityManagerInterface $em,
+        Request                $request,
     ): Response {
         $this->getRouteAccessDecision('admin:email:list');
 
+        $page = max(1, (int) $request->query->get('page', 1));
+
+        $sr = new EmailSearchRequest();
+        $sr->setVisibilityId(VisibilityId::Public);
+        $sr->setPage($page);
+        $sr->setPaginationRoute('admin:email:list');
+
         $repo = $em->getRepository(Email::class);
-        $emails = $repo->findBy([], ['id' => 'DESC']);
+        $emails = $repo->findBySearchRequest($sr);
+        $total = $repo->countBySearchRequest($sr);
+        $pagination = $sr->getPagination($total);
 
         $this->assign('emails', $emails);
+        $this->assign('pagination', $pagination);
+        $this->assign('query', $sr->toArray());
 
         return $this->render('@CmsBundle/admin/email/list.html.twig');
     }
