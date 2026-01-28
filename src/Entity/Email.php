@@ -5,17 +5,23 @@ namespace Sovic\Cms\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 use Sovic\Cms\Repository\EmailRepository;
 use Sovic\Common\Entity\Trait\CreatedAtTrait;
+use Sovic\Common\Entity\Trait\DeletedAtTrait;
 use Sovic\Common\Entity\Trait\IdentityColumnTrait;
+use UserBundle\Entity\Trait\CreatorTrait;
 
 #[Table(name: 'email')]
+#[Index(name: 'creator_user_id', columns: ['creator_user_id'])]
 #[Entity(repositoryClass: EmailRepository::class)]
 class Email
 {
     use IdentityColumnTrait;
     use CreatedAtTrait;
+    use CreatorTrait;
+    use DeletedAtTrait;
 
     #[Column(name: 'name', type: Types::STRING, length: 200, nullable: false)]
     private string $name;
