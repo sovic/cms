@@ -83,6 +83,7 @@ class EmailManager implements EmailManagerInterface
 
         $fromAddress = new Address($email->getFromEmail(), $email->getFromName());
         $message = new TemplatedEmail();
+        $message->text(html_entity_decode(strip_tags($body)));
         $message->htmlTemplate('@CommonUiBundle/email/default.html.twig');
         $message->context($data);
         $message->from($fromAddress);
