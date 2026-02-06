@@ -19,6 +19,7 @@ use Sovic\Common\Entity\Project;
 
 #[Table(name: 'page')]
 #[Index(name: 'project_id', columns: ['project_id'])]
+#[Index(name: 'url_id', columns: ['url_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PageRepository::class)]
 class Page
@@ -31,14 +32,14 @@ class Page
     protected int $id;
 
     #[ManyToOne(targetEntity: Project::class)]
-    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    protected Project $project;
-
-    #[Column(name: 'name', type: Types::STRING, length: 200, nullable: true)]
-    protected string $name;
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE', options: ['default' => null])]
+    protected ?Project $project = null;
 
     #[Column(name: 'url_id', type: Types::STRING, length: 200, nullable: true)]
     protected string $urlId;
+
+    #[Column(name: 'name', type: Types::STRING, length: 200, nullable: true)]
+    protected string $name;
 
     #[Column(name: 'heading', type: Types::STRING, length: 150, nullable: true)]
     protected ?string $heading = null;
@@ -50,7 +51,7 @@ class Page
     protected ?string $content = null;
 
     #[Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
-    protected int $sequence;
+    protected int $sequence = 0;
 
     #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $public = false;
@@ -64,23 +65,17 @@ class Page
     #[Column(name: 'toc', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $toc = false;
 
-    #[Column(name: 'cta_link', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $ctaLink = null;
-
-    #[Column(name: 'cta_text', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $ctaText = null;
-
     #[Column(name: 'content_type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $contentType = null;
 
-    #[Column(name: 'header', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $header = null;
+//    #[Column(name: 'header', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
+//    protected ?string $header = null;
 
     #[Column(name: 'theme', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $theme = null;
 
-    #[Column(name: 'in_sitemap', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
-    protected bool $inSitemap = true;
+    #[Column(name: 'is_in_sitemap', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
+    protected bool $isInSitemap = true;
 
     #[Column(name: 'last_update_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $lastUpdateDate = null;
@@ -98,12 +93,12 @@ class Page
         $this->id = $id;
     }
 
-    public function getProject(): Project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProject(Project $project): void
+    public function setProject(?Project $project): void
     {
         $this->project = $project;
     }
@@ -208,26 +203,6 @@ class Page
         $this->toc = $toc;
     }
 
-    public function getCtaLink(): ?string
-    {
-        return $this->ctaLink;
-    }
-
-    public function setCtaLink(?string $ctaLink): void
-    {
-        $this->ctaLink = $ctaLink;
-    }
-
-    public function getCtaText(): ?string
-    {
-        return $this->ctaText;
-    }
-
-    public function setCtaText(?string $ctaText): void
-    {
-        $this->ctaText = $ctaText;
-    }
-
     public function getContentType(): ?string
     {
         return $this->contentType;
@@ -238,15 +213,15 @@ class Page
         $this->contentType = $contentType;
     }
 
-    public function getHeader(): ?string
-    {
-        return $this->header;
-    }
-
-    public function setHeader(?string $header): void
-    {
-        $this->header = $header;
-    }
+//    public function getHeader(): ?string
+//    {
+//        return $this->header;
+//    }
+//
+//    public function setHeader(?string $header): void
+//    {
+//        $this->header = $header;
+//    }
 
     public function getTheme(): ?string
     {
@@ -260,12 +235,12 @@ class Page
 
     public function isInSitemap(): bool
     {
-        return $this->inSitemap;
+        return $this->isInSitemap;
     }
 
-    public function setInSitemap(bool $inSitemap): void
+    public function setIsInSitemap(bool $isInSitemap): void
     {
-        $this->inSitemap = $inSitemap;
+        $this->isInSitemap = $isInSitemap;
     }
 
     public function getLastUpdateDate(): ?DateTimeImmutable
