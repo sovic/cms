@@ -7,7 +7,7 @@
 
 {% block title %}Přehled nastavení aplikace{% endblock %}
 {% block data_list_title %}
-    <h2 class="text-dark fw-bolder my-6">Nastavení aplikace</h2>
+    <h2 class="text-dark fw-bolder my-6">Nastavení</h2>
 {% endblock %}
 
 {% block data_list_table %}
@@ -23,10 +23,10 @@
             <th class="text-start w-200px" data-dt-column="1">
                 <span class="dt-column-title">Sekce</span>
             </th>
-            <th class="text-start min-w-100px" data-dt-column="2">
+            <th class="text-start min-w-300px" data-dt-column="2" style="width: 30%;">
                 <span class="dt-column-title">Popis nastavení</span>
             </th>
-            <th class="text-start min-w-70px" data-dt-column="3">
+            <th class="text-start min-w-200px" data-dt-column="3">
                 <span class="dt-column-title">Hodnota</span>
             </th>
             <th class="text-end" data-dt-column="4">
@@ -50,9 +50,11 @@
                     {{ s.description }}
                 </td>
                 <td class="text-start">
-                    <a href="{{ detail_url }}">
-                        <strong>{{ s.value|nl2br }}</strong>
-                    </a>
+                    <div style="max-height: 80px; overflow: scroll;">
+                        <a href="{{ detail_url }}">
+                            <strong>{{ s.value|nl2br }}</strong>
+                        </a>
+                    </div>
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}
@@ -60,7 +62,7 @@
                         {
                             'url': detail_url,
                             'title': 'Editovat',
-                        }
+                        },
                     ]) %}
                     {{ data_list.actions_icons(actions) }}
                 </td>
