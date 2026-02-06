@@ -116,7 +116,7 @@
                         }
                     ]) %}
 
-                    <div class="actions d-none">
+                    <div class="actions-wrapper d-none">
                         {{ data_list.actions_icons(actions) }}
                     </div>
                 </td>
@@ -125,18 +125,4 @@
         </tbody>
         <tfoot></tfoot>
     </table>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const $trEls = document.querySelectorAll('tr');
-            for (let i = 0; i < $trEls.length; i++) {
-                $trEls[i].addEventListener('mouseenter', function () {
-                    this.querySelector('.actions').classList.remove('d-none');
-                });
-                $trEls[i].addEventListener('mouseleave', function () {
-                    this.querySelector('.actions').classList.add('d-none');
-                });
-            }
-        });
-    </script>
 {% endblock %}
