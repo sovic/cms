@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
+use Sovic\Cms\Entity\Trait\PublishedAtTrait;
 use Sovic\Cms\Repository\PageRepository;
 use Sovic\Common\Entity\Project;
 
@@ -25,6 +26,7 @@ use Sovic\Common\Entity\Project;
 class Page
 {
     use MetaColumnsTrait;
+    use PublishedAtTrait;
 
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
