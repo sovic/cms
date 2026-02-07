@@ -35,13 +35,13 @@ class Page
     #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE', options: ['default' => null])]
     protected ?Project $project = null;
 
-    #[Column(name: 'url_id', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'url_id', type: Types::STRING, length: 255, nullable: true)]
     protected string $urlId;
 
-    #[Column(name: 'name', type: Types::STRING, length: 200, nullable: true)]
+    #[Column(name: 'name', type: Types::STRING, length: 255, nullable: true)]
     protected string $name;
 
-    #[Column(name: 'heading', type: Types::STRING, length: 150, nullable: true)]
+    #[Column(name: 'heading', type: Types::STRING, length: 255, nullable: true)]
     protected ?string $heading = null;
 
     #[Column(name: 'perex', type: Types::TEXT, length: 16383, nullable: true, options: ['default' => null])]
@@ -50,8 +50,8 @@ class Page
     #[Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
     protected ?string $content = null;
 
-    #[Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
-    protected int $sequence = 0;
+//    #[Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
+//    protected int $sequence = 0;
 
     #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $public = false;
@@ -151,16 +151,6 @@ class Page
     public function setContent(?string $content): void
     {
         $this->content = $content;
-    }
-
-    public function getSequence(): int
-    {
-        return $this->sequence;
-    }
-
-    public function setSequence(int $sequence): void
-    {
-        $this->sequence = $sequence;
     }
 
     public function isPublic(): bool

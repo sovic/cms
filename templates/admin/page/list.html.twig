@@ -1,0 +1,95 @@
+{% extends '@CommonUiBundle/admin/layout/data-list.html.twig' %}
+
+{% import '@CommonUiBundle/admin/macros/data-list.html.twig' as data_list %}
+
+{% block title %}Přehled stránek{% endblock %}
+
+{% set allow_add = true %}
+{% set is_search_enabled = true %}
+{% set is_filters_enabled = false %}
+{% set is_group_actions_enabled = true %}
+
+{% block data_list_title %}
+    <h2>Stránky</h2>
+{% endblock %}
+
+{% block add_item %}
+    {% if allow_add %}
+        <a class="btn btn-flex btn-light-primary"
+           href="{{ path('admin:page:edit') }}">
+            <i class="ki-outline ki-message-add fs-3"></i>
+            Nová stránka
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block data_list_table %}
+    <table class="{{ theme.default.table_class }} dataTable">
+        <thead>
+        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+            {% if is_group_actions_enabled %}
+                {{ data_list.checkbox_all() }}
+            {% endif %}
+            <th class="min-w-300px" data-dt-column="1">
+                <span class="dt-column-title">Název</span>
+            </th>
+            <th class="min-w-100px" data-dt-column="2">
+                <span class="dt-column-title">URL</span>
+            </th>
+            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.default.tbody_class }}">
+        {% for page in pages %}
+            {% set detail_url = path('admin:page:edit', {'id': page.id}) %}
+            <tr>
+                {% if is_group_actions_enabled %}
+                    <td>
+                        {{ data_list.checkbox(page.id) }}
+                    </td>
+                {% endif %}
+                <td>
+                    <a href="{{ detail_url }}"
+                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                        {{ page.name }}
+                    </a>
+                    <div class="mt-1">
+                        {% if page.public %}
+                            <span class="badge badge-light-success">Publikováno</span>
+                        {% else %}
+                            <span class="badge badge-light-warning">Nepublikováno</span>
+                        {% endif %}
+                        {% if page.lang %}
+                            <span class="badge badge-light-info">{{ page.lang }}</span>
+                        {% endif %}
+                    </div>
+                </td>
+                <td>
+                    <span class="text-muted small">
+                        <a href="/{{ page.urlId }}" target="_blank">
+                            {{ '/' ~ page.urlId }}
+                        </a>
+                    </span>
+                </td>
+                <td class="text-end">
+                    {% set actions = [] %}
+                    {% set actions = actions|merge([
+                        {
+                            'url': detail_url,
+                            'title': 'Upravit',
+                            'class': 'text-primary',
+                            'icon': 'ki-duotone ki-pencil',
+                        },
+                    ]) %}
+                    <div class="actions-wrapper">
+                        {{ data_list.actions_icons(actions) }}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+{% endblock %}

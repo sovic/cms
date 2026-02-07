@@ -1,0 +1,92 @@
+{% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
+{% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
+{% import '@CommonUiBundle/admin/macros/content-editor.html.twig' as content_editor %}
+{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.default.card_class }}">
+            {{ form_macro.card_header('Editace stránky', theme) }}
+
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block edit_form %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_macro.section_header('Základní informace') }}
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.urlId) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.heading) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.public) }}
+        </div>
+    </div>
+
+    {{ form_macro.section_header('Obsah stránky') }}
+    <div class="row">
+        <div class="col-12">
+            {{ form_row(form.content) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.perex) }}
+        </div>
+    </div>
+
+    {{ form_macro.section_header('Nastavení') }}
+    <div class="row">
+        <div class="col-12 col-md-4">
+            {{ form_row(form.isInSitemap) }}
+        </div>
+    </div>
+
+    {#    <div class="row"> #}
+    {#        <div class="col-12 col-md-4"> #}
+    {#            {{ form_row(form.contentType) }} #}
+    {#        </div> #}
+    {#        <div class="col-12 col-md-4"> #}
+    {#            {{ form_row(form.theme) }} #}
+    {#        </div> #}
+    {#        <div class="col-12 col-md-4"> #}
+    {#            {{ form_row(form.sideMenuId) }} #}
+    {#        </div> #}
+    {#    </div> #}
+
+    {{ form_macro.section_header('Metadata') }}
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(form.metaTitle) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.metaKeywords) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.metaDescription) }}
+        </div>
+    </div>
+
+    <div class="position-sticky bottom-0 py-3 bg-body border-top">
+        {% if form._token is defined %}
+            {{ form_row(form._token) }}
+        {% endif %}
+        {% if form.save is defined %}
+            {{ form_row(form.save) }}
+        {% endif %}
+    </div>
+
+    {{ form_end(form, {render_rest: false}) }}
+
+    {{ content_editor.content_editor_basic('#page_content') }}
+{% endblock %}
