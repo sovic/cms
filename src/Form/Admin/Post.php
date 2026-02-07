@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Form\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Form\Admin\Trait\MetaFormTrait;
 use Sovic\CommonUi\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -14,6 +15,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class Post extends AbstractType
 {
+    use MetaFormTrait;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -124,41 +127,7 @@ class Post extends AbstractType
             ]
         );
 
-        $builder->add(
-            'metaTitle',
-            TextType::class,
-            [
-                'label' => 'Titulek (nepovinné, použije se název pokud není vyplněno)',
-                'required' => false,
-                'attr' => [
-                    'length' => 255,
-                ],
-            ]
-        );
-
-        $builder->add(
-            'metaDescription',
-            TextType::class,
-            [
-                'label' => 'Popis',
-                'required' => false,
-                'attr' => [
-                    'length' => 255,
-                ],
-            ]
-        );
-
-        $builder->add(
-            'metaKeywords',
-            TextType::class,
-            [
-                'label' => 'Klíčová slova (oddělená čárkou)',
-                'required' => false,
-                'attr' => [
-                    'length' => 255,
-                ],
-            ]
-        );
+        $this->addMetaFields($builder);
 
         // submit
 
