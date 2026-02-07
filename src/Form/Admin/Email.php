@@ -48,7 +48,7 @@ class Email extends AbstractType
             'name',
             TextType::class,
             [
-                'label' => 'Název šablony',
+                'label' => 'Název',
                 'required' => true,
                 'attr' => [
                     'length' => 200,
@@ -98,7 +98,7 @@ class Email extends AbstractType
             'body',
             TextareaType::class,
             [
-                'label' => 'Tělo emailu',
+                'label' => 'Šablona emailu',
                 'required' => false,
                 'empty_data' => '',
                 'attr' => [

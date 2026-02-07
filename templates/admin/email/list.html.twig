@@ -19,7 +19,7 @@
         <a class="btn btn-flex btn-light-primary"
            href="{{ path('admin:email:edit') }}">
             <i class="ki-outline ki-message-add fs-3"></i>
-            Nová šablona emailu
+            Nová šablona
         </a>
     {% endif %}
 {% endblock %}
@@ -41,10 +41,10 @@
                 {{ data_list.checkbox_all() }}
             {% endif %}
 
-            <th class="w-200px" data-dt-column="1">
+            <th class="min-w-100px" data-dt-column="1">
                 <span class="dt-column-title">Vytvořen</span>
             </th>
-            <th class="min-w-100px" data-dt-column="2">
+            <th class="min-w-350px" data-dt-column="2">
                 <span class="dt-column-title">Název</span>
             </th>
             <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce"></th>
@@ -61,16 +61,17 @@
                     </td>
                 {% endif %}
                 <td>
-                    <span class="fw-bold small">{{ item.createdAt|date('j.n.Y H:i')|raw }}</span>
+                    <span class="fw-bold small">{{ item.createdAt|date('j.n.Y')|raw }}</span>
                 </td>
                 <td>
-                    {% if item.emailId %}
-                        <span class="badge badge-light-info me-2">Systémový email</span>
-                    {% endif %}
                     <a href="{{ detail_url }}"
                        class="text-gray-800 text-hover-primary fs-5 fw-bold">
                         {{ item.name }}
                     </a>
+                    {% if item.emailId %}
+                        <br>
+                        <span class="badge badge-light-info me-2">Systémový email</span>
+                    {% endif %}
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}
@@ -80,7 +81,7 @@
                                 'url': '#',
                                 'title': 'Archivovat',
                                 'method': 'email/' ~ item.id ~ '/delete',
-                                'class': 'text-danger'
+                                'class': 'text-warning'
                             }
                         ]) %}
                     {% endif %}
