@@ -13,10 +13,13 @@ trait MetaFormTrait
             'metaTitle',
             TextType::class,
             [
-                'label' => 'Titulek (nepovinné, použije se název pokud není vyplněno)',
+                'label' => 'Titulek (nepovinné)',
                 'required' => false,
                 'attr' => [
                     'length' => 255,
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'bottom',
+                    'title' => 'Titulek se používá pro SEO a zobrazuje se v prohlížeči a ve výsledcích vyhledávání. Pokud není vyplněn, bude automaticky vygenerován z názvu stránky.',
                 ],
             ]
         );

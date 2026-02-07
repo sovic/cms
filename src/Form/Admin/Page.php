@@ -49,10 +49,13 @@ class Page extends AbstractType
             'urlId',
             TextType::class,
             [
-                'label' => 'URL identifikátor (nepovinné, vytvoří se automaticky z názvu pokud není vyplněno)',
+                'label' => 'URL identifikátor (nepovinné)',
                 'required' => false,
                 'attr' => [
                     'length' => 200,
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'bottom',
+                    'title' => 'URL identifikátor se používá pro tvorbu URL adresy stránky. Pokud není vyplněn, bude automaticky vygenerován z názvu stránky. Měl by být unikátní a může obsahovat pouze písmena, čísla a pomlčky.',
                 ],
             ]
         );
@@ -110,9 +113,12 @@ class Page extends AbstractType
             TextareaType::class,
             [
                 'required' => false,
-                'label' => 'Perex (krátký úvodní text, zobrazuje se například v seznamech stránek, nepovinné)',
+                'label' => 'Perex (nepovinné)',
                 'attr' => [
                     'rows' => 5,
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'bottom',
+                    'title' => 'Perex je krátký úvodní text, který se zobrazí například v přehledu stránek. Měl by být stručný a výstižný.',
                 ],
             ]
         );
