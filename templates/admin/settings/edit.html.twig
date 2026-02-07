@@ -31,9 +31,9 @@
         <div class="col-12">
             {{ form_row(form.value) }}
         </div>
-        <div class="col-12">
-            {{ form_row(form.submit) }}
-        </div>
+    </div>
+    <div class="position-sticky bottom-0 py-3 bg-body border-top">
+        {{ form_row(form.submit) }}
     </div>
     {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}
