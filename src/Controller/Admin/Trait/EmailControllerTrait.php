@@ -4,7 +4,7 @@ namespace Sovic\Cms\Controller\Admin\Trait;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
-use Sovic\Cms\Email\EmailListInterface;
+use Sovic\Cms\Email\EmailSettingsInterface;
 use Sovic\Cms\Email\EmailSearchRequest;
 use Sovic\Cms\Entity\Email;
 use Sovic\Common\DataList\Enum\VisibilityId;
@@ -62,7 +62,7 @@ trait EmailControllerTrait
     )]
     public function detail(
         int                    $id,
-        EmailListInterface     $emailList,
+        EmailSettingsInterface $emailList,
         EntityManagerInterface $em,
         Request                $request,
     ): Response {
@@ -92,8 +92,11 @@ trait EmailControllerTrait
             $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
         }
 
+        $emailId = $email->getEmailId();
+
         $this->assign('email', $email);
         $this->assign('form', $form->createView());
+        $this->assign('variables', $emailId ? $emailList->getVariablesForEmailId($emailId) : []);
 
         return $this->render('@CmsBundle/admin/email/edit.html.twig');
     }

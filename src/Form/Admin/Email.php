@@ -5,7 +5,7 @@ namespace Sovic\Cms\Form\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Sovic\Cms\Email\EmailIdInterface;
-use Sovic\Cms\Email\EmailListInterface;
+use Sovic\Cms\Email\EmailSettingsInterface;
 use Sovic\CommonUi\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -32,7 +32,7 @@ class Email extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $emailList = $options['email_list'] ?? null;
-        if (!$emailList instanceof EmailListInterface) {
+        if (!$emailList instanceof EmailSettingsInterface) {
             throw new InvalidArgumentException('Option "email_list" is required.');
         }
 

@@ -9,8 +9,8 @@ use Symfony\Component\Form\FormInterface;
 abstract readonly class AbstractEmailManager implements EmailManagerInterface
 {
     public function __construct(
-        private EmailListInterface   $emailList,
-        private FormFactoryInterface $formFactory
+        private EmailSettingsInterface $emailList,
+        private FormFactoryInterface   $formFactory
     ) {
     }
 
