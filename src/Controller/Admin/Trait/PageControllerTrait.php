@@ -81,4 +81,35 @@ trait PageControllerTrait
 
         return $this->render('@CmsBundle/admin/page/edit.html.twig');
     }
+
+    #[Route(
+        '/admin/page/clone/{id}',
+        name: 'admin:page:clone',
+        requirements: ['id' => '\d+'],
+    )]
+    public function pageClone(
+        int                    $id,
+        EntityManagerInterface $em,
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $repo = $em->getRepository(Page::class);
+        $source = $repo->find($id);
+
+        if ($source === null) {
+            return $this->redirectToRoute('admin:page:list');
+        }
+
+        $clone = clone $source;
+        $clone->setUrlId($source->getUrlId() . '-copy-' . time());
+        $clone->setName($source->getName() . ' (kopie)');
+        $clone->setPublic(false);
+        $clone->setPublishedAt(null);
+        $clone->setLastUpdateDate(null);
+
+        $em->persist($clone);
+        $em->flush();
+
+        return $this->redirectToRoute('admin:page:edit', ['id' => $clone->getId()]);
+    }
 }

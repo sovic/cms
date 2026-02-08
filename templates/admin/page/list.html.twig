@@ -84,6 +84,12 @@
                             'class': 'text-primary',
                             'icon': 'ki-duotone ki-pencil',
                         },
+                        {
+                            'url': path('admin:page:clone', {'id': page.id}),
+                            'title': 'Klonovat',
+                            'class': 'text-info',
+                            'icon': 'ki-duotone ki-copy',
+                        },
                     ]) %}
                     <div class="actions-wrapper">
                         {{ data_list.actions_icons(actions) }}

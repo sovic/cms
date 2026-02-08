@@ -254,4 +254,9 @@ class Page
     {
         $this->sideMenuId = $sideMenuId;
     }
+
+    public function __clone()
+    {
+        unset($this->id);
+    }
 }
