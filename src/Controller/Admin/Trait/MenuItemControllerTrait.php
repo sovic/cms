@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller\Admin\Trait;
 
+use Collator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\MenuItem;
 use Sovic\Cms\Entity\Page;
@@ -63,6 +64,10 @@ trait MenuItemControllerTrait
             }
             $parentChoices[$item->getName()] = $item->getId();
         }
+        $collator = new Collator('cs_CZ');
+        uksort($parentChoices, static function ($a, $b) use ($collator) {
+            return $collator->compare($a, $b);
+        });
 
         $form = $this->createForm(\Sovic\Cms\Form\Admin\MenuItem::class, $menuItem, [
             'pages' => $pages,

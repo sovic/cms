@@ -48,6 +48,14 @@
                     {% if item.position %}
                         <span class="badge badge-light-info">{{ item.position }}</span>
                     {% endif %}
+                    {% if item.visibility %}
+                        {% if item.visibility == 'auth' %}
+                            <span class="badge badge-light-primary">Pouze pro přihlášené</span>
+                        {% endif %}
+                        {% if item.visibility == 'not-auth' %}
+                            <span class="badge badge-light-primary">Pouze pro nepřihlášené</span>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </td>
             <td>

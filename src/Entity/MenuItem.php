@@ -45,6 +45,9 @@ class MenuItem
     #[Column(name: 'is_published', type: Types::BOOLEAN, nullable: false, options: ['default' => 0])]
     protected bool $isPublished = false;
 
+    #[Column(name: 'visibility', type: Types::STRING, length: 20, nullable: true, options: ['default' => null])]
+    protected ?string $visibility = null;
+
     #[Column(name: 'position', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $position = null;
 
@@ -123,6 +126,16 @@ class MenuItem
     public function setIsPublished(bool $isPublished): void
     {
         $this->isPublished = $isPublished;
+    }
+
+    public function getVisibility(): ?string
+    {
+        return $this->visibility;
+    }
+
+    public function setVisibility(?string $visibility): void
+    {
+        $this->visibility = $visibility;
     }
 
     public function getParentId(): ?int

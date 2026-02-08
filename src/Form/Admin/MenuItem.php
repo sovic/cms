@@ -118,6 +118,21 @@ class MenuItem extends AbstractType
         );
 
         $builder->add(
+            'visibility',
+            ChoiceType::class,
+            [
+                'label' => 'Viditelnost',
+                'required' => false,
+                'choices' => [
+                    'Vždy viditelné' => null,
+                    'Pouze pro přihlášené' => 'auth',
+                    'Pouze pro nepřihlášené' => 'not-auth',
+                ],
+                'placeholder' => false,
+            ]
+        );
+
+        $builder->add(
             'sequence',
             IntegerType::class,
             [
