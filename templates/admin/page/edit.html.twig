@@ -6,7 +6,15 @@
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.default.card_class }}">
-            {{ form_macro.card_header('Editace stránky', theme) }}
+            {% set toolbar %}
+                {% if editing %}
+                    <a class="btn btn-flex btn-light-primary" href="/{{ page.urlId }}" target="_blank">
+                        <i class="bi bi-globe fs-3 me-1"></i>
+                        Zobrazit stránku
+                    </a>
+                {% endif %}
+            {% endset %}
+            {{ form_macro.card_header('Editace stránky', theme, toolbar) }}
 
             <div class="card-body">
                 {{ block('edit_form') }}

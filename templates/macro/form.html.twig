@@ -1,8 +1,14 @@
-{% macro card_header(title, theme) %}
+{% macro card_header(title, theme, toolbar) %}
     <div class="{{ theme.default.card_header_class }}">
-        <h1 class="mb-0">
-            {{ title }}
-        </h1>
+        <div class="card-title">
+            <h2>
+                {{ title }}
+            </h2>
+        </div>
+
+        <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
+            {{ toolbar|default('')|raw }}
+        </div>
     </div>
 {% endmacro %}
 

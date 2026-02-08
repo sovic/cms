@@ -75,6 +75,7 @@ trait PageControllerTrait
             $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
         }
 
+        $this->assign('editing', $id > 0);
         $this->assign('page', $page);
         $this->assign('form', $form->createView());
 

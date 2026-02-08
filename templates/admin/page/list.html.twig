@@ -7,7 +7,7 @@
 {% set allow_add = true %}
 {% set is_search_enabled = true %}
 {% set is_filters_enabled = false %}
-{% set is_group_actions_enabled = true %}
+{% set is_group_actions_enabled = false %}
 
 {% block data_list_title %}
     <h2>Stránky</h2>
@@ -68,9 +68,11 @@
                 </td>
                 <td>
                     <span class="text-muted small">
+                        <code>
                         <a href="/{{ page.urlId }}" target="_blank">
                             {{ '/' ~ page.urlId }}
                         </a>
+                        </code>
                     </span>
                 </td>
                 <td class="text-end">

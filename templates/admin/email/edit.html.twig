@@ -1,15 +1,12 @@
 {% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
 {% import '@CommonUiBundle/admin/macros/content-editor.html.twig' as content_editor %}
+{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
 
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.default.card_class }}">
-            <div class="{{ theme.default.card_header_class }}">
-                <h2 class="mb-0">
-                    Editace šablony
-                </h2>
-            </div>
+            {{ form_macro.card_header('Editace šablony', theme) }}
 
             <div class="card-body">
                 {{ block('edit_form') }}
