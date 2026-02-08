@@ -1,0 +1,69 @@
+{% extends '@CommonUiBundle/admin/layout/admin.html.twig' %}
+{% form_theme form '@CommonUiBundle/admin/forms/form-narrow.html.twig' %}
+{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.default.card_class }}">
+            {{ form_macro.card_header('Editace položky menu', theme) }}
+
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block edit_form %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_macro.section_header('Základní informace') }}
+    <div class="row">
+        <div class="col-12 col-lg-4">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-12 col-lg-4">
+            {{ form_row(form.parentId) }}
+        </div>
+        <div class="col-12 col-lg-4">
+            {{ form_row(form.position) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.pageId) }}
+        </div>
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.url) }}
+        </div>
+    </div>
+
+    {{ form_macro.section_header('Nastavení') }}
+    <div class="row">
+        <div class="col-12 col-md-4">
+            {{ form_row(form.isPublished) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-4">
+            {{ form_row(form.sequence) }}
+        </div>
+        <div class="col-12 col-md-8">
+            {{ form_row(form.classes) }}
+        </div>
+    </div>
+
+    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top">
+        {% if form._token is defined %}
+            {{ form_row(form._token) }}
+        {% endif %}
+        {% if form.save is defined %}
+            {{ form_row(form.save) }}
+        {% endif %}
+    </div>
+    <div class="mt-n5"></div>
+
+    {{ form_end(form, {render_rest: false}) }}
+{% endblock %}
