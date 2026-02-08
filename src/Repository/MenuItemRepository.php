@@ -12,7 +12,21 @@ class MenuItemRepository extends EntityRepository
      */
     public function findAllOrdered(): array
     {
-        return $this->findBy([], ['sequence' => 'ASC', 'id' => 'ASC']);
+        return $this->findBy(
+            [],
+            ['sequence' => 'ASC', 'id' => 'ASC'],
+        );
+    }
+
+    /**
+     * @return MenuItem[]
+     */
+    public function findPublishedOrdered(): array
+    {
+        return $this->findBy(
+            ['isPublished' => true],
+            ['sequence' => 'ASC', 'id' => 'ASC'],
+        );
     }
 
     /**
