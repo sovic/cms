@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="position-sticky bottom-0 py-3 bg-body border-top">
+    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top">
         {% if form._token is defined %}
             {{ form_row(form._token) }}
         {% endif %}
@@ -93,6 +93,7 @@
             {{ form_row(form.save) }}
         {% endif %}
     </div>
+    <div class="mt-n5"></div>
 
     {{ form_end(form, {render_rest: false}) }}
 
