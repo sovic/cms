@@ -48,15 +48,15 @@
         <div class="col-12">
             {{ form_row(form.content) }}
         </div>
-        <div class="col-12">
-            {{ form_row(form.perex) }}
-        </div>
     </div>
 
     {{ form_macro.section_header('Nastavení') }}
     <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-12">
             {{ form_row(form.isInSitemap) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.hasToc) }}
         </div>
     </div>
 

@@ -108,33 +108,18 @@ class Page extends AbstractType
             ]
         );
 
-        $builder->add(
-            'perex',
-            TextareaType::class,
-            [
-                'required' => false,
-                'label' => 'Perex (nepovinné)',
-                'attr' => [
-                    'rows' => 5,
-                    'data-bs-toggle' => 'tooltip',
-                    'data-bs-placement' => 'bottom',
-                    'title' => 'Perex je krátký úvodní text, který se zobrazí například v přehledu stránek. Měl by být stručný a výstižný.',
-                ],
-            ]
-        );
-
         // settings
 
-//        $builder->add(
-//            'hasToc',
-//            CheckboxType::class,
-//            [
-//                'label' => 'Obsah (TOC)',
-//                'required' => false,
-//                'getter' => fn(\Sovic\Cms\Entity\Page $page) => $page->hasToc(),
-//                'setter' => fn(\Sovic\Cms\Entity\Page $page, bool $value) => $page->setHasToc($value),
-//            ]
-//        );
+        $builder->add(
+            'hasToc',
+            CheckboxType::class,
+            [
+                'label' => 'Obsah (TOC)',
+                'required' => false,
+                'getter' => fn(\Sovic\Cms\Entity\Page $page) => $page->hasToc(),
+                'setter' => fn(\Sovic\Cms\Entity\Page $page, bool $value) => $page->setHasToc($value),
+            ]
+        );
 
         $builder->add(
             'isInSitemap',
