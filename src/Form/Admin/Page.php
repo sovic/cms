@@ -45,6 +45,11 @@ class Page extends AbstractType
             ]
         );
 
+        $title = '
+            URL identifikátor se používá pro tvorbu URL adresy stránky. 
+            Pokud není vyplněn, bude automaticky vygenerován z názvu stránky.
+            Měl by být unikátní a může obsahovat pouze písmena, čísla a pomlčky.
+        ';
         $builder->add(
             'urlId',
             TextType::class,
@@ -55,7 +60,7 @@ class Page extends AbstractType
                     'length' => 200,
                     'data-bs-toggle' => 'tooltip',
                     'data-bs-placement' => 'bottom',
-                    'title' => 'URL identifikátor se používá pro tvorbu URL adresy stránky. Pokud není vyplněn, bude automaticky vygenerován z názvu stránky. Měl by být unikátní a může obsahovat pouze písmena, čísla a pomlčky.',
+                    'title' => $title,
                 ],
             ]
         );
@@ -81,17 +86,17 @@ class Page extends AbstractType
             ]
         );
 
-//        $builder->add(
-//            'lang',
-//            TextType::class,
-//            [
-//                'label' => 'Jazyk',
-//                'required' => false,
-//                'attr' => [
-//                    'length' => 5,
-//                ],
-//            ]
-//        );
+        $builder->add(
+            'lang',
+            TextType::class,
+            [
+                'label' => 'Jazyk',
+                'required' => false,
+                'attr' => [
+                    'length' => 5,
+                ],
+            ]
+        );
 
         // content
 
