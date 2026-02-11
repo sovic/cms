@@ -168,13 +168,13 @@ class MenuItem
         $this->page = $page;
     }
 
-    public function getLink(): ?string
+    public function getResolveUrl(): ?string
     {
-        $link = $this->getUrl();
+        $url = $this->getUrl();
         if ($this->getPageId() && $this->getPage()) {
-            $link = '/' . $this->getPage()->getUrlId();
+            $url = '/' . $this->getPage()->getUrlId();
         }
 
-        return $link;
+        return $url;
     }
 }

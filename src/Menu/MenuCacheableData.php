@@ -77,8 +77,7 @@ class MenuCacheableData extends AbstractCacheableData
             $tree[] = [
                 'id' => $item->getId(),
                 'name' => $item->getName(),
-                'link' => $item->getLink(),
-                'url' => $item->getUrl(),
+                'url' => $item->getResolveUrl(),
                 'classes' => $item->getClasses(),
                 'visibility' => $item->getVisibility(),
                 'children' => $this->buildSubtree($grouped, $item->getId()),
