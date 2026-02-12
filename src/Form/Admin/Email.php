@@ -103,7 +103,7 @@ class Email extends AbstractType
                 'empty_data' => '',
                 'attr' => [
                     'length' => 16777215,
-                    'rows' => 15,
+                    'rows' => 25,
                 ],
             ]
         );
