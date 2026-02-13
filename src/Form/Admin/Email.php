@@ -114,37 +114,37 @@ class Email extends AbstractType
             return strcmp($a->getLabel(), $b->getLabel());
         });
 
-        $builder->add(
-            'emailId',
-            ChoiceType::class,
-            [
-                'label' => 'Systémový email',
-                'required' => false,
-                'choices' => $choices,
-                'choice_value' => static function (null|EmailIdInterface|string $choice): ?string {
-                    if (is_string($choice)) {
-                        return $choice;
-                    }
-
-                    return $choice?->getId();
-                },
-                'choice_label' => static function (EmailIdInterface|string $choice): string {
-                    if (is_string($choice)) {
-                        return $choice;
-                    }
-
-                    return $choice->getLabel();
-                },
-                'placeholder' => '-- Vyberte --',
-                'choice_attr' => function (EmailIdInterface $choice) {
-                    return [
-                        'data-variables' => implode(', ', $choice->getVariables()),
-                    ];
-                },
-                'data' => $email?->getEmailId(),
-                'mapped' => false,
-            ],
-        );
+//        $builder->add(
+//            'emailId',
+//            ChoiceType::class,
+//            [
+//                'label' => 'Systémový email',
+//                'required' => false,
+//                'choices' => $choices,
+//                'choice_value' => static function (null|EmailIdInterface|string $choice): ?string {
+//                    if (is_string($choice)) {
+//                        return $choice;
+//                    }
+//
+//                    return $choice?->getId();
+//                },
+//                'choice_label' => static function (EmailIdInterface|string $choice): string {
+//                    if (is_string($choice)) {
+//                        return $choice;
+//                    }
+//
+//                    return $choice->getLabel();
+//                },
+//                'placeholder' => '-- Vyberte --',
+//                'choice_attr' => function (EmailIdInterface $choice) {
+//                    return [
+//                        'data-variables' => implode(', ', $choice->getVariables()),
+//                    ];
+//                },
+//                'data' => $email?->getEmailId(),
+//                'mapped' => false,
+//            ],
+//        );
 
         $builder->add('save', SubmitType::class, [
             'label' => 'Uložit změny',

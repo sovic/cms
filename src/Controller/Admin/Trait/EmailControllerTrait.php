@@ -79,7 +79,7 @@ trait EmailControllerTrait
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $email->setEmailId($form->get('emailId')->getData()?->getId());
+                // $email->setEmailId($form->get('emailId')->getData()?->getId());
 
                 $em->persist($email);
                 $em->flush();
