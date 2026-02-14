@@ -26,14 +26,6 @@
 
 {% block data_list_table %}
     <table class="{{ theme.default.table_class }} dataTable">
-        <colgroup>
-            {% if is_group_actions_enabled %}
-                <col data-dt-column="0" style="width: 2%;">
-            {% endif %}
-            <col data-dt-column="1" style="width: auto;">
-            <col data-dt-column="2" style="" class="d-md-none d-xl-table-cell">
-            <col data-dt-column="3" style="">
-        </colgroup>
         <thead>
         <tr class="{{ theme.default.thead_tr_class }}" role="row">
 
@@ -47,7 +39,12 @@
             <th class="min-w-350px" data-dt-column="2">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce"></th>
+            {% if is_admin %}
+                <th class="d-md-none d-xl-table-cell min-w-100px" data-dt-column="3">
+                    <span class="dt-column-title">Vytvořil</span>
+                </th>
+            {% endif %}
+            <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce"></th>
 
         </tr>
         </thead>
@@ -73,6 +70,17 @@
                         <span class="badge badge-light-info me-2">Systémový email</span>
                     {% endif %}
                 </td>
+                {% if is_admin %}
+                    <td>
+                        {% set user = item.creator %}
+                        {% if user %}
+                            <a href="{{ path('user_edit', {'id': user.id}) }}"
+                               class="fs-6">
+                                {{ user.displayName ? user.displayName : user.email }}
+                            </a>
+                        {% endif %}
+                    </td>
+                {% endif %}
                 <td class="text-end">
                     {% set actions = [] %}
                     {% if is_admin %}
