@@ -52,7 +52,7 @@
                 <td class="text-start">
                     <div style="max-height: 80px; overflow: scroll;">
                         <a href="{{ detail_url }}">
-                            <strong>{{ s.value|nl2br }}</strong>
+                            <strong>{{ s.value|replace({"\n": ' ', "\r": ''})|trim }}</strong>
                         </a>
                     </div>
                 </td>
