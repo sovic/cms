@@ -83,7 +83,7 @@
                 {% endif %}
                 <td class="text-end">
                     {% set actions = [] %}
-                    {% if is_admin %}
+                    {% if is_admin and not item.emailId %}
                         {% set actions = actions|merge([
                             {
                                 'url': '#',
