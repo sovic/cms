@@ -80,6 +80,10 @@ trait EmailControllerTrait
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 // $email->setEmailId($form->get('emailId')->getData()?->getId());
+                $operator = $this->getUser();
+                if (!$email->getCreator()) {
+                    $email->setCreator($operator);
+                }
 
                 $em->persist($email);
                 $em->flush();
