@@ -1,0 +1,130 @@
+{% extends '@CommonUiBundle/admin/layout/data-list.html.twig' %}
+
+{% import '@CommonUiBundle/admin/macros/data-list.html.twig' as data_list %}
+
+{% block title %}Menu – {{ position }}{% endblock %}
+
+{% set allow_add = true %}
+{% set is_search_enabled = false %}
+{% set is_filters_enabled = false %}
+{% set is_group_actions_enabled = false %}
+
+{% block data_list_title %}
+    <h2>Menu – {{ position }}</h2>
+{% endblock %}
+
+{% block add_item %}
+    <a class="btn btn-flex btn-light-primary me-3"
+       href="{{ path('admin:menu:list') }}">
+        <i class="ki-outline ki-arrow-left fs-3"></i>
+        Zpět na seznam
+    </a>
+
+    {% if allow_add %}
+        <a class="btn btn-flex btn-light-primary"
+           href="{{ path('admin:menu:edit') }}">
+            <i class="ki-outline ki-message-add fs-3"></i>
+            Nová položka
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% macro render_tree(nodes, depth) %}
+    {% for node in nodes %}
+        {% set item = node.item %}
+        {% set children = node.children %}
+        {% set detail_url = path('admin:menu:edit', {'id': item.id}) %}
+        <tr>
+            <td>
+                <div style="padding-left: {{ depth * 24 }}px;" class="d-flex align-items-center">
+                    {% if depth > 0 %}
+                        <i class="bi bi-arrow-return-right text-muted me-2"></i>
+                    {% endif %}
+                    <a href="{{ detail_url }}"
+                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                        {{ item.name }}
+                    </a>
+                </div>
+                <div style="padding-left: {{ depth * 24 }}px;">
+                    {% if item.published %}
+                        <span class="badge badge-light-success">Publikováno</span>
+                    {% else %}
+                        <span class="badge badge-light-warning">Nepublikováno</span>
+                    {% endif %}
+                    {% if item.position %}
+                        <span class="badge badge-light-info">{{ item.position }}</span>
+                    {% endif %}
+                    {% if item.visibility %}
+                        {% if item.visibility == 'auth' %}
+                            <span class="badge badge-light-primary">Pouze pro přihlášené</span>
+                        {% endif %}
+                        {% if item.visibility == 'not-auth' %}
+                            <span class="badge badge-light-primary">Pouze pro nepřihlášené</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                <div style="padding-left: {{ depth * 24 }}px;">
+                    {% if depth > 0 %}
+                        <i class="bi bi-arrow-return-right text-muted me-2"></i>
+                    {% endif %}
+                    <span class="text-muted small">{{ item.sequence }}</span>
+                </div>
+            </td>
+            <td>
+                {% if item.page %}
+                    <span class="text-muted small">
+                        <code>/{{ item.page.urlId }}</code>
+                    </span>
+                {% elseif item.url %}
+                    <span class="text-muted small">
+                        <code>{{ item.url }}</code>
+                    </span>
+                {% endif %}
+            </td>
+            <td class="text-end">
+                {% set actions = [] %}
+                {% set actions = actions|merge([
+                    {
+                        'url': detail_url,
+                        'title': 'Upravit',
+                        'class': 'text-primary',
+                        'icon': 'ki-duotone ki-pencil',
+                    },
+                ]) %}
+                <div class="actions-wrapper">
+                    {{ data_list.actions_icons(actions) }}
+                </div>
+            </td>
+        </tr>
+        {% if children|length > 0 %}
+            {{ _self.render_tree(children, depth + 1) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% block data_list_table %}
+    <table class="{{ theme.default.table_class }} dataTable">
+        <thead>
+        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+            <th class="min-w-300px" data-dt-column="1">
+                <span class="dt-column-title">Název</span>
+            </th>
+            <th class="min-w-120px" data-dt-column="2">
+                <span class="dt-column-title">Poř.</span>
+            </th>
+            <th class="min-w-200px" data-dt-column="3">
+                <span class="dt-column-title">Odkaz</span>
+            </th>
+            <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.default.tbody_class }}">
+        {{ _self.render_tree(tree, 0) }}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+{% endblock %}

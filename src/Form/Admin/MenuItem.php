@@ -14,6 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class MenuItem extends AbstractType
 {
@@ -27,6 +29,15 @@ class MenuItem extends AbstractType
         $resolver->setDefaults([
             'pages' => [],
             'parent_choices' => [],
+            'constraints' => [
+                new Callback(static function (MenuItemEntity $menuItem, ExecutionContextInterface $context): void {
+                    if ($menuItem->getPosition() === null && $menuItem->getParentId() === null) {
+                        $context->buildViolation('Musí být vyplněna pozice nebo nadřazená položka.')
+                            ->atPath('position')
+                            ->addViolation();
+                    }
+                }),
+            ],
         ]);
     }
 
