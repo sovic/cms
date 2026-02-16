@@ -1,0 +1,24 @@
+{% if query.limit is not defined %}
+    {% set query = query|merge({'limit': 25}) %}
+{% endif %}
+
+<select name="limit"
+        aria-controls="data-list"
+        class="form-select form-select-solid form-select-sm"
+        id="data-list-limit">
+    <option value="25" {% if query.limit == 25 %}selected="selected"{% endif %}>25</option>
+    <option value="50" {% if query.limit == 50 %}selected="selected"{% endif %}>50</option>
+    <option value="100" {% if query.limit == 100 %}selected="selected"{% endif %}>100</option>
+</select>
+<label for="data-list-limit"></label>
+
+<script>
+    const limit = document.getElementById('data-list-limit');
+    limit.addEventListener('change', function () {
+        const url = new URL(window.location.href);
+        url.searchParams.set('limit', limit.value);
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+    });
+    limit.value = new URL(window.location.href).searchParams.get('limit') || {{ query.limit }};
+</script>

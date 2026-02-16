@@ -1,0 +1,63 @@
+{% set module = module is defined ? module : '' %}
+{% set menu = menu is defined ? menu : '' %}
+{% set menu_collapsable = false %}
+
+<div id="kt_app_sidebar"
+     class="app-sidebar flex-column"
+     data-kt-drawer="true"
+     data-kt-drawer-name="app-sidebar"
+     data-kt-drawer-activate="{default: true, lg: false}"
+     data-kt-drawer-overlay="true"
+     data-kt-drawer-width="225px"
+     data-kt-drawer-direction="start"
+     data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle"
+>
+
+    <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+        <a href="{{ path('user_dashboard') }}">
+            <img alt="Logo" src="{{ asset(logo_path, 'img') }}"
+                 class="h-30px app-sidebar-logo-default" style="max-width: 50px;">
+        </a>
+
+        <div id="kt_app_sidebar_toggle"
+             class="app-sidebar-toggle btn btn-icon btn-sm h-30px w-30px rotate {% if sidebar == 'closed' %}active{% endif %}"
+             data-kt-toggle="true"
+             data-kt-toggle-state="active"
+             data-kt-toggle-target="body"
+             data-kt-toggle-name="app-sidebar-minimize"
+                {% if sidebar == 'open' %}
+                    onclick="setCookie('sidebar', 'closed')"
+                {% else %}
+                    onclick="setCookie('sidebar', 'open')"
+                {% endif %}
+        >
+            <i class="ki-outline ki-double-left fs-2 rotate-180"></i>
+        </div>
+    </div>
+
+    <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
+        <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper">
+            <div class="hover-scroll-y my-5 mx-3"
+                 data-kt-scroll="true"
+                 data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+                 data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
+                 data-kt-scroll-wrappers="#kt_app_sidebar_menu"
+                 data-kt-scroll-offset="5px"
+                 data-kt-scroll-save-state="true">
+                <div class="
+                        menu
+                        menu-column
+                        menu-rounded
+                        menu-sub-indention
+                        fw-semibold
+                    "
+                     data-kt-menu="true"
+                     data-kt-menu-expand="false">
+
+                    {% include 'admin/partials/sidebar-menu.html.twig' %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+{% block submit_row -%}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group row')|trim})} %}{{ block('attributes') }}{% endwith %}>{#- -#}
+        <div class="col-12">
+            {{- form_widget(form) -}}
+        </div>
+    </div>
+{%- endblock submit_row %}
+
+{% block checkbox_row -%}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group row')|trim})} %}{{ block('attributes') }}{% endwith %}>
+        <div class="col-12 mt-3 mb-5">
+            {{- form_widget(form) -}}
+            {{- form_help(form) -}}
+        </div>
+    </div>
+{%- endblock checkbox_row %}
+
+{% block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <span class="{% if form is not rootform %}invalid-feedback{% else %}alert alert-danger{% endif %} d-block">
+            {%- for error in errors -%}
+                <span class="d-block">
+                    <span class="form-error-icon badge bg-danger text-uppercase">
+                        {{ 'Error'|trans({}, 'validators') }}
+                    </span>
+                    <span class="form-error-message">{{ error.message }}</span>
+                </span>
+            {%- endfor -%}
+        </span>
+    {%- endif %}
+{%- endblock form_errors %}
+
+{# extend form_widget_simple #}
+{% block form_widget_simple -%}
+    {%- if (prepend is defined) or (append is defined) -%}
+        <div class="input-group{{ group_class|default('') }}">
+            {%- if prepend is defined -%}
+                <div class="input-group-prepend">
+                    {{ prepend|raw }} {# without raw filter the html code will be escaped #}
+                </div>
+            {%- endif -%}
+            {{- parent() -}}
+            {%- if append is defined -%}
+                <div class="input-group-append">
+                    {{ append|raw }}
+                </div>
+            {%- endif -%}
+        </div>
+    {%- else -%}
+        {{- parent() -}}
+    {%- endif -%}
+{%- endblock form_widget_simple %}

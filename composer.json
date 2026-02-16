@@ -24,10 +24,6 @@
         },
         {
             "type": "git",
-            "url": "https://github.com/sovic/common-ui.git"
-        },
-        {
-            "type": "git",
             "url": "https://github.com/sovic/gallery.git"
         },
         {
@@ -45,7 +41,6 @@
         "doctrine/doctrine-bundle": "^2.18",
         "doctrine/orm": "^3.5",
         "sovic/common": "dev-master",
-        "sovic/common-ui": "dev-master",
         "sovic/user-bundle": "dev-master",
         "sovic/gallery": "dev-master",
         "symfony/form": "^7.3",

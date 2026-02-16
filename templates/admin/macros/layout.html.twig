@@ -1,0 +1,127 @@
+{% macro loading() %}
+    <div class="page-loading active">
+        <div class="page-loading-inner">
+            <div class="page-spinner"></div>
+            <span>Loading...</span>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro scroll_to(id, label) %}
+    <a class="btn-scroll-top" href="#{{ id }}" data-scroll data-fixed-element>
+        <span class="btn-scroll-top-tooltip text-muted fs-sm me-2">{{ label }}</span>
+        <i class="btn-scroll-top-icon ai-arrow-up"> </i>
+    </a>
+{% endmacro %}
+
+{% macro scroll_top(id = 'top') %}
+    <div id="back-to-top" class="position-fixed bottom-0 end-0 mb-6 me-6 d-none">
+        <a class="btn btn-icon btn-primary opacity-75" href="#{{ id }}" data-kt-scroll-toggle>
+            <i class="ki-duotone ki-arrow-up"><span class="path1"></span><span class="path2"></span></i>
+        </a>
+    </div>
+{% endmacro %}
+
+{% macro flashes(app) %}
+    {% set success_flashes = app.flashes('success') %}
+    {% set error_flashes = app.flashes('error') %}
+    {% set warning_flashes = app.flashes('warning') %}
+    {% if success_flashes is not empty or error_flashes is not empty or warning_flashes is not empty %}
+        <div class="mb-5">
+            {% if success_flashes is not empty %}
+                <div class="alert alert-success">
+                    {% for message in success_flashes %}
+                        {{- message -}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if error_flashes is not empty %}
+                <div class="alert alert-danger">
+                    {% for message in error_flashes %}
+                        {{- message -}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if warning_flashes is not empty %}
+                <div class="alert alert-warning">
+                    {% for message in warning_flashes %}
+                        {{- message -}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro flashes_js(app) %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% for message in app.flashes('success') %}
+            toastr.success({{ message|json_encode|raw }});
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+            toastr.error({{ message|json_encode|raw }});
+            {% endfor %}
+
+            {% for message in app.flashes('info') %}
+            toastr.info({{ message|json_encode|raw }});
+            {% endfor %}
+        });
+    </script>
+{% endmacro %}
+
+{% macro tooltip(text) %}
+    <i class="bi bi-info-circle"
+       data-bs-html="true"
+       data-bs-toggle="tooltip"
+       data-bs-placement="top"
+       title="{{ text }}"></i>
+{% endmacro %}
+
+{% macro info_alert(title, text, class = 'primary') %}
+    <div class="alert alert-{{ class }} d-flex align-items-center p-5 mb-0">
+        <i class="bi bi-info-circle fs-2x text-primary me-4">
+            <span class="path1"></span><span class="path2"></span>
+        </i>
+        <div class="d-flex flex-column">
+            <h4 class="mb-1 text-primary">{{ title }}</h4>
+            <span>{{ text }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro info_list(title, items, class = 'primary') %}
+    <div class="alert alert-{{ class }} d-flex align-items-center p-5 mb-0">
+        <i class="bi bi-info-circle fs-2x text-primary me-4">
+            <span class="path1"></span><span class="path2"></span>
+        </i>
+        <div class="d-flex flex-column">
+            <h4 class="mb-1 text-primary">{{ title }}</h4>
+            <ul class="mb-0">
+                {% for item in items %}
+                    <li>
+                        {{ item }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro info_block(title, html) %}
+    <div class="alert alert-dismissible bg-light-primary d-flex flex-column flex-sm-row w-100 p-5 mb-5">
+        <i class="ki-duotone ki-information fs-2hx text-primary me-4 mb-5 mb-sm-0">
+            <span class="path1"></span>
+            <span class="path2"></span>
+            <span class="path3"></span>
+        </i>
+        <div class="d-flex flex-column pe-0 pe-sm-10">
+            <p class="fw-bold fs-5 mt-2 {% if html|length <= 0 %}mb-0{% endif %}">{{ title }}</p>
+            {{ html|raw }}
+            {% if html|length > 0 %}
+                <div class="clearfix mb-1"></div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}

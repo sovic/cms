@@ -1,0 +1,94 @@
+{% import '@CmsBundle/admin/macros/layout.html.twig' as layout %}
+{% set theme = {
+    default: {
+        card_class: 'card card-flush card-bleed shadow-light-lg mb-6',
+        card_header_class: 'card-header align-items-center py-5 gap-2 gap-md-5',
+        filters_item_class: 'px-7 py-2',
+        table_class: 'table table-row-dashed align-middle gy-5',
+        tbody_class: 'fs-6 fw-semibold',
+        thead_tr_class: 'text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0',
+        btn_action_sm_class: 'btn btn-sm btn-flex btn-light-primary shadow-sm',
+        btn_list_sm_class: 'btn btn-sm btn-light btn-flex btn-center btn-active-light-primary',
+    }
+} %}
+{% if theme_mode is not defined %}
+    {% set theme_mode = 'light' %}
+{% endif %}
+{% if sidebar is not defined %}
+    {% set sidebar = 'open' %}
+{% endif %}
+{% if title_appendix is not defined %}
+    {% set title_appendix = '' %}
+{% endif %}
+<!DOCTYPE html>
+<html lang="cs" data-bs-theme="{{ theme_mode }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Vojtěch Bojda; mailto:info@vojtechbojda.cz">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>{% block title %}Vítejte!{% endblock %}{{ title_appendix }}</title>
+
+    {% if font_url is defined and font_url is not empty %}
+        <link rel="stylesheet" href="{{ font_url }}"/>
+    {% endif %}
+
+    <link href="{{ asset('bundles/cms/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('bundles/cms/css/style.bundle.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('bundles/cms/css/custom.css') }}" rel="stylesheet" type="text/css"/>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png', 'img') }}"/>
+
+    {% block stylesheets %}{% endblock %}
+    <!--suppress CssUnusedSymbol -->
+    <style>
+        {% if font_family is defined %}
+        body {
+            font-family: {{ font_family }};
+        }
+
+        {% endif %}
+    </style>
+
+    {% if frontend_sentry_asset_path is defined %}
+        <script src="{{ asset(frontend_sentry_asset_path, 'js') }}"></script>
+        <!--suppress JSUnresolvedReference -->
+        <script>
+            Sentry.onLoad(function () {
+                Sentry.init({});
+            });
+        </script>
+    {% endif %}
+</head>
+<body data-kt-app-layout="dark-sidebar"
+      data-kt-app-header-fixed="true"
+      data-kt-app-sidebar-enabled="true"
+      data-kt-app-sidebar-fixed="true"
+      data-kt-app-sidebar-hoverable="true"
+      data-kt-app-sidebar-push-header="true"
+      data-kt-app-sidebar-push-toolbar="true"
+      data-kt-app-sidebar-push-footer="true"
+      data-kt-app-toolbar-enabled="true"
+        {% if sidebar == 'closed' %}
+            data-kt-app-sidebar-minimize="on"
+        {% endif %}
+      class="app-default">
+<div id="top"></div>
+{% block body %}{% endblock %}
+
+<script src="{{ asset('bundles/cms/plugins/global/plugins.bundle.js') }}"></script>
+<script src="{{ asset('bundles/cms/js/scripts.bundle.js') }}"></script>
+<script src="{{ asset('bundles/cms/js/widgets.bundle.js') }}"></script>
+<script src="{{ asset('bundles/cms/js/axios.min.js') }}"></script>
+<script src="{{ asset('bundles/cms/js/autoComplete.min.js') }}"></script>
+<script src="{{ asset('bundles/cms/js/admin.js') }}"></script>
+
+{% block javascripts %}{% endblock %}
+
+{{ layout.flashes_js(app) }}
+{{ layout.scroll_top() }}
+
+{% if auth_user and features is defined and features is not empty %}
+    {% include '@CmsBundle/admin/partials/user-features-drawer.html.twig' %}
+{% endif %}
+</body>
+</html>

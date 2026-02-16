@@ -1,0 +1,72 @@
+<div id="kt-drawer-news"
+     class="bg-white"
+     data-kt-drawer="true"
+     data-kt-drawer-activate="true"
+     data-kt-drawer-toggle="#kt-drawer-features-button"
+     data-kt-drawer-close="#kt-drawer-features-close"
+     data-kt-drawer-width="500px"
+     style="z-index: 1150;">
+
+    <div class="card w-100 rounded-0 scroll-y">
+        <div class="card-header pe-5">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column me-3">
+                    Novinky
+                </div>
+            </div>
+
+            <div class="card-toolbar">
+                <div class="btn btn-sm btn-icon btn-active-light-primary" id="kt-drawer-features-close">
+                    <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body" id="kt-drawer-news-body">
+            {% for feature in features %}
+                <div class="d-flex flex-stack py-4 w-100">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-35px me-4">
+                        <span class="symbol-label bg-light-primary">
+                            {% if feature.icon is defined and feature.icon is not empty %}
+                                <i class="{{ feature.icon }} fs-2 text-primary"></i>
+                            {% else %}
+                                <i class="ki-duotone ki-abstract-28 fs-2 text-primary">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            {% endif %}
+                        </span>
+                        </div>
+
+                        <div class="mb-0 me-2">
+                            {% if url is defined and url is not empty %}
+                                <a href="{{ url }}"
+                                   class="fs-6 text-gray-800 text-hover-primary fw-bold">
+                                    {{ feature.name }}
+                                </a>
+                            {% else %}
+                                <h4 class="fs-6 text-gray-800 text-hover-primary fw-bold">
+                                    {{ feature.name }}
+                                </h4>
+                            {% endif %}
+                            {% if feature.description is defined and feature.description is not empty %}
+                                <div class="text-gray-500 fs-7">{{ feature.description }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if feature.image is defined %}
+                    <div class="d-flex">
+                        <img src="{{ asset('admin/features/' ~ feature.image, 'img') }}"
+                             alt="{{ feature.name }}"
+                             class="img-fluid w-100">
+                    </div>
+                {% endif %}
+
+                <div class="clearfix my-8 border border-top-0 border-bottom-1 border-primary opacity-25"></div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>

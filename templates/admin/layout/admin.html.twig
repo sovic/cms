@@ -1,0 +1,36 @@
+{% extends '@CmsBundle/admin/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+        <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+
+            <div id="kt_app_header" class="app-header ">
+                <div class="app-container container-fluid d-flex align-items-stretch justify-content-between">
+
+                    <div class="d-flex align-items-center d-lg-none ms-n3 me-2" title="Show sidebar menu">
+                        <div class="btn btn-icon btn-active-color-primary w-35px h-35px"
+                             id="kt_app_sidebar_mobile_toggle">
+                            <i class="ki-outline ki-abstract-14 fs-1"></i>
+                        </div>
+                    </div>
+
+                    {% include '@CmsBundle/admin/partials/header.html.twig' %}
+                </div>
+            </div>
+
+            <div class="app-wrapper flex-column flex-row-fluid">
+                {% include '@CmsBundle/admin/partials/sidebar.html.twig' %}
+
+                <div class="app-main flex-column flex-row-fluid">
+                    <div class="d-flex flex-column flex-column-fluid">
+                        {% include '@CmsBundle/admin/partials/toolbar.html.twig' %}
+                        <div class="app-content flex-column-fluid ">
+                            {% block content %}{% endblock %}
+                        </div>
+                    </div>
+                    {% include '@CmsBundle/admin/partials/footer.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

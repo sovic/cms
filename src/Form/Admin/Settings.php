@@ -3,7 +3,7 @@
 namespace Sovic\Cms\Form\Admin;
 
 use Sovic\Common\Project\SettingGroupId;
-use Sovic\CommonUi\Form\FormTheme;
+use Sovic\Cms\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

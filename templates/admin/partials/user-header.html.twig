@@ -1,0 +1,19 @@
+<header class="bg-dark pt-9 pb-11 d-none d-md-block">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col py-5">
+                <h1 class="fw-bold text-white">
+                    {{ 'user.dashboard.heading'|trans({}, 'user-bundle') }}
+                </h1>
+                <p class="fs-lg text-white text-opacity-75 mb-4">
+                    <a class="text-reset" href="mailto:{{ user.email }}">{{ user.email }}</a>
+                </p>
+                <p>
+                    <a href="{{ path('user_logout') }}" class="btn btn-white btn-xs">
+                        {{ 'user.sign_out.link'|trans({}, 'user-bundle') }}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,79 @@
+<div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
+
+    <div class="app-header-menu app-header-mobile-drawer align-items-stretch" data-kt-drawer="true"
+         data-kt-drawer-name="app-header-menu" data-kt-drawer-activate="{default: true, lg: false}"
+         data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="end"
+         data-kt-drawer-toggle="#kt_app_header_menu_toggle" data-kt-swapper="true"
+         data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
+         data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
+    </div>
+
+    <div class="app-navbar flex-shrink-0">
+        <div class="app-navbar-item ms-1 ms-lg-3">
+            {% if app.environment != 'prod' %}
+                <span class="bg-danger text-white px-3 py-2 rounded me-3">
+                    Test environment <span class="d-none d-lg-inline-block">({{ app.environment }})</span>
+                </span>
+            {% endif %}
+
+            {% if auth_user and features is defined and features is not empty %}
+                <div class="app-navbar-item ms-1 ms-lg-3">
+                    <div class="btn btn-icon btn-custom btn-icon-muted btn-active-color-primary w-35px h-35px w-md-40px h-md-40px"
+                         id="kt-drawer-features-button"
+                         title="Novinky">
+                        <i class="ki-duotone ki-notification-status fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            <span class="path3"></span>
+                            <span class="path4"></span>
+                        </i>
+                    </div>
+                </div>
+            {% endif %}
+
+            <a href="#"
+               class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px"
+               data-kt-menu-trigger="{default:'click', lg: 'hover'}"
+               data-kt-menu-attach="parent"
+               data-kt-menu-placement="bottom-end">
+                <i class="ki-outline ki-night-day theme-light-show fs-1"></i>
+                <i class="ki-outline ki-moon theme-dark-show fs-1"></i>
+            </a>
+            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-gray-500 menu-active-bg menu-state-color fw-semibold py-4 fs-base w-200px"
+                 data-kt-menu="true"
+                 data-kt-element="theme-mode-menu">
+
+                <div class="menu-item px-3 my-0">
+                    <a href="#"
+                       class="menu-link px-3 py-2 active"
+                       onclick="setCookie('theme', 'light');"
+                       data-kt-element="mode"
+                       data-kt-value="light">
+                        <span class="menu-icon" data-kt-element="icon">
+                            <i class="ki-outline ki-night-day fs-2"></i>
+                        </span>
+                        <span class="menu-title">Světlé téma</span>
+                    </a>
+                </div>
+                <div class="menu-item px-3 my-0">
+                    <a href="#"
+                       class="menu-link px-3 py-2"
+                       onclick="setCookie('theme', 'dark');"
+                       data-kt-element="mode"
+                       data-kt-value="dark">
+                        <span class="menu-icon" data-kt-element="icon">
+                            <i class="ki-outline ki-moon fs-2"></i>
+                        </span>
+                        <span class="menu-title">Tmavé téma</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if auth_user %}
+            {% include '@CmsBundle/admin/partials/user-menu.html.twig' %}
+        {% endif %}
+
+    </div>
+</div>
+

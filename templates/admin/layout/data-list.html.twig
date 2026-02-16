@@ -1,0 +1,80 @@
+{% extends '@CmsBundle/admin/layout/admin.html.twig' %}
+
+{% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+
+{% if query is not defined %}
+    {% set query = {} %}
+{% endif %}
+{% set search = query.search is defined ? query.search : '' %}
+{% set visibility = query.visibility is defined ? query.visibility : '' %}
+{% set enabled = query.enabled is defined ? query.enabled : '' %}
+
+{% if is_filters_enabled is not defined %}
+    {% set is_filters_enabled = true %}
+{% endif %}
+
+{% if is_search_enabled is not defined %}
+    {% set is_search_enabled = true %}
+{% endif %}
+
+{% set data_list_title_var %}
+    {% block data_list_title %}{% endblock %}
+{% endset %}
+
+{% block content %}
+    <div class="app-container container-fluid">
+        <form method="get" id="search" class="border-0">
+            <div class="{{ theme.default.card_class }}">
+                <div class="{{ theme.default.card_header_class }}">
+                    <div class="card-title">
+                        {% if is_search_enabled %}
+                            {{ data_list.list_header_search(search) }}
+                        {% else %}
+                            {{ data_list_title_var|raw }}
+                        {% endif %}
+                    </div>
+
+                    <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
+                        {% if pagination is defined and pagination.pageCount > 1 %}
+                            <div class="d-flex align-items-center justify-content-center justify-content-md-end">
+                                {% include '@CmsBundle/admin/partials/pagination.html.twig' %}
+                            </div>
+                        {% endif %}
+
+                        {% block add_item %}{% endblock %}
+                        {% if is_filters_enabled %}
+                            {% set filters = block('filters') %}
+                            {{ data_list.list_header_filters(filters, visibility) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    {% if is_search_enabled %}
+                        {{ data_list_title_var|raw }}
+                    {% endif %}
+
+                    <div class="dt-container dt-bootstrap5 dt-empty-footer">
+                        <div class="table-responsive">
+                            {% block data_list_pre_table %}{% endblock %}
+                            {% block data_list_group_actions %}{% endblock %}
+                            {% block data_list_table %}{% endblock %}
+                        </div>
+                        {% if pagination is defined %}
+                            <div class="clearfix mt-3"></div>
+                            {{ data_list.list_footer(pagination, query) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block filters %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include '@CmsBundle/admin/partials/data-list-js.html.twig' %}
+{% endblock %}

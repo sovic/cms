@@ -8,7 +8,6 @@ use Sovic\Cms\Email\Model\EmailModelInterface;
 use Sovic\Cms\Entity\Email;
 use Sovic\Cms\Entity\EmailLog;
 use Sovic\Common\Validator\EmailValidator;
-use Sovic\CommonUi\Email\EmailThemeInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -84,7 +83,7 @@ class EmailManager implements EmailManagerInterface
         $fromAddress = new Address($email->getFromEmail(), $email->getFromName());
         $message = new TemplatedEmail();
         $message->text(html_entity_decode(strip_tags($body)));
-        $message->htmlTemplate('@CommonUiBundle/email/default.html.twig');
+        $message->htmlTemplate('@CmsBundle/email/default.html.twig');
         $message->context($data);
         $message->from($fromAddress);
         if ($senderAddress) {

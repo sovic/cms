@@ -1,0 +1,267 @@
+<!--suppress JSUnusedGlobalSymbols -->
+<script>
+    function bindActions() {
+        const $el = document.getElementsByClassName('action-button');
+        for (let i = 0; i < $el.length; i++) {
+            $el[i].addEventListener('click', function (event) {
+                event.preventDefault();
+                let method = $el[i].getAttribute('data-method');
+                let parameters = JSON.parse($el[i].getAttribute('data-parameters'));
+                let confirm = $el[i].getAttribute('data-confirm');
+                let reload = true;
+                if ($el[i].getAttribute('data-reload') === '0' || $el[i].getAttribute('data-reload') === 'false') {
+                    reload = false;
+                }
+                if (confirm) {
+                    if (window.confirm(confirm)) {
+                        commitAction(method, parameters, reload);
+                    }
+                } else {
+                    commitAction(method, parameters, reload);
+                }
+            });
+        }
+    }
+
+    function bindGroupActions() {
+        const $groupActionEl = document.getElementsByClassName('group-action');
+        for (let i = 0; i < $groupActionEl.length; i++) {
+            $groupActionEl[i].addEventListener('click', function (event) {
+                event.preventDefault();
+                let method = $groupActionEl[i].getAttribute('data-method');
+                let ids = [];
+                let $checkboxes = document.querySelectorAll('input.data-list-check:checked');
+                $checkboxes.forEach(function ($checkbox) {
+                    ids.push($checkbox.value);
+                });
+                let parameters = {
+                    ids: ids,
+                    parameters: JSON.parse($groupActionEl[i].getAttribute('data-parameters')),
+                };
+
+                if (ids.length <= 0) {
+                    toastr.error('Nebyly vybrány žádné záznamy.');
+                    return;
+                }
+                let confirm = $groupActionEl[i].getAttribute('data-confirm');
+                if (confirm && !window.confirm(confirm)) {
+                    return;
+                }
+
+                KTApp.showPageLoading();
+                axios.post('/api/web/' + method, parameters).then(function (response) {
+                    let data = response.data.data;
+                    if (typeof data.message !== 'undefined') {
+                        toastr.success(data.message);
+                    }
+                    if (typeof data.redirect !== 'undefined') {
+                        window.location.href = data.redirect;
+                        window.location.reload();
+                    } else {
+                        window.location.reload();
+                    }
+                    KTApp.hidePageLoading();
+                }).catch(function (error) {
+                    let msg = error.response.data.data.errors.concat('\n')
+                    toastr.error(msg);
+                    KTApp.hidePageLoading();
+                });
+            });
+        }
+    }
+
+    function bindSearch() {
+        let $form = document.getElementById('search');
+        if (!$form) {
+            return;
+        }
+
+        $form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            search();
+        });
+
+        let $searchField = $form.querySelector('input[name="search"]');
+        if ($searchField) {
+            $searchField.addEventListener('change', function (e) {
+                e.preventDefault();
+                search();
+            });
+        }
+
+        let $inactiveCheckbox = $form.querySelector('input[name="show_inactive"]');
+        if ($inactiveCheckbox) {
+            $inactiveCheckbox.addEventListener('change', function (e) {
+                e.preventDefault();
+                let url = new URL(window.location.href);
+                url.searchParams.set('visibility', $inactiveCheckbox.checked ? 'all' : 'public');
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+        }
+
+        let $selectField = $form.querySelectorAll('select');
+        if ($selectField) {
+            $selectField.forEach(function (field) {
+                field.addEventListener('change', function (e) {
+                    e.preventDefault();
+                    let name = field.name;
+                    let value = field.options[field.selectedIndex].value;
+                    let url = new URL(window.location.href);
+                    url.searchParams.set(name, value);
+                    window.location.href = url.toString();
+                });
+            });
+        }
+
+        let $unconfirmedCheckbox = $form.querySelector('input[name="show_unconfirmed"]');
+        if ($unconfirmedCheckbox) {
+            $unconfirmedCheckbox.addEventListener('change', function (e) {
+                e.preventDefault();
+                let url = new URL(window.location.href);
+                if ($unconfirmedCheckbox.checked) {
+                    url.searchParams.set('confirmed', '0');
+                } else {
+                    url.searchParams.delete('confirmed');
+                }
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+        }
+
+        let $isTomSectionCheckbox = $form.querySelector('input[name="is_tom_section"]');
+        if ($isTomSectionCheckbox) {
+            $isTomSectionCheckbox.addEventListener('change', function (e) {
+                e.preventDefault();
+                let url = new URL(window.location.href);
+                if ($isTomSectionCheckbox.checked) {
+                    url.searchParams.set('is_tom_section', '1');
+                } else {
+                    url.searchParams.delete('is_tom_section');
+                }
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+        }
+
+        let $hostingCheckbox = $form.querySelector('input[name="show_hosting"]');
+        if ($hostingCheckbox) {
+            $hostingCheckbox.addEventListener('change', function (e) {
+                e.preventDefault();
+                let url = new URL(window.location.href);
+                if ($hostingCheckbox.checked) {
+                    url.searchParams.set('is_hosting', '1');
+                } else {
+                    url.searchParams.delete('is_hosting');
+                }
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+        }
+
+        let $invalidNumberCheckbox = $form.querySelector('input[name="is_number_invalid"]');
+        if ($invalidNumberCheckbox) {
+            $invalidNumberCheckbox.addEventListener('change', function (e) {
+                e.preventDefault();
+                let url = new URL(window.location.href);
+                if ($invalidNumberCheckbox.checked) {
+                    url.searchParams.set('is_number_invalid', '1');
+                } else {
+                    url.searchParams.delete('is_number_invalid');
+                }
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+        }
+
+        let $resetEl = $form.querySelector('button[type="reset"]');
+        if ($resetEl) {
+            $resetEl.addEventListener('click', function (e) {
+                e.preventDefault();
+                window.location.href = window.location.href.split("?")[0];
+            });
+        }
+    }
+
+    function bindListSort() {
+        const $sortEl = document.getElementsByClassName('dt-orderable-asc dt-orderable-desc');
+        for (let i = 0; i < $sortEl.length; i++) {
+            $sortEl[i].addEventListener('click', function (event) {
+                event.preventDefault();
+                let url = new URL(window.location.href);
+                let sort = $sortEl[i].getAttribute('data-sort');
+                let order;
+                if ($sortEl[i].classList.contains('dt-ordering-asc')) {
+                    order = 'desc';
+                } else if ($sortEl[i].classList.contains('dt-ordering-desc')) {
+                    order = '';
+                    sort = '';
+                } else {
+                    order = 'asc';
+                }
+                url.searchParams.set('sort', sort);
+                url.searchParams.set('order', order);
+                window.location.href = url.toString();
+            });
+        }
+    }
+
+    function commitAction(method, parameters, reload) {
+        KTApp.showPageLoading();
+        axios.post('/api/web/' + method, parameters).then(function (response) {
+            let data = response.data.data;
+            if (typeof data.message !== 'undefined') {
+                toastr.success(data.message);
+            }
+            if (reload) {
+                if (typeof data.redirect !== 'undefined') {
+                    window.location.href = data.redirect;
+                    window.location.reload();
+                } else {
+                    window.location.reload();
+                }
+            }
+            KTApp.hidePageLoading();
+        }).catch(function (error) {
+            let msg = error.response.data.data.errors.concat('\n')
+            toastr.error(msg);
+            KTApp.hidePageLoading();
+        });
+    }
+
+    function search() {
+        let $form = document.getElementById('search');
+        let search = $form.querySelector('input[name="search"]').value;
+        let url = new URL(window.location.href);
+        url.searchParams.set('search', search);
+        window.location.href = url.toString();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        bindActions();
+        bindGroupActions();
+        bindSearch();
+        bindListSort();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const $trEls = document.querySelectorAll('tr');
+        for (let i = 0; i < $trEls.length; i++) {
+
+            $trEls[i].addEventListener('mouseenter', function () {
+                let $els = this.querySelector('.actions-wrapper-hover');
+                if (!$els) {
+                    return;
+                }
+                $els.classList.remove('d-none');
+            });
+            $trEls[i].addEventListener('mouseleave', function () {
+                let $els = this.querySelector('.actions-wrapper-hover');
+                if (!$els) {
+                    return;
+                }
+                $els.classList.add('d-none');
+            });
+        }
+    });
+</script>

@@ -1,0 +1,29 @@
+<div id="kt_app_footer" class="app-footer ">
+    <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+
+        <div class="text-gray-900 order-2 order-md-1">
+            <span class="text-muted fw-semibold me-1">
+                <span title="Čas vygenerování stránky">
+                    <i class="bi bi-clock me-1"></i> {{ 'now'|date('j.n.Y H:i') }}
+                </span>
+                {% if copyright is defined and copyright is not empty %}
+                    © {{ copyright }}
+                {% endif %}
+            </span>
+        </div>
+
+        {% if contact_email is defined and contact_email is not empty %}
+            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                <li class="menu-item">
+                    <a href="mailto:{{ contact_email }}"
+                       target="_blank"
+                       title="Máte dotaz? Napište nám!"
+                       class="menu-link px-2">
+                        <i class="bi bi-question-circle me-1"></i> {{- contact_email -}}
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+
+    </div>
+</div>

@@ -1,0 +1,65 @@
+{% if query is not defined %}
+    {% set query = {} %}
+{% endif %}
+{% if pagination_route_params is not defined and pagination.routeParams is defined %}
+    {% set pagination_route_params = pagination.routeParams %}
+{% endif %}
+{% if pagination_route_params is not defined %}
+    {% set pagination_route_params = {} %}
+{% endif %}
+{% set query = query|merge(pagination_route_params) %}
+
+{% if pagination is defined and pagination.pageCount > 1 %}
+    <div>
+        <ul class="pagination pagination-outline">
+            {% if pagination.currentPage > 2 %}
+                {% set query = query|merge({'page': 1}) %}
+                <li class="dt-paging-button page-item">
+                    <a href="{{ path(pagination.route, query) }}"
+                       class="page-link first"
+                       aria-label="First"
+                       data-dt-idx="first"
+                       tabindex="-1">
+                        <i class="bi-chevron-double-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if pagination.currentPage > 1 %}
+                {% set query = query|merge({'page': pagination.currentPage - 1}) %}
+                <li class="dt-paging-button page-item">
+                    <a href="{{ path(pagination.route, query) }}"
+                       class="page-link previous"
+                       aria-label="Previous"
+                       data-dt-idx="previous"
+                       tabindex="-1">
+                        <i class="previous"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="dt-paging-button page-item active">
+                <a href="#"
+                   class="page-link border-0"
+                   aria-current="page"
+                   data-dt-idx="0"
+                   tabindex="0">
+                    {{ pagination.currentPage }} / {{ pagination.pageCount }}
+                </a>
+            </li>
+
+            {% if pagination.currentPage < pagination.pageCount %}
+                {% set query = query|merge({'page': pagination.currentPage + 1}) %}
+                <li class="dt-paging-button page-item">
+                    <a href="{{ path(pagination.route, query) }}"
+                       class="page-link next"
+                       aria-label="Next"
+                       data-dt-idx="next"
+                       tabindex="0">
+                        <i class="next"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}
