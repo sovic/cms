@@ -1,0 +1,13 @@
+{% macro card(theme, title, subtitle = null, buttons = '') %}
+    <div class="{{ theme.default.card_class }} bg-primary">
+        <div class="card-body p-0">
+            <div class="card-px text-center py-8 my-10">
+                <h2 class="fs-2x fw-bold text-light">{{ title|raw }}</h2>
+                {% if subtitle is not empty %}
+                    <h3 class="fs-3 fw-semibold mb-10 text-light">{{ subtitle|raw }}</h3>
+                {% endif %}
+                {{ buttons|raw }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}

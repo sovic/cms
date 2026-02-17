@@ -1,11 +1,11 @@
 {% extends '@CmsBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
-{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.default.card_class }}">
-            {{ form_macro.card_header('Editace položky menu', theme) }}
+            {{ form_macro.card_header(theme, 'Editace položky menu') }}
 
             <div class="card-body">
                 {{ block('edit_form') }}

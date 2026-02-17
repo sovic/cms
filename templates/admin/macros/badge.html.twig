@@ -1,0 +1,7 @@
+{% macro badge_group(badges) %}
+    <div class="badge-group">
+        {% for badge in badges %}
+            <span class="badge badge-light-{{ badge.variant }} me-1">{{ badge.label }}</span>
+        {% endfor %}
+    </div>
+{% endmacro %}

@@ -1,0 +1,27 @@
+{% macro info_row(label, value) %}
+    <div class="fw-bold mt-3">{{ label }}</div>
+    <div class="text-gray-600">{{ value ?? '-' }}</div>
+{% endmacro %}
+
+{% macro date_row(label, date) %}
+    <div class="fw-bold mt-3">{{ label }}</div>
+    <div class="text-gray-600">{{ date ? date|date('j.n.Y H:i') : '-' }}</div>
+{% endmacro %}
+
+{% macro empty_data_card(theme, title) %}
+    <div class="{{ theme.default.card_class }}">
+        <div class="card-body">
+            <div class="text-gray-600">{{ title }}</div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro tab(label, route_path, current_path) %}
+    <li class="nav-item" role="presentation">
+        <a class="nav-link text-active-primary pb-4 {{ current_path == route_path ? 'active' : '' }}"
+           href="{{ route_path }}"
+           role="tab">
+            {{ label }}
+        </a>
+    </li>
+{% endmacro %}

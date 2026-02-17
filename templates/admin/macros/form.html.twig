@@ -1,4 +1,12 @@
-{% macro card_header(title, theme, toolbar) %}
+{% macro switch(id, label, checked) %}
+    <label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
+        <input class="form-check-input" type="checkbox"
+               id="{{ id }}" {{ checked ? 'checked' : '' }}>
+        <span class="form-check-label fw-semibold text-muted">{{ label }}</span>
+    </label>
+{% endmacro %}
+
+{% macro card_header(theme, title, toolbar) %}
     <div class="{{ theme.default.card_header_class }}">
         <div class="card-title">
             <h2>

@@ -1,7 +1,7 @@
 {% extends '@CmsBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
-{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 
 {% block content %}
     <div class="app-container container">
@@ -14,7 +14,7 @@
                     </a>
                 {% endif %}
             {% endset %}
-            {{ form_macro.card_header('Editace stránky', theme, toolbar) }}
+            {{ form_macro.card_header(theme, 'Editace stránky', toolbar) }}
 
             <div class="card-body">
                 {{ block('edit_form') }}
