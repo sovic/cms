@@ -1,0 +1,117 @@
+{% extends '@CmsBundle/admin/layout/admin.html.twig' %}
+
+{% if basic_form is defined %}
+    {% form_theme basic_form '@CmsBundle/admin/forms/default.html.twig' %}
+{% endif %}
+
+{% import '@CmsBundle/macro/detail.html.twig' as detail %}
+{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+
+{% block title %}Uživatel #{{ user.id }}{% endblock %}
+
+{% block content %}
+    <div class="app-container container-xxl">
+        <div class="d-flex flex-column flex-xl-row">
+            {{ block('sidebar') }}
+
+            <div class="flex-lg-row-fluid ms-lg-10">
+                {{ block('tabs') }}
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" role="tabpanel">
+                        {{ block('tab_content') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block tabs %}
+    {% set current_path = app.request.pathInfo %}
+    <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8"
+        role="tablist">
+        {{ detail.tab('Nastavení', path('admin:user:detail-edit', {'id': user.id}), current_path) }}
+        {{ detail.tab('Předplatné', path('admin:user:subscription', {'id': user.id}), current_path) }}
+        {{ detail.tab('Platby', path('admin:user:payments', {'id': user.id}), current_path) }}
+    </ul>
+{% endblock %}
+
+{% block tab_content %}
+    <div class="{{ theme.default.card_class }}">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <h2>Rychlé nastavení</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0 pb-10">
+            <div class="d-flex flex-wrap gap-5" data-user-id="{{ user.id }}">
+                {{ form_macro.switch('user_active_' ~ user.id, 'Aktivní', user.active) }}
+                {{ form_macro.switch('user_interact_' ~ user.id, 'Může komentovat a hodnotit', user.canInteract) }}
+                {{ form_macro.switch('user_geoip_' ~ user.id, 'GeoIP omezení', user.geoipLimited) }}
+                {{ form_macro.switch('user_emailing_' ~ user.id, 'Emailing', user.emailing) }}
+            </div>
+        </div>
+    </div>
+
+    {{ block('basic_form') }}
+{% endblock %}
+
+{% block basic_form %}
+    <div class="{{ theme.default.card_class }}">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <h2>Základní údaje</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0 pb-5">
+            {{ form_start(basic_form) }}
+            {{ form_errors(basic_form) }}
+
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    {{ form_row(basic_form.email) }}
+                </div>
+                <div class="col-12 col-lg-6">
+                    {{ form_row(basic_form.username) }}
+                </div>
+            </div>
+
+            <div class="mt-2 py-5 border-top">
+                {% if basic_form._token is defined %}
+                    {{ form_row(basic_form._token) }}
+                {% endif %}
+                {% if basic_form.save is defined %}
+                    {{ form_row(basic_form.save) }}
+                {% endif %}
+            </div>
+
+            {{ form_end(basic_form, {render_rest: false}) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="flex-column flex-lg-row-auto w-100 w-xl-350px mb-10">
+        <div class="{{ theme.default.card_class }}">
+            <div class="card-body">
+                <span class="fs-3 text-gray-800 fw-bold mb-1">
+                    {{ name }}
+                </span>
+
+                <div class="d-flex flex-stack fs-4 py-3">
+                    <div class="fw-bold">Stav</div>
+                    <div>
+
+                    </div>
+                </div>
+
+                <div class="separator separator-dashed my-3"></div>
+
+                <div class="pb-5 fs-6">
+                    {{ detail.info_row('ID', id) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
