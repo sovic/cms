@@ -65,6 +65,10 @@ class EmailRepository extends EntityRepository
             $qb->where('e.name LIKE :search');
             $qb->setParameter('search', '%' . $search . '%');
         }
+        if ($searchRequest->getUser()) {
+            $qb->andWhere('e.creator = :creator');
+            $qb->setParameter('creator', $searchRequest->getUser());
+        }
 
         $visibilityId = $searchRequest->getVisibilityId();
         switch ($visibilityId) {
@@ -77,7 +81,6 @@ class EmailRepository extends EntityRepository
                 // No additional criteria
                 break;
             case VisibilityId::Public:
-            default:
                 $qb->andWhere('e.deletedAt IS NULL');
                 break;
         }

@@ -7,6 +7,7 @@ use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
 use Sovic\Cms\Email\EmailSettingsInterface;
 use Sovic\Cms\Email\EmailSearchRequest;
 use Sovic\Cms\Entity\Email;
+use Sovic\Cms\Repository\EmailRepository;
 use Sovic\Common\DataList\Enum\VisibilityId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,17 @@ trait EmailControllerTrait
         return false;
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function isAdminEmailEditGranted(Email $email): bool
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    protected function isAdminEmailListGranted(): bool
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
     #[Route(
         '/admin/email/list',
         name: 'admin:email:list',
@@ -39,9 +51,13 @@ trait EmailControllerTrait
 
         $sr = new EmailSearchRequest();
         $sr->setVisibilityId(VisibilityId::Public);
+        if (!$this->isAdminEmailListGranted()) {
+            $sr->setUser($this->getUser());
+        }
         $sr->setPage($page);
         $sr->setPaginationRoute('admin:email:list');
 
+        /** @var EmailRepository $repo */
         $repo = $em->getRepository(Email::class);
         $emails = $repo->findBySearchRequest($sr);
         $total = $repo->countBySearchRequest($sr);
