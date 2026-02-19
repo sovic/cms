@@ -47,14 +47,11 @@ trait EmailControllerTrait
     ): Response {
         $this->getRouteAccessDecision('admin:email:list');
 
-        if (!$this->isAdminEmailListGranted()) {
-            return $this->render404();
-        }
-
         $page = max(1, (int) $request->query->get('page', 1));
 
         $sr = new EmailSearchRequest();
         $sr->setVisibilityId(VisibilityId::Public);
+        // decision if user can access all emails or only own
         if (!$this->isAdminEmailListGranted()) {
             $sr->setUser($this->getUser());
         }
@@ -95,6 +92,7 @@ trait EmailControllerTrait
             $email = new Email();
         }
 
+        // decision if user can access this email
         if (!$this->isAdminEmailEditGranted($email)) {
             return $this->render404();
         }
