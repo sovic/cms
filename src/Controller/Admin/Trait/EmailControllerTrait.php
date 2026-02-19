@@ -47,6 +47,10 @@ trait EmailControllerTrait
     ): Response {
         $this->getRouteAccessDecision('admin:email:list');
 
+        if (!$this->isAdminEmailListGranted()) {
+            return $this->render404();
+        }
+
         $page = max(1, (int) $request->query->get('page', 1));
 
         $sr = new EmailSearchRequest();
@@ -89,6 +93,10 @@ trait EmailControllerTrait
 
         if ($email === null) {
             $email = new Email();
+        }
+
+        if (!$this->isAdminEmailEditGranted($email)) {
+            return $this->render404();
         }
 
         $form = $this->createForm(\Sovic\Cms\Form\Admin\Email::class, $email, ['email_list' => $emailList]);
