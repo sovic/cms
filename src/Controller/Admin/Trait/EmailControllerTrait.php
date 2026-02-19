@@ -88,13 +88,13 @@ trait EmailControllerTrait
         $repo = $em->getRepository(Email::class);
         $email = $repo->find($id);
 
-        if ($email === null) {
-            $email = new Email();
+        // decision if user can access this email
+        if ($email && !$this->isAdminEmailEditGranted($email)) {
+            return $this->render404();
         }
 
-        // decision if user can access this email
-        if (!$this->isAdminEmailEditGranted($email)) {
-            return $this->render404();
+        if ($email === null) {
+            $email = new Email();
         }
 
         $form = $this->createForm(\Sovic\Cms\Form\Admin\Email::class, $email, ['email_list' => $emailList]);
