@@ -52,11 +52,8 @@ class Page
     #[Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
     protected ?string $content = null;
 
-//    #[Column(name: 'sequence', type: Types::INTEGER, nullable: true)]
-//    protected int $sequence = 0;
-
     #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
-    protected bool $public = false;
+    protected bool $isPublic = false;
 
     #[Column(name: 'lang', length: 5, nullable: true, options: ['default' => null])]
     protected ?string $lang = null;
@@ -65,13 +62,10 @@ class Page
     protected ?int $groupId = null;
 
     #[Column(name: 'toc', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
-    protected bool $toc = false;
+    protected bool $hasToc = false;
 
     #[Column(name: 'content_type', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $contentType = null;
-
-//    #[Column(name: 'header', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-//    protected ?string $header = null;
 
     #[Column(name: 'theme', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $theme = null;
@@ -155,14 +149,14 @@ class Page
         $this->content = $content;
     }
 
-    public function isPublic(): bool
+    public function isIsPublic(): bool
     {
-        return $this->public;
+        return $this->isPublic;
     }
 
-    public function setPublic(bool $public): void
+    public function setIsPublic(bool $isPublic): void
     {
-        $this->public = $public;
+        $this->isPublic = $isPublic;
     }
 
     public function getLang(): ?string
@@ -187,12 +181,12 @@ class Page
 
     public function hasToc(): bool
     {
-        return $this->toc;
+        return $this->hasToc;
     }
 
     public function setHasToc(bool $toc): void
     {
-        $this->toc = $toc;
+        $this->hasToc = $toc;
     }
 
     public function getContentType(): ?string

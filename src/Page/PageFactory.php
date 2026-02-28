@@ -66,7 +66,7 @@ final class PageFactory extends EntityModelFactory implements ProjectEntityModel
         $page->setMetaDescription($heading);
 
         $page->setContent($content);
-        $page->setPublic(true);
+        $page->setIsPublic(true);
 
         return $this->loadByEntity($page);
     }

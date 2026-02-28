@@ -103,7 +103,7 @@ trait PageControllerTrait
         $clone = clone $source;
         $clone->setUrlId($source->getUrlId() . '-copy-' . time());
         $clone->setName($source->getName() . ' (kopie)');
-        $clone->setPublic(false);
+        $clone->setIsPublic(false);
         $clone->setPublishedAt(null);
         $clone->setLastUpdateDate(null);
 

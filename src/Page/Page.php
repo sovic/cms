@@ -89,7 +89,6 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
 
             //
             'gallery' => $gallery,
-            'header' => $entity->getHeader(),
             'hero_image' => $heroImage,
             'menu_active' => '/' . $entity->getUrlId(),
             'show_toc', $entity->hasToc(),
