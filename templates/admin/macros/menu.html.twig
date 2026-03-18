@@ -1,0 +1,39 @@
+{#
+    Renders a single sidebar sub-item.
+
+    @param string label        Visible label
+    @param string route        Symfony route name
+    @param string current_menu Current active route name (from `menu` variable)
+#}
+{% macro menu_item(label, route, current_menu) %}
+    <div class="menu-item">
+        <a class="menu-link{% if current_menu == route %} active{% endif %}"
+           href="{{ path(route) }}">
+            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+            <span class="menu-title">{{ label }}</span>
+        </a>
+    </div>
+{% endmacro %}
+
+{#
+    Renders a collapsible sidebar group with sub-items.
+
+    @param string icon         KTIcons icon name (e.g. 'book-open', 'setting')
+    @param string title        Group heading label
+    @param array  items        List of {label, route} hashes
+    @param string current_menu Current active route name (from `menu` variable)
+#}
+{% macro menu_group(icon, title, items, current_menu) %}
+    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{% if current_menu in items|map(i => i.route) %} show{% endif %}">
+        <span class="menu-link">
+            <span class="menu-icon"><i class="ki-outline ki-{{ icon }} fs-2"></i></span>
+            <span class="menu-title">{{ title }}</span>
+            <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion">
+            {% for item in items %}
+                {{ _self.menu_item(item.label, item.route, current_menu) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
