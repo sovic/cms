@@ -1,0 +1,39 @@
+{% extends '@CmsBundle/admin/base.html.twig' %}
+
+{% import '@CmsBundle/admin/macros/layout.html.twig' as layout %}
+
+{% set background_url = asset('auth.jpg', 'img') %}
+{% set month = "now"|date('m') %}
+{% if month in [12, 1, 2] %}
+    {% set background_url = asset('auth-winter.jpg', 'img') %}
+{% endif %}
+
+{% block body %}
+    <div class="d-flex flex-column flex-root" id="kt_app_root">
+        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+
+            <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-2 order-md-1"
+                 style="background-image: url('{{ background_url }}')">
+                <div class="d-flex flex-column flex-center p-6 p-lg-10 w-100">
+                    <div class="pt-10 pt-lg-0">
+                        {{ include('@CmsBundle/admin/partials/logo-header.html.twig') }}
+                    </div>
+                    <div class="w-lg-500px px-10 bg-light bg-opacity-75 rounded-3 py-8">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-1 order-md-2">
+                <div class="d-flex flex-center flex-column flex-lg-row-fluid">
+                    <div class="w-lg-500px p-10">
+                        {{ layout.flashes(app) }}
+
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
