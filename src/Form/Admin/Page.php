@@ -5,8 +5,10 @@ namespace Sovic\Cms\Form\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Form\Admin\Trait\MetaFormTrait;
 use Sovic\Cms\Form\FormTheme;
+use Sovic\Cms\Repository\MenuItemRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -159,15 +161,24 @@ class Page extends AbstractType
             ]
         );
 
+        /** @var MenuItemRepository $repo */
+        $repo = $this->entityManager->getRepository(\Sovic\Cms\Entity\MenuItem::class);
+        $rootMenuItems = $repo->findRootWithPosition();
+
+        $sideMenuChoices = ['---' => null];
+        foreach ($rootMenuItems as $menuItem) {
+            $label = $menuItem->getName() ?? $menuItem->getPosition();
+            $sideMenuChoices[$label] = $menuItem->getPosition();
+        }
+
         $builder->add(
             'sideMenuId',
-            TextType::class,
+            ChoiceType::class,
             [
-                'label' => 'ID bočního menu',
+                'label' => 'Boční menu',
                 'required' => false,
-                'attr' => [
-                    'length' => 255,
-                ],
+                'choices' => $sideMenuChoices,
+                'placeholder' => false,
             ]
         );
 

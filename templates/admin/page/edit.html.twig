@@ -52,6 +52,9 @@
 
     {{ form_macro.section_header('Nastavení') }}
     <div class="row">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.sideMenuId) }}
+        </div>
         <div class="col-12">
             {{ form_row(form.isInSitemap) }}
         </div>
@@ -66,9 +69,6 @@
     {#        </div> #}
     {#        <div class="col-12 col-md-4"> #}
     {#            {{ form_row(form.theme) }} #}
-    {#        </div> #}
-    {#        <div class="col-12 col-md-4"> #}
-    {#            {{ form_row(form.sideMenuId) }} #}
     {#        </div> #}
     {#    </div> #}
 
