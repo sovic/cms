@@ -78,7 +78,7 @@ class Page extends AbstractType
         );
 
         $builder->add(
-            'public',
+            'isPublic',
             CheckboxType::class,
             [
                 'label' => 'Publikováno',
