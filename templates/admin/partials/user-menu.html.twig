@@ -1,9 +1,11 @@
+{% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
+
 <div class="app-navbar-item ms-2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
     <!--begin::Menu wrapper-->
     <div class="cursor-pointer symbol symbol-35px symbol-md-40px"
          data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
          data-kt-menu-placement="bottom-end">
-        <img src="{{ asset(logo_path, 'img') }}" style="max-width: 30px;" alt="user">
+        {{ icons.icon_placeholder_50px('bi bi-person') }}
     </div>
 
     {% set user_entity = auth_user %}
@@ -15,7 +17,7 @@
         <div class="menu-item px-3">
             <div class="menu-content d-flex align-items-center px-3">
                 <div class="symbol symbol-50px me-5">
-                    <img src="{{ asset(logo_path, 'img') }}" style="max-width: 30px;" alt="user">
+                    {{ icons.icon_placeholder_50px('bi bi-person') }}
                 </div>
 
                 <div class="d-flex flex-column">
