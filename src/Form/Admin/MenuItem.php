@@ -118,13 +118,13 @@ class MenuItem extends AbstractType
         // settings
 
         $builder->add(
-            'isPublished',
+            'isPublic',
             CheckboxType::class,
             [
                 'label' => 'Publikováno',
                 'required' => false,
-                'getter' => fn(MenuItemEntity $item) => $item->isPublished(),
-                'setter' => fn(MenuItemEntity $item, bool $value) => $item->setIsPublished($value),
+                'getter' => fn(MenuItemEntity $item) => $item->isPublic(),
+                'setter' => fn(MenuItemEntity $item, bool $value) => $item->setIsPublic($value),
             ]
         );
 

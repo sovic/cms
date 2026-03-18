@@ -24,7 +24,7 @@ class MenuItemRepository extends EntityRepository
     public function findPublishedOrdered(): array
     {
         return $this->findBy(
-            ['isPublished' => true],
+            ['isPublic' => true],
             ['sequence' => 'ASC', 'id' => 'ASC'],
         );
     }

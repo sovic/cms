@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
+use Sovic\Cms\Entity\Trait\IsPublicTrait;
 use Sovic\Cms\Repository\MenuItemRepository;
 use Sovic\Common\Entity\Trait\IdentityColumnTrait;
 
@@ -19,6 +20,7 @@ use Sovic\Common\Entity\Trait\IdentityColumnTrait;
 class MenuItem
 {
     use IdentityColumnTrait;
+    use IsPublicTrait;
 
     #[Column(name: 'name', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
     protected ?string $name = null;
@@ -41,9 +43,6 @@ class MenuItem
 
     #[Column(name: 'parent_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
     protected ?int $parentId = null;
-
-    #[Column(name: 'is_published', type: Types::BOOLEAN, nullable: false, options: ['default' => 0])]
-    protected bool $isPublished = false;
 
     #[Column(name: 'visibility', type: Types::STRING, length: 20, nullable: true, options: ['default' => null])]
     protected ?string $visibility = null;
@@ -120,16 +119,6 @@ class MenuItem
     public function setClasses(?string $classes): void
     {
         $this->classes = $classes;
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->isPublished;
-    }
-
-    public function setIsPublished(bool $isPublished): void
-    {
-        $this->isPublished = $isPublished;
     }
 
     public function getVisibility(): ?string
