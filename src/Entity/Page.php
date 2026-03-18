@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Sovic\Cms\Entity\Trait\IsPublicTrait;
 use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Entity\Trait\PublishedAtTrait;
 use Sovic\Cms\Repository\PageRepository;
@@ -27,6 +28,7 @@ class Page
 {
     use MetaColumnsTrait;
     use PublishedAtTrait;
+    use IsPublicTrait;
 
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
@@ -51,9 +53,6 @@ class Page
 
     #[Column(name: 'content', type: Types::TEXT, length: 4294967295, nullable: true, options: ['default' => null])]
     protected ?string $content = null;
-
-    #[Column(name: 'public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
-    protected bool $isPublic = false;
 
     #[Column(name: 'lang', length: 5, nullable: true, options: ['default' => null])]
     protected ?string $lang = null;
@@ -147,16 +146,6 @@ class Page
     public function setContent(?string $content): void
     {
         $this->content = $content;
-    }
-
-    public function isIsPublic(): bool
-    {
-        return $this->isPublic;
-    }
-
-    public function setIsPublic(bool $isPublic): void
-    {
-        $this->isPublic = $isPublic;
     }
 
     public function getLang(): ?string
