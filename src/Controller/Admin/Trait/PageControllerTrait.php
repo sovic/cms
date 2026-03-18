@@ -25,6 +25,7 @@ trait PageControllerTrait
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $sr = $factory->createFromRequest($request);
+        $sr->setPaginationRoute('admin:page:list');
         $sr->setVisibilityId(VisibilityId::All);
 
         /** @var PageRepository $repo */
@@ -67,7 +68,7 @@ trait PageControllerTrait
                 $em->persist($page);
                 $em->flush();
 
-//                $this->addFlash('success', 'Stránka byla uložena.');
+                $this->addFlash('success', 'Stránka byla uložena.');
 
                 return $this->redirectToRoute('admin:page:edit', ['id' => $page->getId()]);
             }
