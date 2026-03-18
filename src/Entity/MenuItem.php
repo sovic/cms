@@ -69,6 +69,10 @@ class MenuItem
     public function getUrl(): ?string
     {
         if ($this->url !== null) {
+            if (str_starts_with($this->url, 'http')) {
+                return $this->url;
+            }
+
             return '/' . ltrim($this->url, '/');
         }
 

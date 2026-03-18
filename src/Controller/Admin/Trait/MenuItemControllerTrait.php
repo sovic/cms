@@ -105,7 +105,6 @@ trait MenuItemControllerTrait
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            /** @noinspection NestedPositiveIfStatementsInspection */
             if ($form->isValid()) {
                 $em->persist($menuItem);
                 $em->flush();
@@ -115,7 +114,7 @@ trait MenuItemControllerTrait
                 return $this->redirectToRoute('admin:menu:edit', ['id' => $menuItem->getId()]);
             }
 
-            // $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
         }
 
         $this->assign('menu_item', $menuItem);

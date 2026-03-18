@@ -10,7 +10,7 @@
 {% set is_group_actions_enabled = false %}
 
 {% block data_list_title %}
-    <h2>Menu – {{ position }}</h2>
+    <h2>Menu <span class="badge badge-lg badge-info" title="Systémové ID pozice menu">{{ position }}</span></h2>
 {% endblock %}
 
 {% block add_item %}
@@ -52,7 +52,7 @@
                         <span class="badge badge-light-warning">Nepublikováno</span>
                     {% endif %}
                     {% if item.position %}
-                        <span class="badge badge-light-info">{{ item.position }}</span>
+                        <span class="badge badge-light-info" title="Systémové ID pozice menu">{{ item.position }}</span>
                     {% endif %}
                     {% if item.visibility %}
                         {% if item.visibility == 'auth' %}
@@ -75,7 +75,7 @@
             <td>
                 {% if item.page %}
                     <span class="text-muted small">
-                        <code>/{{ item.page.urlId }}</code>
+                        <code>{{ item.page.urlId }}</code>
                     </span>
                 {% elseif item.url %}
                     <span class="text-muted small">
