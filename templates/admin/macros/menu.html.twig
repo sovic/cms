@@ -20,7 +20,7 @@
 
     @param string icon         KTIcons icon name (e.g. 'book-open', 'setting')
     @param string title        Group heading label
-    @param array  items        List of {label, route} hashes
+    @param array  items        List of {label, route, visible} hashes
     @param string current_menu Current active route name (from `menu` variable)
 #}
 {% macro menu_group(icon, title, items, current_menu) %}
@@ -32,7 +32,10 @@
         </span>
         <div class="menu-sub menu-sub-accordion">
             {% for item in items %}
-                {{ _self.menu_item(item.label, item.route, current_menu) }}
+                {% set item = item|merge({visible: item.visible is not defined or item.visible}) %}
+                {% if item.visible %}
+                    {{ _self.menu_item(item.label, item.route, current_menu) }}
+                {% endif %}
             {% endfor %}
         </div>
     </div>

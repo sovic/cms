@@ -29,13 +29,18 @@ class AdminBaseController extends BaseController
                 $sidebar = 'open';
             }
         }
-        
+
         $parameters['sidebar'] = $sidebar;
         $parameters['theme_mode'] = $themeMode;
 
         // user bundle
         $parameters['is_authorized'] = $user !== null;
         $parameters['auth_user'] = $user;
+
+        // routing
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $parameters['current_route'] = $request?->attributes->get('_route');
 
         // misc
         $parameters['local_debug'] = !empty($_ENV['APP_LOCAL_DEBUG']);
