@@ -3,11 +3,8 @@
 namespace Sovic\Cms\Controller\Admin;
 
 use Sovic\Cms\Controller\Admin\Trait\PageControllerTrait;
-use Sovic\Cms\Controller\ProjectBaseController;
-use Sovic\Common\Controller\Trait\BaseControllerTrait;
 
-class PageController extends ProjectBaseController
+class PageController extends AdminBaseController
 {
-    use BaseControllerTrait;
     use PageControllerTrait;
 }
