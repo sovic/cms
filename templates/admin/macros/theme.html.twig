@@ -11,7 +11,7 @@
 {% endmacro %}
 
 {% macro table_class() %}
-    {{ 'table table-row-dashed align-middle gy-5' }}
+    {{ 'table table-row-dashed align-middle gy-5 data-table' }}
 {% endmacro %}
 
 {% macro tbody_class() %}
@@ -32,4 +32,8 @@
 
 {% macro btn_list_sm_class() %}
     {{ 'btn btn-sm btn-light btn-flex btn-center btn-active-light-primary' }}
+{% endmacro %}
+
+{% macro form_sticky_bar_class() %}
+    {{ 'position-sticky bottom-0 mt-2 py-5 bg-body border-top' }}
 {% endmacro %}
