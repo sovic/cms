@@ -333,3 +333,11 @@
         </div>
     {% endif %}
 {% endmacro %}
+
+{% macro no_items_row(columns, label = 'Žádné záznamy') %}
+    <tr>
+        <td colspan="{{ columns }}" class="text-center text-muted py-10">
+            {{ label }}
+        </td>
+    </tr>
+{% endmacro %}
