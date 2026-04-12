@@ -1,6 +1,7 @@
 {% macro content_editor_basic(selector) %}
+    <style>{{ selector }} { visibility: hidden; }</style>
     <script src="{{ asset('bundles/cms/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
-    <!--suppress JSUnresolvedReference -->
+    <!--suppress JSUnresolvedReference, SpellCheckingInspection -->
     <script>
         const $el = document.querySelector('{{ selector }}');
         if ($el) {
@@ -21,6 +22,9 @@
                     {title: 'CTA link', value: 'int_cta_link'},
                 ],
                 content_style: ".int_cta_link { display: inline-block; padding: 9px 20px 10px 20px; background-color: #007bff; color: #ffffff !important; text-decoration: none; border-radius: 5px; }",
+                init_instance_callback: function (editor) {
+                    editor.getContainer().style.visibility = 'visible';
+                },
             };
 
             tinymce.init(options);
