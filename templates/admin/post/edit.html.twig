@@ -2,6 +2,7 @@
 {% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/gallery.html.twig' as gallery_macro %}
 
 {% block content %}
     <div class="app-container container">
@@ -9,7 +10,31 @@
             {{ form_macro.card_header(theme, 'Editace příspěvku') }}
 
             <div class="card-body">
-                {{ block('edit_form') }}
+                {% if editing %}
+                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-5 fw-semibold mb-8"
+                        role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active"
+                                    id="tab-form-btn"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#tab-form"
+                                    type="button" role="tab"
+                                    aria-selected="true">
+                                Příspěvek
+                            </button>
+                        </li>
+                        {{ gallery_macro.gallery_tabs_nav(galleries) }}
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab-form" role="tabpanel">
+                            {{ block('edit_form') }}
+                        </div>
+                        {{ gallery_macro.gallery_tabs_panes('post', post.id, galleries) }}
+                    </div>
+                {% else %}
+                    {{ block('edit_form') }}
+                {% endif %}
             </div>
         </div>
     </div>

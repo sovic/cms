@@ -16,6 +16,7 @@ trait GalleryControllerTrait
         foreach ($names as $galleryName) {
             $gallery = $galleryManager->getGallery($galleryName);
             if ($gallery === null) {
+                $galleries[$galleryName] = [];
                 continue;
             }
             $resultSet = $gallery->getItemsResultSet();

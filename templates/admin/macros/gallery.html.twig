@@ -1,0 +1,36 @@
+{% macro not_available() %}
+    <div class="text-center py-16 text-gray-500 border border-dashed border-gray-300 rounded my-4">
+        <i class="bi bi-images fs-2x mb-4 d-block"></i>
+        <div class="fs-6">Galerie není k dispozici.</div>
+    </div>
+{% endmacro %}
+
+{% macro gallery_tabs_nav(galleries) %}
+    {% for gallery_name, items in galleries %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link"
+                    id="tab-gallery-{{ gallery_name }}-btn"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-gallery-{{ gallery_name }}"
+                    type="button"
+                    role="tab"
+                    aria-selected="false">
+                {{ gallery_name|capitalize }}
+                <span class="badge badge-circle badge-sm badge-light-primary ms-2 {{ items|length > 0 ? '' : 'd-none' }}"
+                      id="gallery-count-badge-{{ gallery_name }}">{{ items|length }}</span>
+            </button>
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% macro gallery_tabs_panes(model, model_id, galleries) %}
+    {% for gallery_name, items in galleries %}
+        <div class="tab-pane fade" id="tab-gallery-{{ gallery_name }}" role="tabpanel">
+            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: model, model_id: model_id, model_name: gallery_name, gallery_items: items}, with_context: false) }}
+        </div>
+    {% else %}
+        <div class="tab-pane fade" id="tab-gallery-empty" role="tabpanel">
+            {{ _self.not_available() }}
+        </div>
+    {% endfor %}
+{% endmacro %}
