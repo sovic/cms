@@ -91,15 +91,23 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12 mt-8">
-            {% if form.save is defined %}
-                {{ form_row(form.save) }}
-            {% endif %}
-        </div>
+    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top" id="page-sticky-bar">
+        {% if form._token is defined %}
+            {{ form_row(form._token) }}
+        {% endif %}
+        {% if form.save is defined %}
+            {{ form_row(form.save) }}
+        {% endif %}
     </div>
+    <div class="mt-n5"></div>
 
     {{ form_end(form, {render_rest: true}) }}
 
     {{ content_editor.content_editor_basic('#post_content') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
 {% endblock %}

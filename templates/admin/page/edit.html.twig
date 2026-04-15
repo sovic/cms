@@ -147,14 +147,5 @@
         }());
     </script>
 
-    <!-- Draggable only -->
-    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/draggable.js"></script>
-    <!-- Sortable only -->
-    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/sortable.js"></script>
-    <!-- Droppable only -->
-    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/droppable.js"></script>
-    <!-- Swappable only -->
-    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/swappable.js"></script>
-    <!-- Plugins only -->
-    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/plugins.js"></script>
+    {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
 {% endblock %}
