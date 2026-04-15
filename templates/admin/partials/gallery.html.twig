@@ -1,12 +1,12 @@
 {#
 Variables:
-  model       string  e.g. 'page', 'user'
-  modelId     int     entity id
-  modelName   string  gallery name (default = same as model)
-  gallery_items array  result from Gallery::getItems() enriched with is_cover
+  model         string  e.g. 'page', 'user'
+  model_id      int     entity id
+  model_name    string  gallery name (default = same as model)
+  gallery_items array   result from Gallery::getItems() enriched with is_cover
 #}
-{% set modelName = modelName ?? model %}
-<div class="gallery-grid" data-model="{{ model }}" data-model-id="{{ modelId }}" data-model-name="{{ modelName }}">
+{% set model_name = model_name ?? model %}
+<div class="gallery-grid" data-model="{{ model }}" data-model-id="{{ model_id }}" data-model-name="{{ model_name }}">
     <div class="gallery-grid-empty text-center py-10 text-gray-500 {{ gallery_items is not empty ? 'd-none' : '' }}">
         <i class="bi bi-images fs-3x mb-3 d-block"></i>
         Galerie neobsahuje žádné obrázky.

@@ -43,7 +43,14 @@
                             {{ block('edit_form') }}
                         </div>
                         <div class="tab-pane fade" id="tab-gallery" role="tabpanel">
-                            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: 'page', modelId: page.id, gallery_items: gallery_items}, with_context: false) }}
+                            {% for gallery_name, items in galleries %}
+                                {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: 'page', model_id: page.id, model_name: gallery_name, gallery_items: items}, with_context: false) }}
+                            {% else %}
+                                <div class="text-center py-10 text-gray-500">
+                                    <i class="bi bi-images fs-3x mb-3 d-block"></i>
+                                    Galerie není k dispozici.
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 {% else %}
