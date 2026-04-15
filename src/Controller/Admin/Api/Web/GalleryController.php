@@ -1,6 +1,6 @@
 <?php
 
-namespace Sovic\Cms\Controller\Admin\Api;
+namespace Sovic\Cms\Controller\Admin\Api\Web;
 
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
@@ -13,7 +13,7 @@ use Sovic\Gallery\Repository\GalleryItemRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-class GalleryApiController extends AdminBaseController
+class GalleryController extends AdminBaseController
 {
     use JsonResponseTrait;
 
@@ -87,7 +87,10 @@ class GalleryApiController extends AdminBaseController
             return $this->sendFail(404);
         }
 
-        $existingCovers = $repo->findBy(['galleryId' => $item->getGalleryId(), 'isCover' => true]);
+        $existingCovers = $repo->findBy([
+            'galleryId' => $item->getGalleryId(),
+            'isCover' => true,
+        ]);
         foreach ($existingCovers as $cover) {
             $cover->setIsCover(false);
             $this->entityManager->persist($cover);
