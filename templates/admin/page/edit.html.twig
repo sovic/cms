@@ -17,7 +17,38 @@
             {{ form_macro.card_header(theme, 'Editace stránky', toolbar) }}
 
             <div class="card-body">
-                {{ block('edit_form') }}
+                {% if editing %}
+                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-5 fw-semibold mb-8"
+                        id="pageEditTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-form-btn"
+                                    data-bs-toggle="tab" data-bs-target="#tab-form"
+                                    type="button" role="tab" aria-selected="true">
+                                Stránka
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-gallery-btn"
+                                    data-bs-toggle="tab" data-bs-target="#tab-gallery"
+                                    type="button" role="tab" aria-selected="false">
+                                Galerie
+                                <span class="badge badge-circle badge-sm badge-light-primary ms-2 {{ gallery_item_count > 0 ? '' : 'd-none' }}"
+                                      id="gallery-count-badge">{{ gallery_item_count }}</span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab-form" role="tabpanel">
+                            {{ block('edit_form') }}
+                        </div>
+                        <div class="tab-pane fade" id="tab-gallery" role="tabpanel">
+                            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: 'page', modelId: page.id, gallery_items: gallery_items}, with_context: false) }}
+                        </div>
+                    </div>
+                {% else %}
+                    {{ block('edit_form') }}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -85,7 +116,7 @@
         </div>
     </div>
 
-    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top">
+    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top" id="page-sticky-bar">
         {% if form._token is defined %}
             {{ form_row(form._token) }}
         {% endif %}
@@ -98,4 +129,25 @@
     {{ form_end(form, {render_rest: false}) }}
 
     {{ content_editor.content_editor_basic('#page_content') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function () {
+            // Sticky bar: hide when gallery tab is active, restore when form tab is active
+            const stickyBar = document.getElementById('page-sticky-bar');
+            const galleryTabBtn = document.getElementById('tab-gallery-btn');
+            const formTabBtn = document.getElementById('tab-form-btn');
+
+            if (galleryTabBtn && stickyBar) {
+                galleryTabBtn.addEventListener('shown.bs.tab', function () {
+                    stickyBar.classList.add('d-none');
+                });
+                formTabBtn.addEventListener('shown.bs.tab', function () {
+                    stickyBar.classList.remove('d-none');
+                });
+            }
+        }());
+    </script>
 {% endblock %}

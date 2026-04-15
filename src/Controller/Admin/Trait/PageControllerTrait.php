@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller\Admin\Trait;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\Page;
+use Sovic\Cms\Page\PageFactory;
 use Sovic\Cms\Repository\PageRepository;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
 use Sovic\Common\DataList\Enum\VisibilityId;
@@ -49,6 +50,7 @@ trait PageControllerTrait
     public function pageEdit(
         ?int                   $id,
         EntityManagerInterface $em,
+        PageFactory            $pageFactory,
         Request                $request,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -76,9 +78,33 @@ trait PageControllerTrait
             $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
         }
 
-        $this->assign('editing', $id > 0);
-        $this->assign('page', $page);
+        $editing = $id > 0;
+        $galleryItems = [];
+        $galleryItemCount = 0;
+
+        if ($editing && $page->getId() !== null) {
+            $model = $pageFactory->loadByEntity($page);
+            $gallery = $model->getGalleryManager()->getGallery('page');
+            if ($gallery !== null) {
+                $resultSet = $gallery->getItemsResultSet();
+                $resultSet->setBaseUrl('https://www.sovic.cz/gallery');
+                $items = $resultSet->toArray();
+                $cover = $gallery->getCoverImage();
+                $coverId = $cover ? $cover['id'] : null;
+                foreach ($items as &$item) {
+                    $item['is_cover'] = ($item['id'] === $coverId);
+                }
+                unset($item);
+                $galleryItems = $items;
+                $galleryItemCount = count($galleryItems);
+            }
+        }
+
+        $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
+        $this->assign('gallery_item_count', $galleryItemCount);
+        $this->assign('gallery_items', $galleryItems);
+        $this->assign('page', $page);
 
         return $this->render('@CmsBundle/admin/page/edit.html.twig');
     }

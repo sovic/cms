@@ -1,0 +1,189 @@
+{#
+Variables:
+  model       string  e.g. 'page', 'user'
+  modelId     int     entity id
+  modelName   string  gallery name (default = same as model)
+  gallery_items array  result from Gallery::getItems() enriched with is_cover
+#}
+{% set modelName = modelName ?? model %}
+<div class="gallery-grid" data-model="{{ model }}" data-model-id="{{ modelId }}" data-model-name="{{ modelName }}">
+    <div class="gallery-grid-empty text-center py-10 text-gray-500 {{ gallery_items is not empty ? 'd-none' : '' }}">
+        <i class="bi bi-images fs-3x mb-3 d-block"></i>
+        Galerie neobsahuje žádné obrázky.
+    </div>
+
+    <div class="row g-4 gallery-grid-items {{ gallery_items is empty ? 'd-none' : '' }}">
+        {% for item in gallery_items %}
+            <div class="col-6 col-md-4 col-lg-3 gallery-item-col" id="gallery-item-{{ item.id }}">
+                <div class="card card-flush shadow-sm h-100 {{ item.is_cover ? 'border border-primary' : '' }}"
+                     data-item-id="{{ item.id }}">
+                    <div class="card-body p-3 d-flex flex-column">
+                        <div class="position-relative mb-3">
+                            <img src="{{ item.small }}"
+                                 alt="{{ item.name }}"
+                                 class="img-fluid rounded w-100"
+                                 style="object-fit: cover; max-height: 160px;">
+                            <span class="badge badge-primary position-absolute top-0 start-0 m-1 {{ item.is_cover ? '' : 'd-none' }}"
+                                  id="cover-badge-{{ item.id }}">Obálka</span>
+                            <button type="button"
+                                    class="btn btn-icon btn-sm btn-color-white position-absolute top-0 end-0 m-1 js-gallery-delete"
+                                    data-item-id="{{ item.id }}"
+                                    title="Odebrat">
+                                <i class="bi bi-x-lg fs-6"></i>
+                            </button>
+                        </div>
+
+                        <div class="fs-8 text-gray-600 mb-2 text-truncate"
+                             title="{{ item.name }}">
+                            {{ item.name }}{% if item.extension %}.{{ item.extension }}{% endif %}
+                        </div>
+                        {% if item.width and item.height %}
+                            <div class="fs-8 text-gray-500 mb-3">{{ item.width }} × {{ item.height }} px</div>
+                        {% endif %}
+
+                        <div class="mt-auto d-flex gap-1">
+                            <button type="button"
+                                    class="btn btn-icon btn-sm btn-light-primary js-gallery-set-cover {{ item.is_cover ? 'active' : '' }}"
+                                    data-item-id="{{ item.id }}"
+                                    title="Nastavit jako titulní obrázek">
+                                <i class="bi bi-star{{ item.is_cover ? '-fill' : '' }}"
+                                   id="cover-icon-{{ item.id }}"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-icon btn-sm btn-light js-gallery-move-left"
+                                    data-item-id="{{ item.id }}"
+                                    title="Posunout doleva">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-icon btn-sm btn-light js-gallery-move-right"
+                                    data-item-id="{{ item.id }}"
+                                    title="Posunout doprava">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!--suppress JSUnresolvedReference -->
+<script>
+    (function () {
+        document.querySelectorAll('.gallery-grid').forEach(function (grid) {
+            const model = grid.dataset.model;
+            const modelId = grid.dataset.modelId;
+            const modelName = grid.dataset.modelName;
+            const base = `/admin/api/${model}/${modelId}/gallery/${modelName}/item`;
+            const url = (itemId, action) => `${base}/${itemId}/${action}`;
+
+            function updateCountBadge(delta) {
+                const badge = document.getElementById('gallery-count-badge');
+                if (!badge) return;
+                const current = (parseInt(badge.textContent, 10) || 0) + delta;
+                badge.textContent = current;
+                badge.classList.toggle('d-none', current <= 0);
+            }
+
+            // Delete
+            grid.addEventListener('click', function (e) {
+                const btn = e.target.closest('.js-gallery-delete');
+                if (!btn) return;
+                if (!confirm('Opravdu chcete odebrat tento obrázek?')) return;
+
+                const itemId = btn.dataset.itemId;
+
+                axios.post(url(itemId, 'delete'))
+                    .then(function (response) {
+                        if (response.data.status === 'success') {
+                            const col = document.getElementById('gallery-item-' + itemId);
+                            if (col) col.remove();
+                            updateCountBadge(-1);
+
+                            if (grid.querySelectorAll('.gallery-item-col').length === 0) {
+                                grid.querySelector('.gallery-grid-items').classList.add('d-none');
+                                grid.querySelector('.gallery-grid-empty').classList.remove('d-none');
+                            }
+
+                            toastr.success('Obrázek byl odebrán.');
+                        } else {
+                            toastr.error(response.data.data?.message || 'Nepodařilo se odebrat obrázek.');
+                        }
+                    })
+                    .catch(function () {
+                        toastr.error('Chyba při odebírání obrázku.');
+                    });
+            });
+
+            // Set cover
+            grid.addEventListener('click', function (e) {
+                const btn = e.target.closest('.js-gallery-set-cover');
+                if (!btn) return;
+
+                const itemId = btn.dataset.itemId;
+
+                axios.post(url(itemId, 'set-cover'))
+                    .then(function (response) {
+                        if (response.data.status === 'success') {
+                            grid.querySelectorAll('.js-gallery-set-cover').forEach(function (b) {
+                                const id = b.dataset.itemId;
+                                b.classList.remove('active');
+                                b.closest('.card').classList.remove('border', 'border-primary');
+                                document.getElementById('cover-badge-' + id)?.classList.add('d-none');
+                                const icon = document.getElementById('cover-icon-' + id);
+                                if (icon) {
+                                    icon.classList.replace('bi-star-fill', 'bi-star');
+                                }
+                            });
+
+                            btn.classList.add('active');
+                            btn.closest('.card').classList.add('border', 'border-primary');
+                            document.getElementById('cover-badge-' + itemId)?.classList.remove('d-none');
+                            const icon = document.getElementById('cover-icon-' + itemId);
+                            if (icon) {
+                                icon.classList.replace('bi-star', 'bi-star-fill');
+                            }
+
+                            toastr.success('Obálka byla nastavena.');
+                        } else {
+                            toastr.error(response.data.data?.message || 'Nepodařilo se nastavit obálku.');
+                        }
+                    })
+                    .catch(function () {
+                        toastr.error('Chyba při nastavení obálky.');
+                    });
+            });
+
+            // Move left / right
+            grid.addEventListener('click', function (e) {
+                const btnLeft = e.target.closest('.js-gallery-move-left');
+                const btnRight = e.target.closest('.js-gallery-move-right');
+                const btn = btnLeft || btnRight;
+                if (!btn) return;
+
+                const itemId = btn.dataset.itemId;
+                const action = btnLeft ? 'move-left' : 'move-right';
+
+                axios.post(url(itemId, action))
+                    .then(function (response) {
+                        if (response.data.status === 'success') {
+                            const col = document.getElementById('gallery-item-' + itemId);
+                            const row = grid.querySelector('.gallery-grid-items');
+                            if (btnLeft && col.previousElementSibling) {
+                                row.insertBefore(col, col.previousElementSibling);
+                            } else if (btnRight && col.nextElementSibling) {
+                                row.insertBefore(col.nextElementSibling, col);
+                            }
+                        } else {
+                            toastr.error(response.data.data?.message || 'Nepodařilo se přesunout obrázek.');
+                        }
+                    })
+                    .catch(function () {
+                        toastr.error('Chyba při přesouvání obrázku.');
+                    });
+            });
+        });
+    }());
+</script>
