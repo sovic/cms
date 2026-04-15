@@ -5,6 +5,12 @@ namespace Sovic\Cms\Repository;
 use Doctrine\ORM\EntityRepository;
 use Sovic\Cms\Entity\MenuItem;
 
+/**
+ * @method MenuItem|null find($id, $lockMode = null, $lockVersion = null)
+ * @method MenuItem|null findOneBy(array $criteria, array $orderBy = null)
+ * @method MenuItem[]    findAll()
+ * @method MenuItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 class MenuItemRepository extends EntityRepository
 {
     /**
@@ -34,13 +40,13 @@ class MenuItemRepository extends EntityRepository
      */
     public function findRootWithPosition(): array
     {
-        return $this->createQueryBuilder('m')
-            ->where('m.position IS NOT NULL')
-            ->andWhere('m.parentId IS NULL')
-            ->addOrderBy('m.name', 'ASC')
-            ->addOrderBy('m.id', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $qb = $this->createQueryBuilder('m');
+        $qb->where('m.position IS NOT NULL');
+        $qb->andWhere('m.parentId IS NULL');
+        $qb->addOrderBy('m.name', 'ASC');
+        $qb->addOrderBy('m.id', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -55,7 +61,7 @@ class MenuItemRepository extends EntityRepository
     }
 
     /**
-     * Build hierarchical tree structure from flat list.
+     * Build a hierarchical tree structure from a flat list.
      *
      * @param MenuItem[] $items
      * @return array<int, array{item: MenuItem, children: array}>
@@ -72,7 +78,7 @@ class MenuItemRepository extends EntityRepository
     }
 
     /**
-     * Build tree for a specific position (root items with given position + all their descendants).
+     * Build a tree for a specific position (root items with a given position and all their descendants).
      *
      * @param MenuItem[] $items
      * @return array<int, array{item: MenuItem, children: array}>
