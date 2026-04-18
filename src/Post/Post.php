@@ -9,10 +9,10 @@ use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Model\Trait\PrivateSlugTrait;
 use Sovic\Common\Model\AbstractEntityModel;
-use Sovic\Gallery\Entity\GalleryModelInterface;
+use Sovic\Cms\Entity\GalleryModelInterface;
 use Sovic\Cms\Entity\Author;
 use Sovic\Cms\Entity\PostAuthor;
-use Sovic\Gallery\Model\Trait\GalleryModelTrait;
+use Sovic\Cms\Model\Trait\GalleryModelTrait;
 
 /**
  * @property \Sovic\Cms\Entity\Post $entity

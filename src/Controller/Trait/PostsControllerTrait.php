@@ -12,7 +12,7 @@ use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Helpers\Date;
 use Sovic\Common\Pagination\Pagination;
-use Sovic\Gallery\Gallery\Gallery;
+use Sovic\Cms\Gallery\Gallery;
 use Symfony\Component\HttpFoundation\Response;
 
 trait PostsControllerTrait

@@ -24,10 +24,6 @@
         },
         {
             "type": "git",
-            "url": "https://github.com/sovic/gallery.git"
-        },
-        {
-            "type": "git",
             "url": "https://github.com/sovic/user-bundle.git"
         }
     ],
@@ -37,12 +33,12 @@
         "php": "^8.2",
         "ext-imagick": "*",
         "ext-intl": "*",
+        "ext-zip": "*",
         "cocur/slugify": "^4.0",
         "doctrine/doctrine-bundle": "^2.18",
         "doctrine/orm": "^3.5",
         "sovic/common": "dev-master",
         "sovic/user-bundle": "dev-master",
-        "sovic/gallery": "dev-master",
         "symfony/form": "^7.3",
         "symfony/framework-bundle": "^7.3",
         "symfony/http-foundation": "^7.3",

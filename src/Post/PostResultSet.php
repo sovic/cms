@@ -5,9 +5,9 @@ namespace Sovic\Cms\Post;
 use Cocur\Slugify\Slugify;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Sovic\Gallery\Entity\GalleryItem;
-use Sovic\Gallery\Gallery\GalleryHelper;
-use Sovic\Gallery\Repository\GalleryItemRepository;
+use Sovic\Cms\Entity\GalleryItem;
+use Sovic\Cms\Gallery\GalleryHelper;
+use Sovic\Cms\Repository\GalleryItemRepository;
 
 class PostResultSet
 {

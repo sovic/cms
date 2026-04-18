@@ -4,7 +4,7 @@ namespace Sovic\Cms\Command;
 
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
-use Sovic\Gallery\Gallery\GalleryFactory;
+use Sovic\Cms\Gallery\GalleryFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;

@@ -3,8 +3,8 @@
 namespace Sovic\Cms\Page;
 
 use Sovic\Common\Model\AbstractEntityModel;
-use Sovic\Gallery\Entity\GalleryModelInterface;
-use Sovic\Gallery\Model\Trait\GalleryModelTrait;
+use Sovic\Cms\Entity\GalleryModelInterface;
+use Sovic\Cms\Model\Trait\GalleryModelTrait;
 
 /**
  * @property \Sovic\Cms\Entity\Page $entity

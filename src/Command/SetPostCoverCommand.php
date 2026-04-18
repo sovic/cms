@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Command\Trait\PostCommandTrait;
 use Sovic\Cms\Post\PostFactory;
-use Sovic\Gallery\Entity\GalleryItem;
+use Sovic\Cms\Entity\GalleryItem;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;

@@ -4,7 +4,7 @@ namespace Sovic\Cms\Command\Trait;
 
 use ImagickException;
 use League\Flysystem\FilesystemException;
-use Sovic\Gallery\Entity\GalleryModelInterface;
+use Sovic\Cms\Entity\GalleryModelInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

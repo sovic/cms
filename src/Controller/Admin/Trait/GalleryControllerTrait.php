@@ -2,7 +2,7 @@
 
 namespace Sovic\Cms\Controller\Admin\Trait;
 
-use Sovic\Gallery\Gallery\GalleryManager;
+use Sovic\Cms\Gallery\GalleryManager;
 
 trait GalleryControllerTrait
 {

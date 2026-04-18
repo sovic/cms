@@ -6,10 +6,10 @@ use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Controller\Admin\AdminBaseController;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
-use Sovic\Gallery\Entity\Gallery as GalleryEntity;
-use Sovic\Gallery\Entity\GalleryItem;
-use Sovic\Gallery\Gallery\GalleryFactory;
-use Sovic\Gallery\Repository\GalleryItemRepository;
+use Sovic\Cms\Entity\Gallery as GalleryEntity;
+use Sovic\Cms\Entity\GalleryItem;
+use Sovic\Cms\Gallery\GalleryFactory;
+use Sovic\Cms\Repository\GalleryItemRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
