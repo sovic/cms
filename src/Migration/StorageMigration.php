@@ -8,11 +8,10 @@ use League\Flysystem\Config;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use League\Flysystem\Visibility;
-use Sovic\Gallery\Entity\Gallery;
-use Sovic\Gallery\Entity\GalleryItem;
-use Sovic\Gallery\Gallery\GalleryHelper;
-use Sovic\Gallery\Migration\AbstractMigration;
-use Sovic\Gallery\Repository\GalleryItemRepository;
+use Sovic\Cms\Entity\Gallery;
+use Sovic\Cms\Entity\GalleryItem;
+use Sovic\Cms\Gallery\GalleryHelper;
+use Sovic\Cms\Repository\GalleryItemRepository;
 
 class StorageMigration extends AbstractMigration
 {
@@ -41,7 +40,7 @@ class StorageMigration extends AbstractMigration
         }
 
         if (!empty($options['gallery'])) {
-            if (!$options['gallery'] instanceof \Sovic\Gallery\Gallery\Gallery) {
+            if (!$options['gallery'] instanceof \Sovic\Cms\Gallery\Gallery) {
                 throw new InvalidArgumentException('Gallery must be instance of ' . Gallery::class);
             }
             $galleries = [$options['gallery']->getEntity()];
@@ -63,7 +62,7 @@ class StorageMigration extends AbstractMigration
         $galleryItemRepo = $this->entityManager->getRepository(GalleryItem::class);
 
         foreach ($galleries as $entity) {
-            $gallery = new \Sovic\Gallery\Gallery\Gallery($entity);
+            $gallery = new \Sovic\Cms\Gallery\Gallery($entity);
             $gallery->setEntityManager($this->entityManager);
 
             $newStoragePath = $gallery->getGalleryStoragePath();

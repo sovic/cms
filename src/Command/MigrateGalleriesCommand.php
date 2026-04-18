@@ -4,7 +4,7 @@ namespace Sovic\Cms\Command;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use Sovic\Gallery\Migration\GalleryMigration;
+use Sovic\Cms\Migration\GalleryMigration;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
