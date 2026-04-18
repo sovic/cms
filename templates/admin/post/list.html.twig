@@ -1,6 +1,7 @@
 {% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 
 {% block title %}Přehled příspěvků{% endblock %}
 
@@ -92,10 +93,9 @@
                             {{ post.intro_text|raw }}
                         </div>
                     {% endif %}
-                    <div class="mt-3">
-                        {% if not post.is_published %}
-                            {{ data_list.action_button('Publikovat', 'post', post.id, 'publish', {}, 'btn btn-sm btn-outline btn-outline-dashed btn-outline-success fs-8 py-2 px-4', '', '', true) }}
-                        {% endif %}
+
+                    <div class="p-2 mt-2 d-flex flex-wrap gap-3" data-post-id="{{ post.id }}">
+                        {{ form_macro.switch('post_is_published_' ~ post.id, 'Publikovaný', post.is_published) }}
                     </div>
                 </td>
                 <td class="text-end">
@@ -125,4 +125,9 @@
         </tbody>
         <tfoot></tfoot>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
 {% endblock %}
