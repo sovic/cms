@@ -7,18 +7,18 @@
 <div class="col-6 col-md-4 col-lg-3 gallery-item-col" id="gallery-item-${item.id}">
     <div class="card card-flush shadow-sm h-100 ${isCover ? 'border border-primary' : ''}" data-item-id="${item.id}">
         <div class="card-body p-3 d-flex flex-column">
-            <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${item.big}">
-                <div class="position-relative mb-3">
+            <div class="position-relative mb-3">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${item.big}">
                     <img src="${item.small}" alt="${item.name}" class="img-fluid rounded w-100 overlay-wrapper" style="object-fit: cover; max-height: 160px;">
-                    <span class="badge badge-primary position-absolute top-0 start-0 m-1 ${isCover ? '' : 'd-none'}" id="cover-badge-${item.id}">Titulní</span>
-                    <button type="button" class="btn btn-icon btn-sm btn-color-white position-absolute top-0 end-0 m-1 js-gallery-delete" data-item-id="${item.id}" title="Odebrat">
-                        <i class="bi bi-x-lg fs-6"></i>
-                    </button>
                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                         <i class="bi bi-eye-fill text-white fs-3x"></i>
                     </div>
-                </div>
-            </a>
+                </a>
+                <span class="badge badge-primary position-absolute top-0 start-0 m-1 ${isCover ? '' : 'd-none'}" id="cover-badge-${item.id}">Titulní</span>
+                <button type="button" class="btn btn-icon btn-sm btn-color-white position-absolute top-0 end-0 m-1 js-gallery-delete" data-item-id="${item.id}" title="Odebrat">
+                    <i class="bi bi-x-lg fs-6"></i>
+                </button>
+            </div>
             <div class="fs-8 text-gray-600 mb-2 text-truncate" title="${item.name}">${item.name}${item.extension ? '.' + item.extension : ''}</div>
             ${item.width && item.height ? `<div class="fs-8 text-gray-500 mb-3">${item.width} × ${item.height} px</div>` : ''}
             <div class="mt-auto d-flex gap-1">
