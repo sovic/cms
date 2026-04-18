@@ -45,7 +45,8 @@
         "symfony/mailer": "^7.3",
         "symfony/security-bundle": "^7.3",
         "symfony/twig-bundle": "^7.3",
-        "symfony/validator": "^7.3"
+        "symfony/validator": "^7.3",
+        "league/flysystem": "^3.33"
     },
     "require-dev": {
         "rector/rector": "^1.0",
