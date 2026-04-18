@@ -17,25 +17,26 @@
             window.scrollTo({top: 0, behavior: 'instant'});
         });
 
-        const hash = window.location.hash;
-        if (hash) {
+        function activateTabFromHash(hash) {
+            if (!hash) return false;
             const btn = document.querySelector('[data-bs-toggle="tab"][data-bs-target="' + hash + '"]');
             if (btn) {
-                const tabContent = document.querySelector('.tab-content');
-
-                document.addEventListener('shown.bs.tab', function handler() {
-                    document.removeEventListener('shown.bs.tab', handler);
-                });
-
                 bootstrap.Tab.getOrCreateInstance(btn).show();
-                return;
+                return true;
             }
+            return false;
         }
 
-        // No hash — initialise hide state for the default active tab
-        const activeBtn = document.querySelector('[data-bs-toggle="tab"].active');
-        if (activeBtn && activeBtn.dataset.bsTarget) {
-            updateHideExceptTab(activeBtn.dataset.bsTarget.replace('#', ''));
+        window.addEventListener('hashchange', function (e) {
+            activateTabFromHash(window.location.hash);
+        });
+
+        if (!activateTabFromHash(window.location.hash)) {
+            // No hash — initialise hide state for the default active tab
+            const activeBtn = document.querySelector('[data-bs-toggle="tab"].active');
+            if (activeBtn && activeBtn.dataset.bsTarget) {
+                updateHideExceptTab(activeBtn.dataset.bsTarget.replace('#', ''));
+            }
         }
     }
 
