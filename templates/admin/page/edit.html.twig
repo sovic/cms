@@ -5,14 +5,6 @@
 {% import '@CmsBundle/admin/macros/gallery.html.twig' as gallery_macro %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
-{% if editing %}
-    {% block stylesheets %}
-        {{ parent() }}
-        <style>.tab-hash-loading .tab-content{visibility:hidden}</style>
-        <script>if(location.hash)document.documentElement.classList.add('tab-hash-loading')</script>
-    {% endblock %}
-{% endif %}
-
 {% block content %}
     <div class="app-container container">
         {% if editing %}
