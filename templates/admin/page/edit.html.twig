@@ -3,11 +3,20 @@
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/gallery.html.twig' as gallery_macro %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+
+{% if editing %}
+    {% block stylesheets %}
+        {{ parent() }}
+        <style>.tab-hash-loading .tab-content{visibility:hidden}</style>
+        <script>if(location.hash)document.documentElement.classList.add('tab-hash-loading')</script>
+    {% endblock %}
+{% endif %}
 
 {% block content %}
     <div class="app-container container">
         {% if editing %}
-            <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8"
+            <ul class="{{ theme.nav_tabs_class }}"
                 role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active"
@@ -36,7 +45,7 @@
 {% endblock %}
 
 {% block edit_card %}
-    <div class="{{ theme.default.card_class }}">
+    <div class="{{ theme.card_class }}">
         {% set toolbar %}
             {% if editing %}
                 <a class="btn btn-flex btn-light-primary" href="/{{ page.urlId }}" target="_blank">
@@ -106,7 +115,9 @@
         </div>
     </div>
 
-    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top" id="page-sticky-bar">
+    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top"
+         id="page-sticky-bar"
+         data-hide-except-tab="tab-form">
         {% if form._token is defined %}
             {{ form_row(form._token) }}
         {% endif %}
@@ -123,23 +134,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        (function () {
-            const stickyBar = document.getElementById('page-sticky-bar');
-            const formTabBtn = document.getElementById('tab-form-btn');
 
-            if (stickyBar) {
-                document.querySelectorAll('[id^="tab-gallery-"][id$="-btn"]').forEach(function (btn) {
-                    btn.addEventListener('shown.bs.tab', function () {
-                        stickyBar.classList.add('d-none');
-                    });
-                });
-                formTabBtn?.addEventListener('shown.bs.tab', function () {
-                    stickyBar.classList.remove('d-none');
-                });
-            }
-        }());
-    </script>
-
+    <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
 {% endblock %}

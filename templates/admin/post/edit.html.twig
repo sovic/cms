@@ -3,18 +3,20 @@
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/gallery.html.twig' as gallery_macro %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block content %}
     <div class="app-container container">
         {% if editing %}
-            <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8"
+            <ul class="{{ theme.nav_tabs_class }}"
                 role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active"
                             id="tab-form-btn"
                             data-bs-toggle="tab"
                             data-bs-target="#tab-form"
-                            type="button" role="tab"
+                            type="button"
+                            role="tab"
                             aria-selected="true">
                         Příspěvek
                     </button>
@@ -35,7 +37,7 @@
 {% endblock %}
 
 {% block edit_card %}
-    <div class="{{ theme.default.card_class }}">
+    <div class="{{ theme.card_class }}">
         {{ form_macro.card_header(theme, 'Editace příspěvku') }}
 
         <div class="card-body">
@@ -95,7 +97,9 @@
         </div>
     </div>
 
-    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top" id="page-sticky-bar">
+    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top"
+         id="page-sticky-bar"
+         data-hide-except-tab="tab-form">
         {% if form._token is defined %}
             {{ form_row(form._token) }}
         {% endif %}
@@ -113,5 +117,6 @@
 {% block javascripts %}
     {{ parent() }}
 
+    <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
 {% endblock %}
