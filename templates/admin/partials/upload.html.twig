@@ -1,0 +1,23 @@
+{#
+Variables:
+  model         string  e.g. 'page', 'post'
+  model_id      int     entity id
+  gallery_name  string  gallery name
+#}
+<div class="gallery-upload mt-6 mb-6"
+     data-model="{{ model }}"
+     data-model-id="{{ model_id }}"
+     data-gallery-name="{{ gallery_name }}">
+    <form class="dropzone" id="gallery-dropzone-{{ gallery_name }}">
+        <div class="dz-message needsclick">
+            <i class="ki-duotone ki-file-up fs-3x text-primary">
+                <span class="path1"></span>
+                <span class="path2"></span>
+            </i>
+            <div class="ms-4">
+                <h3 class="fs-5 fw-bold text-gray-900 mb-1">Přetáhněte sem soubory nebo klikněte pro nahrání.</h3>
+                <span class="fs-7 fw-semibold text-gray-500">Nahrajte až 10 souborů najednou</span>
+            </div>
+        </div>
+    </form>
+</div>

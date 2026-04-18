@@ -6,6 +6,8 @@ Variables:
   gallery_items array   result from Gallery::getItems() enriched with is_cover
 #}
 {% set model_name = model_name ?? model %}
+{{ include('@CmsBundle/admin/partials/upload.html.twig', {model: model, model_id: model_id, gallery_name: model_name}, with_context: false) }}
+
 <div class="gallery-grid"
      data-model="{{ model }}" data-model-id="{{ model_id }}"
      data-model-name="{{ model_name }}">

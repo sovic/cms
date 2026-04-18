@@ -14,6 +14,7 @@ use Sovic\Cms\Entity\Gallery as GalleryEntity;
 use Sovic\Cms\Entity\GalleryItem;
 use Sovic\Cms\Repository\GalleryItemRepository;
 use Sovic\Common\Model\AbstractEntityModel;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
 
 /**
@@ -236,12 +237,17 @@ class Gallery extends AbstractEntityModel
     {
         $uploadedItems = [];
         if (is_file($path)) {
-            $uploadedItems[] = $this->handleUploadFromPath($path);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $filename = pathinfo($path, PATHINFO_FILENAME);
+            $uploadedItems[] = $this->handleUpload($path, $extension, $filename);
         }
         if (is_dir($path)) {
             $files = array_diff(scandir($path), ['.', '..']);
             foreach ($files as $file) {
-                $uploadedItems[] = $this->handleUploadFromPath($path . DIRECTORY_SEPARATOR . $file);
+                $filePath = $path . DIRECTORY_SEPARATOR . $file;
+                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                $filename = pathinfo($filePath, PATHINFO_FILENAME);
+                $uploadedItems[] = $this->handleUpload($filePath, $extension, $filename);
             }
         }
 
@@ -249,16 +255,26 @@ class Gallery extends AbstractEntityModel
     }
 
     /**
+     * @throws FilesystemException
+     * @throws ImagickException
+     */
+    public function uploadFile(UploadedFile $file): GalleryItem
+    {
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+        return $this->handleUpload($file->getPathname(), $extension, $filename);
+    }
+
+    /**
      * @throws ImagickException
      * @throws FilesystemException
      */
-    private function handleUploadFromPath(string $path): GalleryItem
+    private function handleUpload(string $path, string $extension, string $filename): GalleryItem
     {
         if (!file_exists($path)) {
             throw new InvalidArgumentException('invalid path');
         }
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $filename = pathinfo($path, PATHINFO_FILENAME);
 
         $item = new GalleryItem();
         $item->setGallery($this->getEntity());
