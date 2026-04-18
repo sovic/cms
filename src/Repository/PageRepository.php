@@ -26,7 +26,7 @@ class PageRepository extends EntityRepository
         return $this->findBy(
             [
                 'project' => $project->entity,
-                'public' => true,
+                'isPublic' => true,
             ],
             ['id' => 'DESC'],
             $limit,
@@ -65,11 +65,11 @@ class PageRepository extends EntityRepository
 
         switch ($searchRequest->getVisibilityId()) {
             case VisibilityId::Public:
-                $qb->andWhere('p.public = true');
+                $qb->andWhere('p.isPublic = true');
                 break;
 
             case VisibilityId::Private:
-                $qb->andWhere('p.public = false');
+                $qb->andWhere('p.isPublic = false');
                 break;
 
             case VisibilityId::Deleted:
