@@ -1,13 +1,13 @@
 {#
 Renders a single sidebar sub-item.
 
-@param string label        Visible label
-@param string route        Symfony route name
-@param string current_menu Current active route name (from `menu` variable)
+@param string label         Visible label
+@param string route         Symfony route name
+@param string current_route Current active route name (from `menu` variable)
 #}
-{% macro menu_item(label, route, current_menu, icon = false) %}
+{% macro menu_item(label, route, current_route, icon = false) %}
     <div class="menu-item">
-        <a class="menu-link{% if current_menu == route %} active{% endif %}"
+        <a class="menu-link{% if current_route == route %} active{% endif %}"
            href="{{ path(route) }}">
             {% if icon %}
                 <span class="menu-icon"><i class="ki-outline ki-{{ icon }} fs-2"></i></span>
@@ -22,14 +22,16 @@ Renders a single sidebar sub-item.
 {#
 Renders a collapsible sidebar group with sub-items.
 
-@param string icon         KTIcons icon name (e.g. 'book-open', 'setting')
-@param string title        Group heading label
-@param array  items        List of {label, route, visible} hashes
-@param string current_menu Current active route name (from `menu` variable)
+@param string icon          KTIcons icon name (e.g. 'book-open', 'setting')
+@param string title         Group heading label
+@param array  items         List of {label, route, visible} hashes
+@param string current_route Current active route name (from `menu` variable)
 #}
-{% macro menu_group(icon, title, items, current_menu) %}
+{% macro menu_group(icon, title, items, current_route) %}
+    {% set current_ns = current_route|split(':')[1] ?? '' %}
+    {% set is_active = current_route in items|map(i => i.route) or (current_ns and current_ns in items|map(i => i.route|split(':')[1] ?? '')) %}
     <div data-kt-menu-trigger="click"
-         class="menu-item menu-accordion{% if current_menu in items|map(i => i.route) %} show{% endif %}">
+         class="menu-item menu-accordion{% if is_active %} show{% endif %}">
         <span class="menu-link">
             <span class="menu-icon"><i class="ki-outline ki-{{ icon }} fs-2"></i></span>
             <span class="menu-title">{{ title }}</span>
@@ -39,7 +41,7 @@ Renders a collapsible sidebar group with sub-items.
             {% for item in items %}
                 {% set item = item|merge({visible: item.visible is not defined or item.visible}) %}
                 {% if item.visible %}
-                    {{ _self.menu_item(item.label, item.route, current_menu) }}
+                    {{ _self.menu_item(item.label, item.route, current_route) }}
                 {% endif %}
             {% endfor %}
         </div>
