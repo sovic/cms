@@ -2,6 +2,8 @@
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
 
+{% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
+
 {% block title %}Menu – {{ position }}{% endblock %}
 
 {% set allow_add = true %}
@@ -10,7 +12,10 @@
 {% set is_group_actions_enabled = false %}
 
 {% block data_list_title %}
-    <h2>Menu <span class="badge badge-lg badge-info" title="Systémové ID pozice menu">{{ position }}</span></h2>
+    <h2>
+        {{ icons.back_to_list(path('admin:menu:list')) }}
+        Menu <span class="badge badge-lg badge-info" title="Systémové ID pozice menu">{{ position }}</span>
+    </h2>
 {% endblock %}
 
 {% block add_item %}

@@ -11,3 +11,11 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro back_to_list(url) %}
+    <a href="{{ url }}"
+       class="text-muted me-3"
+       title="Zpět na seznam">
+        <i class="ki-outline ki-arrow-left fs-2"></i>
+    </a>
+{% endmacro %}
