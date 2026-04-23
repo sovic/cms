@@ -5,3 +5,31 @@
         {% endfor %}
     </div>
 {% endmacro %}
+
+{% macro yes_no(value, yes_variant, no_variant) %}
+    {% if value %}
+        <span class="badge badge-light-{{ yes_variant|default('success') }}">Ano</span>
+    {% else %}
+        <span class="badge badge-light-{{ no_variant|default('secondary') }}">Ne</span>
+    {% endif %}
+{% endmacro %}
+
+{# Aktivní / Neaktivní badge, optional extra CSS class #}
+{% macro active(value, class) %}
+    {% if value %}
+        <span class="badge badge-light-success{{ class ? ' ' ~ class : '' }}">Aktivní</span>
+    {% else %}
+        <span class="badge badge-light-danger{{ class ? ' ' ~ class : '' }}">Neaktivní</span>
+    {% endif %}
+{% endmacro %}
+
+{# For nullable booleans: true=yes_variant, false=no_variant, null=dash #}
+{% macro yes_no_null(value, yes_variant, no_variant) %}
+    {% if value is same as(true) %}
+        <span class="badge badge-light-{{ yes_variant|default('success') }}">Ano</span>
+    {% elseif value is same as(false) %}
+        <span class="badge badge-light-{{ no_variant|default('danger') }}">Ne</span>
+    {% else %}
+        <span class="text-muted">-</span>
+    {% endif %}
+{% endmacro %}
