@@ -1,7 +1,6 @@
 {% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
-
 {% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 
 {% block title %}Menu – {{ position }}{% endblock %}
@@ -19,12 +18,6 @@
 {% endblock %}
 
 {% block add_item %}
-    <a class="btn btn-flex btn-light-primary me-3"
-       href="{{ path('admin:menu:list') }}">
-        <i class="ki-outline ki-arrow-left fs-3"></i>
-        Zpět na seznam
-    </a>
-
     {% if allow_add %}
         <a class="btn btn-flex btn-light-primary"
            href="{{ path('admin:menu:edit') }}">
