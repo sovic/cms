@@ -20,6 +20,9 @@
 {% if title_appendix is not defined %}
     {% set title_appendix = '' %}
 {% endif %}
+{% if api_base_url is not defined %}
+    {% set api_base_url = '/admin' %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="cs" data-bs-theme="{{ theme_mode }}">
 <head>

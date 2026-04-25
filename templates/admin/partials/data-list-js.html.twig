@@ -1,4 +1,8 @@
 <!--suppress JSUnusedGlobalSymbols -->
+{% if api_base_url is not defined %}
+    {% set api_base_url = '' %}
+{% endif %}
+
 <script>
     function bindActions() {
         const $el = document.getElementsByClassName('action-button');
@@ -49,7 +53,7 @@
                 }
 
                 KTApp.showPageLoading();
-                axios.post('/api/web/' + method, parameters).then(function (response) {
+                axios.post('{{ api_base_url }}/api/web/' + method, parameters).then(function (response) {
                     let data = response.data.data;
                     if (typeof data.message !== 'undefined') {
                         toastr.success(data.message);
@@ -66,8 +70,11 @@
                     toastr.error(msg);
                     KTApp.hidePageLoading();
                 });
-            });
+            }
         }
+    )
+        ;
+    }
     }
 
     function bindSearch() {
@@ -208,7 +215,7 @@
 
     function commitAction(method, parameters, reload) {
         KTApp.showPageLoading();
-        axios.post('/api/web/' + method, parameters).then(function (response) {
+        axios.post('{{ api_base_url }}/api/web/' + method, parameters).then(function (response) {
             let data = response.data.data;
             if (typeof data.message !== 'undefined') {
                 toastr.success(data.message);
