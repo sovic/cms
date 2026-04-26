@@ -268,4 +268,13 @@
             });
         }
     });
+
+    document.querySelectorAll('tr[data-href]').forEach(function (row) {
+        row.addEventListener('click', function (e) {
+            if (e.target.closest('a, button, form, input, label, [data-bs-toggle]')) {
+                return;
+            }
+            window.location.href = row.dataset.href;
+        });
+    });
 </script>
