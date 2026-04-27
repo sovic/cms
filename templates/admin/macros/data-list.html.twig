@@ -80,51 +80,57 @@
     {% endif %}
 {% endmacro %}
 
-{% macro actions_icons(actions) %}
+{% macro actions_icons(actions, wrapper = true) %}
     {% if actions|length > 0 %}
-        <div class="my-3 ms-9 text-end">
-            {% for action in actions %}
-                {% set icon = action.icon is defined ? action.icon : 'ki-duotone ki-pencil' %}
-                {% if action.model is not defined %}
-                    {% set action = action|merge({'model': ''}) %}
-                {% endif %}
-                {% if action.method is not defined %}
-                    {% set action = action|merge({'method': ''}) %}
-                {% endif %}
-                {% if action.parameters is not defined %}
-                    {% set action = action|merge({'parameters': {}}) %}
-                {% endif %}
-                {% if action.class is not defined %}
-                    {% set action = action|merge({'class': ''}) %}
-                {% endif %}
-                {% if action.confirm is not defined %}
-                    {% set action = action|merge({'confirm': ''}) %}
-                {% endif %}
-                {% if action.btn_class is not defined %}
-                    {% set action = action|merge({'btn_class': 'btn-active-light-primary'}) %}
-                {% endif %}
+        {% if wrapper %}
+            <div class="actions-wrapper d-inline-flex">
+            <div class="my-3 ms-3 text-end">
+        {% endif %}
+        {% for action in actions %}
+            {% set icon = action.icon is defined ? action.icon : 'ki-duotone ki-pencil' %}
+            {% if action.model is not defined %}
+                {% set action = action|merge({'model': ''}) %}
+            {% endif %}
+            {% if action.method is not defined %}
+                {% set action = action|merge({'method': ''}) %}
+            {% endif %}
+            {% if action.parameters is not defined %}
+                {% set action = action|merge({'parameters': {}}) %}
+            {% endif %}
+            {% if action.class is not defined %}
+                {% set action = action|merge({'class': ''}) %}
+            {% endif %}
+            {% if action.confirm is not defined %}
+                {% set action = action|merge({'confirm': ''}) %}
+            {% endif %}
+            {% if action.btn_class is not defined %}
+                {% set action = action|merge({'btn_class': 'btn-active-light-primary'}) %}
+            {% endif %}
 
-                <a href="{{ action.url }}"
-                   class="btn btn-icon {{ action.btn_class }} w-30px h-30px {% if not loop.last %}me-3{% endif %}"
-                   data-bs-toggle="tooltip"
-                   data-bs-trigger="hover"
-                   aria-label="{{ action.title }}"
-                   data-bs-original-title="{{ action.title }}"
-                   data-model="{{ action.model }}"
-                   data-method="{{ action.method }}"
-                   data-confirm="{{ action.confirm }}"
-                   data-parameters="{{ action.parameters|json_encode }}"
-                >
-                    <i class="{{ icon }} fs-3">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                        <span class="path3"></span>
-                        <span class="path4"></span>
-                        <span class="path5"></span>
-                    </i>
-                </a>
-            {% endfor %}
-        </div>
+            <a href="{{ action.url }}"
+               class="btn btn-icon {{ action.btn_class }} w-30px h-30px {% if not loop.last %}me-3{% endif %}"
+               data-bs-toggle="tooltip"
+               data-bs-trigger="hover"
+               aria-label="{{ action.title }}"
+               data-bs-original-title="{{ action.title }}"
+               data-model="{{ action.model }}"
+               data-method="{{ action.method }}"
+               data-confirm="{{ action.confirm }}"
+               data-parameters="{{ action.parameters|json_encode }}"
+            >
+                <i class="{{ icon }} fs-3">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                    <span class="path3"></span>
+                    <span class="path4"></span>
+                    <span class="path5"></span>
+                </i>
+            </a>
+        {% endfor %}
+        {% if wrapper %}
+            </div>
+            </div>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
