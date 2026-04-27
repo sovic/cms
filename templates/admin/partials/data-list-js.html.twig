@@ -272,9 +272,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('tr[data-href]').forEach(function (row) {
             row.addEventListener('click', function (e) {
-                if (e.target.closest('a, button, form, input, label, [data-bs-toggle]')) {
+                let clickedTd = e.target.closest('td');
+                if (clickedTd && clickedTd.querySelector('.actions-wrapper')) {
                     return;
                 }
+
                 window.location.href = row.dataset.href;
             });
         });
