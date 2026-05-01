@@ -125,3 +125,18 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro notice(text, icon) %}
+    <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed mb-0 p-6">
+        {% if icon %}
+            <i class="{{ icon }} fs-2 text-primary me-4"></i>
+        {% endif %}
+        <div class="d-flex flex-stack flex-grow-1 ">
+            <div class="fw-semibold">
+                <div class="fs-6 text-gray-700 ">
+                    {{ text|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
