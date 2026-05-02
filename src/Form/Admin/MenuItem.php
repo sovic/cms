@@ -162,7 +162,7 @@ class MenuItem extends AbstractType
             'position',
             TextType::class,
             [
-                'label' => 'Pozice',
+                'label' => 'Pozice (kořenové položky)',
                 'required' => false,
                 'attr' => [
                     'length' => 255,

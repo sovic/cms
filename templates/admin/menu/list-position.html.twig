@@ -1,6 +1,7 @@
 {% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 
 {% block title %}Menu – {{ position }}{% endblock %}
@@ -44,11 +45,16 @@
                     </a>
                 </div>
                 <div style="padding-left: {{ depth * 24 }}px;">
-                    {% if item.isPublic %}
-                        <span class="badge badge-light-success">Publikováno</span>
-                    {% else %}
-                        <span class="badge badge-light-warning">Nepublikováno</span>
-                    {% endif %}
+                    <div class="js-toggle-switch"
+                         data-entity="menu-item"
+                         data-entity-id="{{ item.id }}"
+                            {% if depth > 0 %}
+                                style="padding-left: 20px; padding-top: 3px;"
+                            {% endif %}
+                    >
+                        {% set icon = '<i class="bi bi-check-circle-fill ' ~ (item.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-4"></i>' %}
+                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, icon, item.isPublic, null, 'is_public') }}
+                    </div>
                     {% if item.visibility %}
                         {% if item.visibility == 'auth' %}
                             <span class="badge badge-light-primary">Pouze pro přihlášené</span>
@@ -61,10 +67,11 @@
             </td>
             <td>
                 <div style="padding-left: {{ depth * 24 }}px;">
+                    <i class="bi bi-arrow-return-right text-muted me-2"></i>
                     {% if depth > 0 %}
-                        <i class="bi bi-arrow-return-right text-muted me-2"></i>
+                        <span class="text-muted small">{{ item.sequence }}</span>
                     {% endif %}
-                    <span class="text-muted small">{{ item.sequence }}</span>
+
                 </div>
             </td>
             <td>
@@ -96,6 +103,11 @@
         {% endif %}
     {% endfor %}
 {% endmacro %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
+{% endblock %}
 
 {% block data_list_table %}
     <table class="{{ theme.default.table_class }} dataTable">
