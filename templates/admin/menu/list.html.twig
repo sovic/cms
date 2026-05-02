@@ -30,10 +30,7 @@
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="min-w-200px" data-dt-column="2">
-                <span class="dt-column-title">Pozice</span>
-            </th>
-            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
+            <th class="text-end min-w-70px" data-dt-column="2" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>
@@ -54,9 +51,6 @@
                             <span class="badge badge-light-warning">Nepublikováno</span>
                         {% endif %}
                     </div>
-                </td>
-                <td>
-                    <span class="badge badge-light-info">{{ item.position }}</span>
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}
