@@ -73,6 +73,20 @@ class MenuItemController extends AdminBaseController
 
         if ($menuItem === null) {
             $menuItem = new MenuItem();
+
+            $parentId = $request->query->getInt('parent_id') ?: null;
+            if ($parentId !== null) {
+                $menuItem->setParentId($parentId);
+            }
+
+            $siblings = $em->getRepository(MenuItem::class)->findBy(['parentId' => $parentId]);
+            $maxSequence = 0;
+            foreach ($siblings as $sibling) {
+                if ($sibling->getSequence() > $maxSequence) {
+                    $maxSequence = $sibling->getSequence();
+                }
+            }
+            $menuItem->setSequence($maxSequence + 1);
         }
 
         // pages for select
