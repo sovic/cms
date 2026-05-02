@@ -105,6 +105,49 @@ class MenuItemRepository extends EntityRepository
         return $roots;
     }
 
+    public function resequenceTree(MenuItem $item): void
+    {
+        $em = $this->getEntityManager();
+        $allItems = $this->findAllOrdered();
+
+        $itemsById = [];
+        foreach ($allItems as $i) {
+            $itemsById[$i->getId()] = $i;
+        }
+
+        $root = $item;
+        while ($root->getParentId() !== null && isset($itemsById[$root->getParentId()])) {
+            $root = $itemsById[$root->getParentId()];
+        }
+
+        $grouped = [];
+        foreach ($allItems as $i) {
+            $grouped[$i->getParentId() ?? 0][] = $i;
+        }
+
+        $subtreeParentIds = [$root->getId()];
+        $groupedSubtree = [0 => [$root]];
+        while (!empty($subtreeParentIds)) {
+            $parentId = array_shift($subtreeParentIds);
+            if (isset($grouped[$parentId])) {
+                $groupedSubtree[$parentId] = $grouped[$parentId];
+                foreach ($grouped[$parentId] as $child) {
+                    $subtreeParentIds[] = $child->getId();
+                }
+            }
+        }
+
+        foreach ($groupedSubtree as $siblings) {
+            $seq = 1;
+            foreach ($siblings as $sibling) {
+                $sibling->setSequence($seq++);
+                $em->persist($sibling);
+            }
+        }
+
+        $em->flush();
+    }
+
     /**
      * @param array<int, MenuItem[]> $grouped
      * @return array<int, array{item: MenuItem, children: array}>

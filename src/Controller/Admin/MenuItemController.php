@@ -110,6 +110,8 @@ class MenuItemController extends AdminBaseController
                 $em->persist($menuItem);
                 $em->flush();
 
+                $repo->resequenceTree($menuItem);
+
                 (new MenuCacheableData($cache, $em))->warmUp();
 
                 return $this->redirectToRoute('admin:menu:edit', ['id' => $menuItem->getId()]);
