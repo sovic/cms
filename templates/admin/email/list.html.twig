@@ -10,6 +10,10 @@
 {% set is_group_actions_enabled = false %}
 {% set is_all_allowed = true %}
 
+{% if is_admin is not defined %}
+    {% set is_admin = false %}
+{% endif %}
+
 {% block data_list_title %}
     <h2>Šablony emailů</h2>
 {% endblock %}
