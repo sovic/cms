@@ -3,22 +3,26 @@
 namespace Sovic\Cms\Controller\Admin\Api\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sovic\Cms\Controller\Admin\AdminBaseController;
+use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
 use Sovic\Cms\Entity\MenuItem;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-class MenuItemController extends AdminBaseController
+class MenuItemController extends AbstractBaseApiController
 {
     use JsonResponseTrait;
+
+    private const ToggleableFields = [
+        'is_public',
+    ];
 
     #[Route(
         '/admin/api/web/menu-item/{id}/toggle-state',
         name: 'admin:api:web:menu-item:toggle-state',
         requirements: ['id' => '\d+'],
-        methods: ['GET', 'POST'],
+        methods: ['POST'],
     )]
     public function toggleState(
         int                    $id,
@@ -32,8 +36,15 @@ class MenuItemController extends AdminBaseController
             return $this->sendFail(404);
         }
 
-        $field = $request->request->get('field');
-        $state = (bool) $request->request->get('state');
+        $data = $this->getRequestData($request);
+        $field = $data['field'] ?? null;
+        if (!in_array($field, self::ToggleableFields, true)) {
+            $this->addError('invalid_field');
+
+            return $this->sendFail();
+        }
+
+        $state = $data['state'] ?? null;
 
         if ($field === 'is_public') {
             $menuItem->setIsPublic($state);
