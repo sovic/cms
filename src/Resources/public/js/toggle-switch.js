@@ -48,14 +48,17 @@
 
     /**
      * Attach change listeners to all toggle switches inside containers
-     * that carry a data-{entity}-id attribute.
+     * marked with the .js-toggle-switch class and data-entity / data-entity-id attributes.
      */
     function init() {
-        document.querySelectorAll('[data-user-id], [data-file-id]').forEach(function (container) {
-            const userId = container.dataset.userId;
-            const fileId = container.dataset.fileId;
-            const entity = userId !== undefined ? 'user' : 'file';
-            const entityId = userId !== undefined ? userId : fileId;
+        document.querySelectorAll('.js-toggle-switch').forEach(function (container) {
+            const entity = container.dataset.entity;
+            const entityId = container.dataset.entityId;
+
+            if (!entity || !entityId) {
+                console.warn('[toggle-switch] Missing data-entity or data-entity-id on container:', container);
+                return;
+            }
 
             container.querySelectorAll('input.form-check-input[type="checkbox"]').forEach(function (checkbox) {
                 checkbox.addEventListener('change', function () {

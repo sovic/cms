@@ -1,11 +1,13 @@
-{% macro switch(id, label, checked, title = null) %}
+{% macro switch(id, label, checked, title = null, field = null) %}
     {% if title %}
         <span title="{{ title }}">
     {% endif %}
     <label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
         <input class="form-check-input"
                type="checkbox"
-               id="{{ id }}" {{ checked ? 'checked' : '' }}>
+               id="{{ id }}"
+               {{ field ? 'data-field="' ~ field ~ '"' : '' }}
+               {{ checked ? 'checked' : '' }}>
         <span class="form-check-label fw-semibold text-muted">{{ label|raw }}</span>
     </label>
     {% if title %}

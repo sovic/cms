@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="card-body pt-0 pb-10">
-            <div class="d-flex flex-wrap gap-5" data-user-id="{{ user.id }}">
+            <div class="d-flex flex-wrap gap-5 js-toggle-switch" data-entity="user" data-entity-id="{{ user.id }}">
                 {{ form_macro.switch('user_active_' ~ user.id, 'Aktivní', user.active) }}
                 {{ form_macro.switch('user_interact_' ~ user.id, 'Může komentovat a hodnotit', user.canInteract) }}
                 {{ form_macro.switch('user_geoip_' ~ user.id, 'GeoIP omezení', user.geoipLimited) }}
