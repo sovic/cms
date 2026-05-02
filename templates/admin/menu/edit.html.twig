@@ -1,11 +1,19 @@
 {% extends '@CmsBundle/admin/layout/admin.html.twig' %}
 {% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.default.card_class }}">
-            {{ form_macro.card_header(theme, 'Editace položky menu') }}
+            {% if root_position %}
+                {% set back_url = path('admin:menu:list:position', {'position': root_position}) %}
+            {% elseif menu_item.position %}
+                {% set back_url = path('admin:menu:list:position', {'position': menu_item.position}) %}
+            {% else %}
+                {% set back_url = path('admin:menu:list') %}
+            {% endif %}
+            {{ form_macro.card_header(theme, icons.back_to_list(back_url) ~ 'Editace položky menu') }}
 
             <div class="card-body">
                 {{ block('edit_form') }}

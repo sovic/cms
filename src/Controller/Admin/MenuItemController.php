@@ -120,8 +120,15 @@ class MenuItemController extends AdminBaseController
             $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
         }
 
+        $rootPosition = null;
+        if ($menuItem->getParentId() !== null) {
+            $rootItem = $repo->find($menuItem->getParentId());
+            $rootPosition = $rootItem->getPosition();
+        }
+
         $this->assign('menu_item', $menuItem);
         $this->assign('form', $form->createView());
+        $this->assign('root_position', $rootPosition);
 
         return $this->render('@CmsBundle/admin/menu/edit.html.twig');
     }
