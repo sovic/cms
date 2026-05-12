@@ -60,42 +60,7 @@ class EmailManager implements EmailManagerInterface
             throw new InvalidArgumentException('Email not found for ID: ' . $model->getId()->getId());
         }
 
-        $theme = $this->emailTheme;
-        $body = $email->getBody();
-        $subject = $email->getSubject();
-        foreach ($data as $key => $value) {
-            $body = str_replace('{' . $key . '}', $value, $body);
-            $subject = str_replace('{' . $key . '}', $value, $subject);
-        }
-        $data['body'] = $this->formatHtml($body);
-        $data['subject'] = $subject;
-        $data['theme'] = $theme->getTheme();
-        $data['recipient_email'] = $emailTo;
-        if (!empty($data['email_signature'])) {
-            $data['email_signature'] = $theme->getFormattedFooterHtml($data['email_signature']);
-        }
-
-        $senderAddress = null;
-        if ($sender && EmailValidator::validate($sender) === true) {
-            $senderAddress = new Address($sender);
-        }
-
-        $fromAddress = new Address($email->getFromEmail(), $email->getFromName());
-        $message = new TemplatedEmail();
-        $message->text(html_entity_decode(strip_tags($body)));
-        $message->htmlTemplate('@CmsBundle/email/default.html.twig');
-        $message->context($data);
-        $message->from($fromAddress);
-        if ($senderAddress) {
-            $message->sender($senderAddress);
-        }
-        $message->to($emailTo);
-        if ($replyTo && EmailValidator::validate($replyTo) === true) {
-            $message->replyTo($replyTo);
-        }
-        $message->subject($subject);
-        $message->html($body);
-
+        $message = $this->buildMessage($email, $data, $emailTo, $sender, $replyTo);
         $error = $this->sendMessage($message, $transportId);
 
         if ($log) {
@@ -125,6 +90,16 @@ class EmailManager implements EmailManagerInterface
         return $this->emailTheme->getFormattedHtml($html);
     }
 
+    public function sendTest(Email $email, string $emailTo): bool
+    {
+        $message = $this->buildMessage($email, [], $emailTo);
+        $message->subject('[TEST] ' . $email->getSubject());
+
+        $error = $this->sendMessage($message);
+
+        return null === $error;
+    }
+
     public function log(EmailIdInterface $emailId, \Symfony\Component\Mime\Email $message, ?string $error = null): void
     {
         $log = new EmailLog();
@@ -136,5 +111,52 @@ class EmailManager implements EmailManagerInterface
 
         $this->em->persist($log);
         $this->em->flush();
+    }
+
+    private function buildMessage(
+        Email   $email,
+        array   $data,
+        string  $emailTo,
+        ?string $sender = null,
+        ?string $replyTo = null,
+    ): TemplatedEmail {
+        $theme = $this->emailTheme;
+        $body = $email->getBody();
+        $subject = $email->getSubject();
+        foreach ($data as $key => $value) {
+            $body = str_replace('{' . $key . '}', $value, $body);
+            $subject = str_replace('{' . $key . '}', $value, $subject);
+        }
+        $data['body'] = $this->formatHtml($body);
+        $data['subject'] = $subject;
+        $data['theme'] = $theme->getTheme();
+        $data['recipient_email'] = $emailTo;
+        if (!empty($data['email_signature'])) {
+            $data['email_signature'] = $theme->getFormattedFooterHtml($data['email_signature']);
+        }
+
+        $senderAddress = null;
+        if ($sender && EmailValidator::validate($sender) === true) {
+            $senderAddress = new Address($sender);
+        }
+
+        $fromEmail = $email->getFromEmail() ?? $emailTo;
+        $fromAddress = new Address($fromEmail, $email->getFromName() ?? '');
+        $message = new TemplatedEmail();
+        $message->text(html_entity_decode(strip_tags($body)));
+        $message->htmlTemplate('@CmsBundle/email/default.html.twig');
+        $message->context($data);
+        $message->from($fromAddress);
+        if ($senderAddress) {
+            $message->sender($senderAddress);
+        }
+        $message->to($emailTo);
+        if ($replyTo && EmailValidator::validate($replyTo) === true) {
+            $message->replyTo($replyTo);
+        }
+        $message->subject($subject);
+        $message->html($body);
+
+        return $message;
     }
 }
