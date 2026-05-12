@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 class PageController extends AdminBaseController
 {
@@ -84,12 +85,18 @@ class PageController extends AdminBaseController
                 $em->persist($page);
                 $em->flush();
 
-                $this->addFlash('success', 'Stránka byla uložena.');
+                try {
+                    $this->addFlash('success', 'Stránka byla uložena.');
+                } catch (Throwable) {
+                }
 
                 return $this->redirectToRoute('admin:page:edit', ['id' => $page->getId()]);
             }
 
-            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            try {
+                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            } catch (Throwable) {
+            }
         }
 
         $editing = $id > 0;

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
+use Throwable;
 
 class MenuItemController extends AdminBaseController
 {
@@ -131,7 +132,10 @@ class MenuItemController extends AdminBaseController
                 return $this->redirectToRoute('admin:menu:edit', ['id' => $menuItem->getId()]);
             }
 
-            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            try {
+                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            } catch (Throwable) {
+            }
         }
 
         $rootPosition = null;

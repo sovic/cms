@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 class PostController extends AdminBaseController
 {
@@ -103,12 +104,18 @@ class PostController extends AdminBaseController
                 $model = $postFactory->loadByEntity($post);
                 $model->save();
 
-                $this->addFlash('success', 'Příspěvek byl uložen.');
+                try {
+                    $this->addFlash('success', 'Příspěvek byl uložen.');
+                } catch (Throwable) {
+                }
 
                 return $this->redirectToRoute('admin:post:edit', ['id' => $post->getId()]);
             }
 
-            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            try {
+                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            } catch (Throwable) {
+            }
         }
 
         $editing = $id > 0;

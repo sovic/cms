@@ -12,6 +12,7 @@ use Sovic\Common\DataList\Enum\VisibilityId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 trait EmailControllerTrait
 {
@@ -110,12 +111,18 @@ trait EmailControllerTrait
                 $em->persist($email);
                 $em->flush();
 
-                $this->addFlash('success', 'Email byl uložen.');
+                try {
+                    $this->addFlash('success', 'Email byl uložen.');
+                } catch (Throwable) {
+                }
 
                 return $this->redirectToRoute('admin:email:edit', ['id' => $email->getId()]);
             }
 
-            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            try {
+                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            } catch (Throwable) {
+            }
         }
 
         $emailId = $email->getEmailId();
