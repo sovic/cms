@@ -126,7 +126,9 @@ class EmailController extends AdminBaseController
         }
 
         $emailId = $email->getEmailId();
+        $editing = $id > 0;
 
+        $this->assign('editing', $editing);
         $this->assign('email', $email);
         $this->assign('form', $form->createView());
         $this->assign('variables', $emailId ? $emailList->getVariablesForEmailId($emailId) : []);
