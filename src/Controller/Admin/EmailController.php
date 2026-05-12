@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
+use UserBundle\User\UserEntityInterface;
 
 class EmailController extends AdminBaseController
 {
@@ -102,9 +103,8 @@ class EmailController extends AdminBaseController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                // $email->setEmailId($form->get('emailId')->getData()?->getId());
                 $operator = $this->getUser();
-                if (!$email->getCreator()) {
+                if ($operator instanceof UserEntityInterface && !$email->getCreator()) {
                     $email->setCreator($operator);
                 }
 
