@@ -32,11 +32,9 @@
     <table class="{{ theme.default.table_class }} dataTable">
         <thead>
         <tr class="{{ theme.default.thead_tr_class }}" role="row">
-
             {% if is_group_actions_enabled %}
                 {{ data_list.checkbox_all() }}
             {% endif %}
-
             <th class="min-w-100px" data-dt-column="1">
                 <span class="dt-column-title">Vytvořen</span>
             </th>
@@ -49,7 +47,6 @@
                 </th>
             {% endif %}
             <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce"></th>
-
         </tr>
         </thead>
         <tbody class="{{ theme.default.tbody_class }}">
@@ -62,7 +59,7 @@
                     </td>
                 {% endif %}
                 <td>
-                    <span class="fw-bold small">{{ item.createdAt|date('j.n.Y')|raw }}</span>
+                    <span class="fw-bold">{{ item.createdAt|date('j.n.Y')|raw }}</span>
                 </td>
                 <td>
                     <a href="{{ detail_url }}"
