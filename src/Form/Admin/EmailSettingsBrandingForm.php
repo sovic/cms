@@ -4,7 +4,7 @@ namespace Sovic\Cms\Form\Admin;
 
 use Sovic\Cms\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,7 +24,7 @@ class EmailSettingsBrandingForm extends AbstractType
 
         $builder->add(
             'primary_color',
-            ColorType::class,
+            TextType::class,
             [
                 'label' => 'Primární barva',
                 'required' => false,
@@ -36,7 +36,7 @@ class EmailSettingsBrandingForm extends AbstractType
 
         $builder->add(
             'secondary_color',
-            ColorType::class,
+            TextType::class,
             [
                 'label' => 'Sekundární barva',
                 'required' => false,

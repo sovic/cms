@@ -30,6 +30,26 @@
     </div>
 {% endmacro %}
 
+{% macro color_input(field, tooltip = null) %}
+    <div class="mb-5">
+        <label class="form-label d-flex align-items-center gap-1" for="{{ field.vars.id }}">
+            {{ field.vars.label }}
+            {% if tooltip %}
+                <i class="ki-outline ki-information-5 fs-5 text-muted lh-1 cursor-pointer"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="top"
+                   title="{{ tooltip }}"></i>
+            {% endif %}
+        </label>
+        <div class="d-flex gap-2 align-items-center">
+            {{ form_widget(field) }}
+            <div class="rounded rounded-3 flex-shrink-0"
+                 style="width: 38px; height: 38px; background-color: {{ field.vars.value ?: '#cccccc' }};"></div>
+        </div>
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+
 {% macro section_header(title) %}
     <div class="row">
         <div class="col-12">

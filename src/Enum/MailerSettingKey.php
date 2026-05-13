@@ -21,9 +21,9 @@ enum MailerSettingKey: string implements SettingKeyInterface
     public function getDescription(): string
     {
         return match ($this) {
-            self::DefaultContactEmail => 'Emaily: výchozí kontaktní e-mail',
-            self::PrimaryColor => 'Emaily: primární barva',
-            self::SecondaryColor => 'Emaily: sekundární barva',
+            self::DefaultContactEmail => 'Výchozí kontaktní e-mail',
+            self::PrimaryColor => 'Primární barva',
+            self::SecondaryColor => 'Sekundární barva',
         };
     }
 }
