@@ -3,12 +3,17 @@
 namespace Sovic\Cms\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Admin\Trait\SettingsTrait;
 use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
 use Sovic\Cms\Email\EmailSearchRequest;
 use Sovic\Cms\Email\EmailSettingsInterface;
 use Sovic\Cms\Entity\Email;
+use Sovic\Cms\Enum\MailerSettingKey;
+use Sovic\Cms\Form\Admin\EmailSettingsBrandingForm;
+use Sovic\Cms\Form\Admin\EmailSettingsGeneralForm;
 use Sovic\Cms\Repository\EmailRepository;
 use Sovic\Common\DataList\Enum\VisibilityId;
+use Sovic\Common\Project\SettingGroupId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,10 +23,11 @@ use UserBundle\User\UserEntityInterface;
 class EmailController extends AdminBaseController
 {
     use ControllerAccessTrait;
+    use SettingsTrait;
 
     protected function isAttributeGranted(string $attribute): bool
     {
-        if (in_array($attribute, ['admin:email:list', 'admin:email:edit'])) {
+        if (in_array($attribute, ['admin:email:list', 'admin:email:edit', 'admin:email:settings'])) {
             return $this->isGranted('ROLE_ADMIN');
         }
 
@@ -134,5 +140,93 @@ class EmailController extends AdminBaseController
         $this->assign('variables', $emailId ? $emailList->getVariablesForEmailId($emailId) : []);
 
         return $this->render('@CmsBundle/admin/email/edit.html.twig');
+    }
+
+    #[Route(
+        '/admin/email/settings',
+        name: 'admin:email:settings',
+    )]
+    public function settings(
+        Request $request,
+    ): Response {
+        $this->getRouteAccessDecision('admin:email:settings');
+
+        $generalForm = $this->createForm(EmailSettingsGeneralForm::class, [
+            MailerSettingKey::DefaultContactEmail->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::DefaultContactEmail->getFormField(), ''),
+        ]);
+
+        $brandingForm = $this->createForm(EmailSettingsBrandingForm::class, [
+            MailerSettingKey::PrimaryColor->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::PrimaryColor->getFormField(), ''),
+            MailerSettingKey::SecondaryColor->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::SecondaryColor->getFormField(), ''),
+        ]);
+
+        $activeTab = $request->query->get('tab', 'general');
+
+        $generalForm->handleRequest($request);
+        if ($generalForm->isSubmitted()) {
+            if ($generalForm->isValid()) {
+                $data = $generalForm->getData();
+
+                $settingKey = MailerSettingKey::DefaultContactEmail;
+                $this->persistSettingValue(
+                    SettingGroupId::Mailer,
+                    $settingKey->getFormField(),
+                    $data[$settingKey->getFormField()] ?? '',
+                    null,
+                    $settingKey->getDescription(),
+                );
+
+                try {
+                    $this->addFlash('success', 'Nastavení uloženo.');
+                } catch (Throwable) {
+                }
+
+                return $this->redirectToRoute('admin:email:settings');
+            }
+
+            try {
+                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            } catch (Throwable) {
+            }
+
+            $activeTab = 'general';
+        }
+
+        $brandingForm->handleRequest($request);
+        if ($brandingForm->isSubmitted()) {
+            if ($brandingForm->isValid()) {
+                $data = $brandingForm->getData();
+
+                foreach ([MailerSettingKey::PrimaryColor, MailerSettingKey::SecondaryColor] as $settingKey) {
+                    $this->persistSettingValue(
+                        SettingGroupId::Mailer,
+                        $settingKey->getFormField(),
+                        $data[$settingKey->getFormField()] ?? '',
+                        null,
+                        $settingKey->getDescription(),
+                    );
+                }
+
+                try {
+                    $this->addFlash('success', 'Nastavení uloženo.');
+                } catch (Throwable) {
+                }
+
+                return $this->redirectToRoute('admin:email:settings', ['tab' => 'branding']);
+            }
+
+            try {
+                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            } catch (Throwable) {
+            }
+
+            $activeTab = 'branding';
+        }
+
+        $this->assign('active_tab', $activeTab);
+        $this->assign('branding_form', $brandingForm->createView());
+        $this->assign('general_form', $generalForm->createView());
+
+        return $this->render('@CmsBundle/admin/email/settings.html.twig');
     }
 }

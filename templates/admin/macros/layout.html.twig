@@ -1,3 +1,15 @@
+{% macro tabs(tabs, active_tab) %}
+    <ul class="nav nav-tabs nav-line-tabs mb-8 fs-6">
+        {% for tab in tabs %}
+            <li class="nav-item">
+                <a class="nav-link {{ active_tab == tab.id ? 'active' }}"
+                   data-bs-toggle="tab"
+                   href="#tab-{{ tab.id }}">{{ tab.label }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
 {% macro loading() %}
     <div class="page-loading active">
         <div class="page-loading-inner">

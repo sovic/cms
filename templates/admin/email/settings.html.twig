@@ -1,0 +1,70 @@
+{% extends '@CmsBundle/admin/layout/admin.html.twig' %}
+{% form_theme general_form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
+{% form_theme branding_form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/layout.html.twig' as layout_macro %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+
+{% block content %}
+    <div class="app-container container">
+        {{ layout_macro.tabs([
+            {'id': 'general', 'label': 'Obecné nastavení'},
+            {'id': 'branding', 'label': 'Branding'},
+        ], active_tab) }}
+
+        <div class="tab-content">
+            <div class="tab-pane fade {{ active_tab == 'general' ? 'show active' }}"
+                 id="tab-general"
+                 role="tabpanel">
+                <div class="{{ theme.card_class() }}">
+                    {{ form_macro.card_header(theme, 'Obecné nastavení') }}
+                    <div class="card-body">
+                        {{ form_start(general_form) }}
+                        {{ form_errors(general_form) }}
+                        <div class="row">
+                            <div class="col-12">
+                                {{ form_row(general_form.default_contact_email) }}
+                            </div>
+                        </div>
+                        <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top">
+                            {% if general_form._token is defined %}
+                                {{ form_row(general_form._token) }}
+                            {% endif %}
+                            {{ form_row(general_form.save) }}
+                        </div>
+                        <div class="mt-n5"></div>
+                        {{ form_end(general_form, {'render_rest': false}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade {{ active_tab == 'branding' ? 'show active' }}"
+                 id="tab-branding"
+                 role="tabpanel">
+                <div class="{{ theme.card_class() }}">
+                    {{ form_macro.card_header(theme, 'Branding') }}
+                    <div class="card-body">
+                        {{ form_start(branding_form) }}
+                        {{ form_errors(branding_form) }}
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                {{ form_row(branding_form.primary_color) }}
+                            </div>
+                            <div class="col-12 col-md-6">
+                                {{ form_row(branding_form.secondary_color) }}
+                            </div>
+                        </div>
+                        <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top">
+                            {% if branding_form._token is defined %}
+                                {{ form_row(branding_form._token) }}
+                            {% endif %}
+                            {{ form_row(branding_form.save) }}
+                        </div>
+                        <div class="mt-n5"></div>
+                        {{ form_end(branding_form, {'render_rest': false}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
