@@ -1,6 +1,7 @@
 {% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 
 {% set is_filters_enabled = false %}
 {% set is_search_enabled = false %}
@@ -50,11 +51,19 @@
                     {{ s.description }}
                 </td>
                 <td class="text-start">
-                    <div style="max-height: 80px; overflow: scroll;">
-                        <a href="{{ detail_url }}">
-                            <strong>{{ s.value|replace({"\n": ' ', "\r": ''})|trim }}</strong>
-                        </a>
-                    </div>
+                    {% if s.type is not null and s.type.value == 'bool' %}
+                        <div class="js-toggle-switch"
+                             data-entity="setting"
+                             data-entity-id="{{ s.id }}">
+                            {{ form_macro.switch('setting_value_' ~ s.id, '', s.value, null, 'value') }}
+                        </div>
+                    {% else %}
+                        <div style="max-height: 80px; overflow: scroll;">
+                            <a href="{{ detail_url }}">
+                                <strong>{{ s.value|replace({"\n": ' ', "\r": ''})|trim }}</strong>
+                            </a>
+                        </div>
+                    {% endif %}
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}
@@ -70,4 +79,9 @@
         {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
 {% endblock %}
