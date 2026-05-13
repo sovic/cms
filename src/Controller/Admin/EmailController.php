@@ -170,13 +170,13 @@ class EmailController extends AdminBaseController
             if ($generalForm->isValid()) {
                 $data = $generalForm->getData();
 
-                $settingKey = MailerSettingKey::DefaultContactEmail;
+                $key = MailerSettingKey::DefaultContactEmail;
                 $this->persistSettingValue(
                     SettingGroupId::Mailer,
-                    $settingKey->getFormField(),
-                    $data[$settingKey->getFormField()] ?? '',
+                    $key->getFormField(),
+                    $data[$key->getFormField()] ?? '',
                     null,
-                    $settingKey->getDescription(),
+                    $key->getDescription(),
                 );
 
                 try {
@@ -200,13 +200,17 @@ class EmailController extends AdminBaseController
             if ($brandingForm->isValid()) {
                 $data = $brandingForm->getData();
 
-                foreach ([MailerSettingKey::PrimaryColor, MailerSettingKey::SecondaryColor] as $settingKey) {
+                $keys = [
+                    MailerSettingKey::PrimaryColor,
+                    MailerSettingKey::SecondaryColor,
+                ];
+                foreach ($keys as $key) {
                     $this->persistSettingValue(
                         SettingGroupId::Mailer,
-                        $settingKey->getFormField(),
-                        $data[$settingKey->getFormField()] ?? '',
+                        $key->getFormField(),
+                        $data[$key->getFormField()] ?? '',
                         null,
-                        $settingKey->getDescription(),
+                        $key->getDescription(),
                     );
                 }
 
