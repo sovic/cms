@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UploadController extends AdminBaseController
 {
@@ -36,8 +37,9 @@ class UploadController extends AdminBaseController
         methods: ['POST'],
     )]
     public function upload(
-        Request            $request,
-        FilesystemOperator $galleryStorage,
+        Request             $request,
+        FilesystemOperator  $galleryStorage,
+        TranslatorInterface $t,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -47,7 +49,7 @@ class UploadController extends AdminBaseController
         $file = $request->files->get('file');
 
         if (!$model || !$modelId || !$galleryName || !$file) {
-            $this->data['message'] = 'Missing required parameters.';
+            $this->data['message'] = $t->trans('api.missing_params', domain: 'upload');
 
             return $this->sendFail();
         }
@@ -64,7 +66,7 @@ class UploadController extends AdminBaseController
 
             return $this->sendFail();
         } catch (FilesystemException|ImagickException $e) {
-            $this->data['message'] = 'Upload failed: ' . $e->getMessage();
+            $this->data['message'] = $t->trans('api.upload_failed', ['message' => $e->getMessage()], 'upload');
 
             return $this->sendFail(500);
         }

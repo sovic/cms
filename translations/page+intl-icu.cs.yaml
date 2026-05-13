@@ -1,0 +1,3 @@
+flash:
+  saved: 'Stránka byla uložena.'
+  form_error: 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.'

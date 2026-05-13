@@ -9,6 +9,7 @@ use Sovic\Cms\Entity\Email;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 class EmailController extends AdminBaseController
@@ -25,12 +26,13 @@ class EmailController extends AdminBaseController
         int                    $id,
         EmailManager           $emailManager,
         EntityManagerInterface $em,
+        TranslatorInterface    $t,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $email = $em->getRepository(Email::class)->find($id);
         if (!$email) {
-            $this->data['message'] = 'Email not found.';
+            $this->data['message'] = $t->trans('api.not_found', domain: 'email');
 
             return $this->sendFail(404);
         }
@@ -44,12 +46,12 @@ class EmailController extends AdminBaseController
         }
 
         if (!$result) {
-            $this->data['message'] = 'Nepodařilo se odeslat testovací email.';
+            $this->data['message'] = $t->trans('api.test_failed', domain: 'email');
 
             return $this->sendFail();
         }
 
-        $this->data['message'] = 'Testovací email byl odeslán na ' . $emailTo . '.';
+        $this->data['message'] = $t->trans('api.test_sent', ['email_to' => $emailTo], 'email');
 
         return $this->sendSuccess();
     }

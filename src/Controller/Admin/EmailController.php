@@ -17,6 +17,7 @@ use Sovic\Common\Project\SettingGroupId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 use UserBundle\User\UserEntityInterface;
 
@@ -90,6 +91,7 @@ class EmailController extends AdminBaseController
         EmailSettingsInterface $emailList,
         EntityManagerInterface $em,
         Request                $request,
+        TranslatorInterface    $t,
     ): Response {
         $this->getRouteAccessDecision('admin:email:edit');
 
@@ -118,7 +120,7 @@ class EmailController extends AdminBaseController
                 $em->flush();
 
                 try {
-                    $this->addFlash('success', 'Email byl uložen.');
+                    $this->addFlash('success', $t->trans('flash.saved', domain: 'email'));
                 } catch (Throwable) {
                 }
 
@@ -126,7 +128,7 @@ class EmailController extends AdminBaseController
             }
 
             try {
-                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'email'));
             } catch (Throwable) {
             }
         }
@@ -147,7 +149,8 @@ class EmailController extends AdminBaseController
         name: 'admin:email:settings',
     )]
     public function settings(
-        Request $request,
+        Request             $request,
+        TranslatorInterface $t,
     ): Response {
         $this->getRouteAccessDecision('admin:email:settings');
 
@@ -177,7 +180,7 @@ class EmailController extends AdminBaseController
                 );
 
                 try {
-                    $this->addFlash('success', 'Nastavení uloženo.');
+                    $this->addFlash('success', $t->trans('flash.settings_saved', domain: 'email'));
                 } catch (Throwable) {
                 }
 
@@ -185,7 +188,7 @@ class EmailController extends AdminBaseController
             }
 
             try {
-                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'email'));
             } catch (Throwable) {
             }
 
@@ -208,7 +211,7 @@ class EmailController extends AdminBaseController
                 }
 
                 try {
-                    $this->addFlash('success', 'Nastavení uloženo.');
+                    $this->addFlash('success', $t->trans('flash.settings_saved', domain: 'email'));
                 } catch (Throwable) {
                 }
 
@@ -216,7 +219,7 @@ class EmailController extends AdminBaseController
             }
 
             try {
-                $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'email'));
             } catch (Throwable) {
             }
 

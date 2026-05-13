@@ -1,0 +1,8 @@
+flash:
+  saved: 'Email byl uložen.'
+  settings_saved: 'Nastavení uloženo.'
+  form_error: 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.'
+api:
+  not_found: 'Email nebyl nalezen.'
+  test_sent: 'Testovací email byl odeslán na {email_to}.'
+  test_failed: 'Nepodařilo se odeslat testovací email.'
