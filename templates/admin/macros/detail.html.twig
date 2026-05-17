@@ -3,9 +3,19 @@
     <div class="text-gray-600">{{ value ?? '-' }}</div>
 {% endmacro %}
 
-{% macro date_row(label, date) %}
+{% macro date_row(label, date, show_time = true) %}
     <div class="fw-bold mt-3">{{ label }}</div>
-    <div class="text-gray-600">{{ date ? date|date('j.n.Y H:i') : '-' }}</div>
+    <div class="text-gray-600">
+        {%- if date -%}
+            {% if show_time %}
+                {{ date|format_date_time }}
+            {% else %}
+                {{ date|format_date }}
+            {% endif %}
+        {%- else -%}
+            -
+        {%- endif -%}
+    </div>
 {% endmacro %}
 
 {% macro empty_data_card(theme, title) %}
