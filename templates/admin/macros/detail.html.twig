@@ -1,6 +1,6 @@
 {% macro info_row(label, value) %}
     <div class="fw-bold mt-3">{{ label }}</div>
-    <div class="text-gray-600">{{ value ?? '-' }}</div>
+    <div class="text-gray-600">{{ value ? value|raw : '-' }}</div>
 {% endmacro %}
 
 {% macro date_row(label, date, show_time = true) %}
