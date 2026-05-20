@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class MenuItemController extends AdminBaseController
 {
@@ -64,6 +66,7 @@ class MenuItemController extends AdminBaseController
         CacheInterface         $cache,
         EntityManagerInterface $em,
         Request                $request,
+        TranslatorInterface    $t,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -131,7 +134,10 @@ class MenuItemController extends AdminBaseController
                 return $this->redirectToRoute('admin:menu:edit', ['id' => $menuItem->getId()]);
             }
 
-            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            try {
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'menu_item'));
+            } catch (Throwable) {
+            }
         }
 
         $rootPosition = null;

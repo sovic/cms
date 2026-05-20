@@ -2,9 +2,238 @@
 
 namespace Sovic\Cms\Controller\Admin;
 
-use Sovic\Cms\Controller\Admin\Trait\EmailControllerTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Admin\Trait\SettingsTrait;
+use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
+use Sovic\Cms\Email\EmailSearchRequest;
+use Sovic\Cms\Email\EmailSettingsInterface;
+use Sovic\Cms\Entity\Email;
+use Sovic\Cms\Enum\MailerSettingKey;
+use Sovic\Cms\Form\Admin\EmailSettingsBrandingForm;
+use Sovic\Cms\Form\Admin\EmailSettingsGeneralForm;
+use Sovic\Cms\Repository\EmailRepository;
+use Sovic\Common\DataList\Enum\VisibilityId;
+use Sovic\Common\Project\SettingGroupId;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
+use UserBundle\User\UserEntityInterface;
 
 class EmailController extends AdminBaseController
 {
-    use EmailControllerTrait;
+    use ControllerAccessTrait;
+    use SettingsTrait;
+
+    protected function isAttributeGranted(string $attribute): bool
+    {
+        if (in_array($attribute, ['admin:email:list', 'admin:email:edit', 'admin:email:settings'])) {
+            return $this->isGranted('ROLE_ADMIN');
+        }
+
+        return false;
+    }
+
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function isAdminEmailEditGranted(Email $email): bool
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    protected function isAdminEmailListGranted(): bool
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    #[Route(
+        '/admin/email/list',
+        name: 'admin:email:list',
+    )]
+    public function email(
+        EntityManagerInterface $em,
+        Request                $request,
+    ): Response {
+        $this->getRouteAccessDecision('admin:email:list');
+
+        $page = max(1, (int) $request->query->get('page', 1));
+
+        $sr = new EmailSearchRequest();
+        $sr->setVisibilityId(VisibilityId::Public);
+        // decision if user can access all emails or only own
+        if (!$this->isAdminEmailListGranted()) {
+            $sr->setUser($this->getUser());
+        }
+        $sr->setPage($page);
+        $sr->setPaginationRoute('admin:email:list');
+
+        /** @var EmailRepository $repo */
+        $repo = $em->getRepository(Email::class);
+        $emails = $repo->findBySearchRequest($sr);
+        $total = $repo->countBySearchRequest($sr);
+        $pagination = $sr->getPagination($total);
+
+        $this->assign('emails', $emails);
+        $this->assign('pagination', $pagination);
+        $this->assign('query', $sr->toArray());
+
+        return $this->render('@CmsBundle/admin/email/list.html.twig');
+    }
+
+    #[Route(
+        '/admin/email/edit/{id}',
+        name: 'admin:email:edit',
+        requirements: ['id' => '\d+'],
+        defaults: ['id' => 0],
+    )]
+    public function detail(
+        int                    $id,
+        EmailSettingsInterface $emailList,
+        EntityManagerInterface $em,
+        Request                $request,
+        TranslatorInterface    $t,
+    ): Response {
+        $this->getRouteAccessDecision('admin:email:edit');
+
+        $repo = $em->getRepository(Email::class);
+        $email = $repo->find($id);
+
+        // decision if user can access this email
+        if ($email && !$this->isAdminEmailEditGranted($email)) {
+            return $this->render404();
+        }
+
+        if ($email === null) {
+            $email = new Email();
+        }
+
+        $form = $this->createForm(\Sovic\Cms\Form\Admin\Email::class, $email, ['email_list' => $emailList]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $operator = $this->getUser();
+                if ($operator instanceof UserEntityInterface && !$email->getCreator()) {
+                    $email->setCreator($operator);
+                }
+
+                $em->persist($email);
+                $em->flush();
+
+                try {
+                    $this->addFlash('success', $t->trans('flash.saved', domain: 'email'));
+                } catch (Throwable) {
+                }
+
+                return $this->redirectToRoute('admin:email:edit', ['id' => $email->getId()]);
+            }
+
+            try {
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'email'));
+            } catch (Throwable) {
+            }
+        }
+
+        $emailId = $email->getEmailId();
+        $editing = $id > 0;
+
+        $this->assign('editing', $editing);
+        $this->assign('email', $email);
+        $this->assign('form', $form->createView());
+        $this->assign('variables', $emailId ? $emailList->getVariablesForEmailId($emailId) : []);
+
+        return $this->render('@CmsBundle/admin/email/edit.html.twig');
+    }
+
+    #[Route(
+        '/admin/email/settings',
+        name: 'admin:email:settings',
+    )]
+    public function settings(
+        Request             $request,
+        TranslatorInterface $t,
+    ): Response {
+        $this->getRouteAccessDecision('admin:email:settings');
+
+        $generalForm = $this->createForm(EmailSettingsGeneralForm::class, [
+            MailerSettingKey::DefaultContactEmail->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::DefaultContactEmail->getFormField(), ''),
+        ]);
+
+        $brandingForm = $this->createForm(EmailSettingsBrandingForm::class, [
+            MailerSettingKey::PrimaryColor->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::PrimaryColor->getFormField(), ''),
+            MailerSettingKey::SecondaryColor->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::SecondaryColor->getFormField(), ''),
+        ]);
+
+        $activeTab = $request->query->get('tab', 'general');
+
+        $generalForm->handleRequest($request);
+        if ($generalForm->isSubmitted()) {
+            if ($generalForm->isValid()) {
+                $data = $generalForm->getData();
+
+                $key = MailerSettingKey::DefaultContactEmail;
+                $this->persistSettingValue(
+                    SettingGroupId::Mailer,
+                    $key->getFormField(),
+                    $data[$key->getFormField()] ?? '',
+                    null,
+                    $key->getDescription(),
+                );
+
+                try {
+                    $this->addFlash('success', $t->trans('flash.settings_saved', domain: 'email'));
+                } catch (Throwable) {
+                }
+
+                return $this->redirectToRoute('admin:email:settings');
+            }
+
+            try {
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'email'));
+            } catch (Throwable) {
+            }
+
+            $activeTab = 'general';
+        }
+
+        $brandingForm->handleRequest($request);
+        if ($brandingForm->isSubmitted()) {
+            if ($brandingForm->isValid()) {
+                $data = $brandingForm->getData();
+
+                $keys = [
+                    MailerSettingKey::PrimaryColor,
+                    MailerSettingKey::SecondaryColor,
+                ];
+                foreach ($keys as $key) {
+                    $this->persistSettingValue(
+                        SettingGroupId::Mailer,
+                        $key->getFormField(),
+                        $data[$key->getFormField()] ?? '',
+                        null,
+                        $key->getDescription(),
+                    );
+                }
+
+                try {
+                    $this->addFlash('success', $t->trans('flash.settings_saved', domain: 'email'));
+                } catch (Throwable) {
+                }
+
+                return $this->redirectToRoute('admin:email:settings', ['tab' => 'branding']);
+            }
+
+            try {
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'email'));
+            } catch (Throwable) {
+            }
+
+            $activeTab = 'branding';
+        }
+
+        $this->assign('active_tab', $activeTab);
+        $this->assign('branding_form', $brandingForm->createView());
+        $this->assign('general_form', $generalForm->createView());
+
+        return $this->render('@CmsBundle/admin/email/settings.html.twig');
+    }
 }

@@ -1,0 +1,3 @@
+api:
+  missing_params: 'Chybí povinné parametry.'
+  upload_failed: 'Nahrávání selhalo: {message}'

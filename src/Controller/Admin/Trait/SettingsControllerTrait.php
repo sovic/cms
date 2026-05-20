@@ -9,6 +9,8 @@ use Sovic\Common\Entity\Setting;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 trait SettingsControllerTrait
 {
@@ -56,6 +58,7 @@ trait SettingsControllerTrait
         int                    $id,
         EntityManagerInterface $em,
         Request                $request,
+        TranslatorInterface    $t,
     ): Response {
         $this->getRouteAccessDecision('admin:settings:list');
 
@@ -75,12 +78,18 @@ trait SettingsControllerTrait
                 $em->persist($settings);
                 $em->flush();
 
-                $this->addFlash('success', 'Nastavení uloženo.');
+                try {
+                    $this->addFlash('success', $t->trans('flash.saved', domain: 'settings'));
+                } catch (Throwable) {
+                }
 
                 return $this->redirectToRoute('admin:settings:edit', ['id' => $settings->getId()]);
             }
 
-            $this->addFlash('error', 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.');
+            try {
+                $this->addFlash('error', $t->trans('flash.form_error', domain: 'settings'));
+            } catch (Throwable) {
+            }
         }
 
         $this->assign('form', $form->createView());

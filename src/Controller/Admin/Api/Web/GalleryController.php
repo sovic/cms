@@ -12,6 +12,7 @@ use Sovic\Cms\Gallery\GalleryFactory;
 use Sovic\Cms\Repository\GalleryItemRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GalleryController extends AdminBaseController
 {
@@ -39,24 +40,25 @@ class GalleryController extends AdminBaseController
         methods: ['POST'],
     )]
     public function deleteGalleryItem(
-        string             $model,
-        int                $modelId,
-        int                $itemId,
-        GalleryFactory     $galleryFactory,
-        FilesystemOperator $galleryStorage,
+        string              $model,
+        int                 $modelId,
+        int                 $itemId,
+        GalleryFactory      $galleryFactory,
+        FilesystemOperator  $galleryStorage,
+        TranslatorInterface $t,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $item = $this->loadItem($model, $modelId, $itemId);
         if ($item === null) {
-            $this->data['message'] = 'Gallery item not found.';
+            $this->data['message'] = $t->trans('api.item_not_found', domain: 'gallery');
 
             return $this->sendFail(404);
         }
 
         $gallery = $galleryFactory->loadByGalleryItemId($itemId);
         if ($gallery === null) {
-            $this->data['message'] = 'Gallery not found.';
+            $this->data['message'] = $t->trans('api.not_found', domain: 'gallery');
 
             return $this->sendFail(404);
         }
@@ -109,9 +111,9 @@ class GalleryController extends AdminBaseController
         requirements: ['model' => '[a-z]+', 'modelId' => '\d+', 'itemId' => '\d+'],
         methods: ['POST'],
     )]
-    public function moveGalleryItemLeft(string $model, int $modelId, int $itemId): JsonResponse
+    public function moveGalleryItemLeft(string $model, int $modelId, int $itemId, TranslatorInterface $t): JsonResponse
     {
-        return $this->moveGalleryItem($model, $modelId, $itemId, -1);
+        return $this->moveGalleryItem($model, $modelId, $itemId, -1, $t);
     }
 
     #[Route(
@@ -120,12 +122,12 @@ class GalleryController extends AdminBaseController
         requirements: ['model' => '[a-z]+', 'modelId' => '\d+', 'itemId' => '\d+'],
         methods: ['POST'],
     )]
-    public function moveGalleryItemRight(string $model, int $modelId, int $itemId): JsonResponse
+    public function moveGalleryItemRight(string $model, int $modelId, int $itemId, TranslatorInterface $t): JsonResponse
     {
-        return $this->moveGalleryItem($model, $modelId, $itemId, +1);
+        return $this->moveGalleryItem($model, $modelId, $itemId, +1, $t);
     }
 
-    private function moveGalleryItem(string $model, int $modelId, int $itemId, int $direction): JsonResponse
+    private function moveGalleryItem(string $model, int $modelId, int $itemId, int $direction, TranslatorInterface $t): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -134,14 +136,14 @@ class GalleryController extends AdminBaseController
 
         $item = $this->loadItem($model, $modelId, $itemId);
         if ($item === null) {
-            $this->data['message'] = 'Gallery item not found.';
+            $this->data['message'] = $t->trans('api.item_not_found', domain: 'gallery');
 
             return $this->sendFail(404);
         }
 
         $galleryEntity = $this->entityManager->getRepository(GalleryEntity::class)->find($item->getGalleryId());
         if ($galleryEntity === null) {
-            $this->data['message'] = 'Gallery not found.';
+            $this->data['message'] = $t->trans('api.not_found', domain: 'gallery');
 
             return $this->sendFail(404);
         }
@@ -163,7 +165,7 @@ class GalleryController extends AdminBaseController
 
         $neighborIndex = $currentIndex + $direction;
         if ($currentIndex === null || !isset($orderedItems[$neighborIndex])) {
-            $this->data['message'] = 'Item is already at the edge.';
+            $this->data['message'] = $t->trans('api.edge', domain: 'gallery');
 
             return $this->sendFail();
         }

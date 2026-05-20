@@ -1,3 +1,15 @@
+{% macro tabs(tabs, active_tab) %}
+    <ul class="nav nav-tabs nav-line-tabs mb-8 fs-6">
+        {% for tab in tabs %}
+            <li class="nav-item">
+                <a class="nav-link {{ active_tab == tab.id ? 'active' }}"
+                   data-bs-toggle="tab"
+                   href="#tab-{{ tab.id }}">{{ tab.label }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
 {% macro loading() %}
     <div class="page-loading active">
         <div class="page-loading-inner">
@@ -79,13 +91,13 @@
        title="{{ text }}"></i>
 {% endmacro %}
 
-{% macro info_alert(title, text, class = 'primary') %}
+{% macro info_alert(title, text, class = 'primary', text_class = 'primary') %}
     <div class="alert alert-{{ class }} d-flex align-items-center p-5 mb-0">
-        <i class="bi bi-info-circle fs-2x text-primary me-4">
+        <i class="bi bi-info-circle fs-2x text-{{ text_class }} me-4">
             <span class="path1"></span><span class="path2"></span>
         </i>
         <div class="d-flex flex-column">
-            <h4 class="mb-1 text-primary">{{ title }}</h4>
+            <h4 class="mb-1 text-{{ text_class }}">{{ title }}</h4>
             <span>{{ text }}</span>
         </div>
     </div>

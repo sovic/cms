@@ -1,0 +1,6 @@
+flash:
+  saved: 'Nastavení uloženo.'
+  form_error: 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.'
+api:
+  not_found: 'Nastavení nebylo nalezeno.'
+  toggle_failed: 'Nastavení nelze přepnout — není typu boolean.'

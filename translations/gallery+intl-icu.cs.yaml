@@ -1,0 +1,4 @@
+api:
+  item_not_found: 'Položka galerie nebyla nalezena.'
+  not_found: 'Galerie nebyla nalezena.'
+  edge: 'Položka je již na okraji.'
