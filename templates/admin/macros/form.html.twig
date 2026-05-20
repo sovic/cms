@@ -7,8 +7,9 @@
                type="checkbox"
                id="{{ id }}"
                autocomplete="off"
-               {{ field ? 'data-field="' ~ field ~ '"' : '' }}
-               {{ checked ? 'checked' : '' }}>
+                {{ field ? 'data-field=' ~ field : '' }}
+                {{ checked ? 'checked' : '' }}
+        >
         <span class="form-check-label fw-semibold text-muted">{{ label|raw }}</span>
     </label>
     {% if title %}
