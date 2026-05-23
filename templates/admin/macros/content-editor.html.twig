@@ -37,7 +37,8 @@
                     if (url.indexOf('{') !== -1) {
                         return url;
                     }
-                    return tinymce.activeEditor.convertURL(url, 'href', null);
+                    // use documentBaseURI.toAbsolute to avoid recursive call back into urlconverter_callback
+                    return this.documentBaseURI.toAbsolute(url);
                 },
             };
 
