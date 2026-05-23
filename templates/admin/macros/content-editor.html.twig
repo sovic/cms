@@ -1,5 +1,9 @@
 {% macro content_editor_basic(selector, base_url = null, language = 'cs') %}
-    <style>{{ selector }} { visibility: hidden; }</style>
+    <style>{{ selector }}
+        {
+            visibility: hidden
+        ;
+        }</style>
     <script src="{{ asset('bundles/cms/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
     <!--suppress JSUnresolvedReference, SpellCheckingInspection -->
     <script>
@@ -26,6 +30,13 @@
                 content_style: ".int_cta_link { display: inline-block; padding: 9px 20px 10px 20px; background-color: #007bff; color: #ffffff !important; text-decoration: none; border-radius: 5px; }",
                 init_instance_callback: function (editor) {
                     editor.getContainer().style.visibility = 'visible';
+                },
+                urlconverter_callback: function (url) {
+                    // ignore urls that contain a placeholder, e.g. {link}, {unsubscribe_url}, etc.
+                    if (url.indexOf('{') !== -1) {
+                        return url;
+                    }
+                    return tinymce.activeEditor.convertURL(url, 'href', null);
                 },
             };
 
