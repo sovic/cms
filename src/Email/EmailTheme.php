@@ -2,15 +2,33 @@
 
 namespace Sovic\Cms\Email;
 
-class EmailTheme implements EmailThemeInterface
+use Sovic\Common\Project\SettingGroupId;
+use Sovic\Common\Project\Settings;
+
+readonly class EmailTheme implements EmailThemeInterface
 {
+    public function __construct(
+        private Settings $settings,
+    ) {
+    }
+
     protected function getPrimaryColor(): string
     {
+        $primaryColor = $this->settings->get(SettingGroupId::Mailer->value, 'primary_color');
+        if (!empty($primaryColor)) {
+            return $primaryColor;
+        }
+
         return '#0078A2';
     }
 
     protected function getSecondaryColor(): string
     {
+        $secondaryColor = $this->settings->get(SettingGroupId::Mailer->value, 'secondary_color');
+        if (!empty($secondaryColor)) {
+            return $secondaryColor;
+        }
+
         return '#e3001a';
     }
 
