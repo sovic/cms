@@ -20,6 +20,7 @@
                 relative_urls: false,
                 {% if base_url %}document_base_url: '{{ base_url }}',{% endif %}
                 browser_spellcheck: true,
+                body_attrs: {spellcheck: 'true'},
                 language_url: '{{ asset('bundles/cms/plugins/custom/tinymce/langs/' ~ language ~ '.js') }}',
                 language: '{{ language }}',
                 link_class_list: [
