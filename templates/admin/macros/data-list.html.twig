@@ -354,13 +354,12 @@
     <div class="{{ theme.filters_item_class }}">
         <div class="form-group">
             <label class="form-label">{{ label }}</label>
-            <label>
-                <input type="number"
-                       class="form-control"
-                       name="{{ name }}"
-                       min="0"
-                       value="{{ value }}">
-            </label>
+            <!--suppress HtmlFormInputWithoutLabel -->
+            <input type="number"
+                   class="form-control"
+                   name="{{ name }}"
+                   min="0"
+                   value="{{ value }}">
         </div>
     </div>
 {% endmacro %}
