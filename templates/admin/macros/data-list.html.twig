@@ -222,7 +222,7 @@
     </div>
 {% endmacro %}
 
-{% macro list_header_filters(filters = '') %}
+{% macro list_header_filters(filters = '', advanced_filters = '') %}
     <button type="button" class="btn btn-light-primary show menu-dropdown"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end">
@@ -239,18 +239,54 @@
             <div class="fs-5 text-gray-900 fw-bold">Filtrovat</div>
         </div>
 
-        {{ filters|raw }}
+        <div class="clearfix mb-3"></div>
+
+        <div class="px-7">
+            {{ filters|raw }}
+        </div>
 
         <div class="px-7 pb-7 pt-3">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-space-between">
+                {% if advanced_filters is defined and advanced_filters is not empty %}
+                    <button type="button"
+                            class="btn btn-light-primary btn-sm me-auto"
+                            data-bs-toggle="modal"
+                            data-bs-target="#advanced-filters-modal">
+                        <span class="d-none d-md-inline-block">Pokročilé filtrování</span>
+                    </button>
+                {% endif %}
+
                 <button type="reset" class="btn btn-light btn-sm btn-active-light-primary">Zrušit výběr</button>
             </div>
         </div>
     </div>
+
+    {% if advanced_filters is defined and advanced_filters is not empty %}
+        <div class="modal modal-lg fade" id="advanced-filters-modal"
+             tabindex="-1"
+             aria-labelledby="advanced-filters-modal-label"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="advanced-filters-modal-label">Pokročilé filtrování</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ advanced_filters|raw }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-light btn-active-light-primary btn-sm">Zrušit výběr</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Použít</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {% macro list_filter_enum_select(label, id, items, selected_value = '') %}
-    <div class="px-7 py-2 w-100">
+    <div class="py-2 w-100">
         <label for="{{ id }}" class="form-label fs-6 fw-semibold w-100">
             <select id="{{ id }}"
                     name="{{ id }}"
@@ -269,7 +305,7 @@
 {% endmacro %}
 
 {% macro list_filter_id_name_select(label, id, items, selected_value = '') %}
-    <div class="px-7 py-2 w-100">
+    <div class="py-2 w-100">
         <label for="{{ id }}" class="form-label fs-6 fw-semibold w-100">
             <select id="{{ id }}"
                     name="{{ id }}"
@@ -288,7 +324,7 @@
 {% endmacro %}
 
 {% macro list_filter_inactive(visibility) %}
-    <div class="px-7 py-2">
+    <div class="py-2">
         <div class="form-group">
             <div class="form-check">
                 <input type="checkbox"

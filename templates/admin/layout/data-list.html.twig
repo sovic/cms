@@ -44,9 +44,9 @@
                         {% block add_item %}{% endblock %}
 
                         {% if is_filters_enabled %}
-                            <div class="clearfix mb-3"></div>
                             {% set filters = block('filters') %}
-                            {{ data_list.list_header_filters(filters, visibility) }}
+                            {% set advanced_filters = block('advanced_filters') %}
+                            {{ data_list.list_header_filters(filters, advanced_filters) }}
                         {% endif %}
                     </div>
                 </div>
@@ -73,6 +73,10 @@
 {% endblock %}
 
 {% block filters %}
+
+{% endblock %}
+
+{% block advanced_filters %}
 
 {% endblock %}
 
