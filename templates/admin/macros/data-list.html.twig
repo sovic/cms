@@ -349,6 +349,22 @@
     </div>
 {% endmacro %}
 
+{% macro list_filter_number_input(label, name, value = '') %}
+    {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+    <div class="{{ theme.filters_item_class }}">
+        <div class="form-group">
+            <label class="form-label">{{ label }}</label>
+            <label>
+                <input type="number"
+                       class="form-control"
+                       name="{{ name }}"
+                       min="0"
+                       value="{{ value }}">
+            </label>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro group_action_button(method, label, tooltip = '', confirm = false, parameters = {}) %}
     <a href="#"
        class="link-underline badge badge-light-primary group-action"
