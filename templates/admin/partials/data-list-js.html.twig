@@ -93,20 +93,12 @@
             });
         }
 
-        let $inactiveCheckbox = $form.querySelector('input[name="show_inactive"]');
-        if ($inactiveCheckbox) {
-            $inactiveCheckbox.addEventListener('change', function (e) {
-                e.preventDefault();
-                let url = new URL(window.location.href);
-                url.searchParams.set('visibility', $inactiveCheckbox.checked ? 'all' : 'public');
-                url.searchParams.delete('page');
-                window.location.href = url.toString();
-            });
-        }
-
         let $selectField = $form.querySelectorAll('select');
         if ($selectField) {
             $selectField.forEach(function (field) {
+                if (field.closest('#advanced-filters-modal')) {
+                    return;
+                }
                 field.addEventListener('change', function (e) {
                     e.preventDefault();
                     let name = field.name;
@@ -118,65 +110,20 @@
             });
         }
 
-        let $unconfirmedCheckbox = $form.querySelector('input[name="show_unconfirmed"]');
-        if ($unconfirmedCheckbox) {
-            $unconfirmedCheckbox.addEventListener('change', function (e) {
+        $form.querySelectorAll('.basic-filters input[type="checkbox"]').forEach(function ($checkbox) {
+            $checkbox.addEventListener('change', function (e) {
                 e.preventDefault();
                 let url = new URL(window.location.href);
-                if ($unconfirmedCheckbox.checked) {
-                    url.searchParams.set('confirmed', '0');
+                let param = $checkbox.dataset.param || $checkbox.name;
+                if ($checkbox.checked) {
+                    url.searchParams.set(param, $checkbox.value);
                 } else {
-                    url.searchParams.delete('confirmed');
+                    url.searchParams.delete(param);
                 }
                 url.searchParams.delete('page');
                 window.location.href = url.toString();
             });
-        }
-
-        let $isTomSectionCheckbox = $form.querySelector('input[name="is_tom_section"]');
-        if ($isTomSectionCheckbox) {
-            $isTomSectionCheckbox.addEventListener('change', function (e) {
-                e.preventDefault();
-                let url = new URL(window.location.href);
-                if ($isTomSectionCheckbox.checked) {
-                    url.searchParams.set('is_tom_section', '1');
-                } else {
-                    url.searchParams.delete('is_tom_section');
-                }
-                url.searchParams.delete('page');
-                window.location.href = url.toString();
-            });
-        }
-
-        let $hostingCheckbox = $form.querySelector('input[name="show_hosting"]');
-        if ($hostingCheckbox) {
-            $hostingCheckbox.addEventListener('change', function (e) {
-                e.preventDefault();
-                let url = new URL(window.location.href);
-                if ($hostingCheckbox.checked) {
-                    url.searchParams.set('is_hosting', '1');
-                } else {
-                    url.searchParams.delete('is_hosting');
-                }
-                url.searchParams.delete('page');
-                window.location.href = url.toString();
-            });
-        }
-
-        let $invalidNumberCheckbox = $form.querySelector('input[name="is_number_invalid"]');
-        if ($invalidNumberCheckbox) {
-            $invalidNumberCheckbox.addEventListener('change', function (e) {
-                e.preventDefault();
-                let url = new URL(window.location.href);
-                if ($invalidNumberCheckbox.checked) {
-                    url.searchParams.set('is_number_invalid', '1');
-                } else {
-                    url.searchParams.delete('is_number_invalid');
-                }
-                url.searchParams.delete('page');
-                window.location.href = url.toString();
-            });
-        }
+        });
 
         let $resetEl = $form.querySelector('button[type="reset"]');
         if ($resetEl) {
@@ -206,6 +153,66 @@
                 url.searchParams.set('sort', sort);
                 url.searchParams.set('order', order);
                 window.location.href = url.toString();
+            });
+        }
+    }
+
+    function bindAdvancedFilters() {
+        const modal = document.getElementById('advanced-filters-modal');
+        if (!modal) {
+            return;
+        }
+
+        const submitBtn = modal.querySelector('[data-advanced-filters-submit]');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('page');
+
+                modal.querySelectorAll('select').forEach(function (field) {
+                    if (!field.name) return;
+                    const value = field.options[field.selectedIndex].value;
+                    if (value) {
+                        url.searchParams.set(field.name, value);
+                    } else {
+                        url.searchParams.delete(field.name);
+                    }
+                });
+
+                modal.querySelectorAll('input[type="checkbox"]').forEach(function (field) {
+                    if (!field.name) return;
+                    if (field.checked) {
+                        url.searchParams.set(field.name, field.value && field.value !== '0' ? field.value : '1');
+                    } else {
+                        url.searchParams.delete(field.name);
+                    }
+                });
+
+                modal.querySelectorAll('input[type="text"], input[type="number"]').forEach(function (field) {
+                    if (!field.name) return;
+                    if (field.value) {
+                        url.searchParams.set(field.name, field.value);
+                    } else {
+                        url.searchParams.delete(field.name);
+                    }
+                });
+
+                window.location.href = url.toString();
+            });
+        }
+
+        const resetBtn = modal.querySelector('[data-advanced-filters-reset]');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                modal.querySelectorAll('select').forEach(function (field) {
+                    field.selectedIndex = 0;
+                });
+                modal.querySelectorAll('input[type="checkbox"]').forEach(function (field) {
+                    field.checked = false;
+                });
+                modal.querySelectorAll('input[type="text"], input[type="number"]').forEach(function (field) {
+                    field.value = '';
+                });
             });
         }
     }
@@ -246,6 +253,7 @@
         bindGroupActions();
         bindSearch();
         bindListSort();
+        bindAdvancedFilters();
     });
 
     document.addEventListener('DOMContentLoaded', function () {
