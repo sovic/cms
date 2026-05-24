@@ -222,7 +222,7 @@
     </div>
 {% endmacro %}
 
-{% macro list_header_filters(filters = '', visibility = 'public') %}
+{% macro list_header_filters(filters = '') %}
     <button type="button" class="btn btn-light-primary show menu-dropdown"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end">
@@ -315,7 +315,6 @@
                        name="{{ name }}"
                        class="form-check-input"
                        value="{{ value }}"
-                       onchange="this.form.submit()"
                        {% if selected %}checked="checked"{% endif %}>
                 <label class="form-check-label" for="{{ name }}">
                     {{ label }}

@@ -42,7 +42,9 @@
                         {% endif %}
 
                         {% block add_item %}{% endblock %}
+
                         {% if is_filters_enabled %}
+                            <div class="clearfix mb-3"></div>
                             {% set filters = block('filters') %}
                             {{ data_list.list_header_filters(filters, visibility) }}
                         {% endif %}
