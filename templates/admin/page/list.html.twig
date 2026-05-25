@@ -1,6 +1,7 @@
 {% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 
 {% block title %}Přehled stránek{% endblock %}
 
@@ -23,6 +24,11 @@
     {% endif %}
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
+{% endblock %}
+
 {% block data_list_table %}
     <table class="{{ theme.default.table_class }} dataTable">
         <thead>
@@ -33,7 +39,7 @@
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
+            <th class="text-end min-w-125px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>
@@ -49,11 +55,12 @@
                 {% endif %}
                 <td>
                     <div class="mt-1">
-                        {% if page.isPublic %}
-                            <span class="badge badge-light-success">Publikováno</span>
-                        {% else %}
-                            <span class="badge badge-light-warning">Nepublikováno</span>
-                        {% endif %}
+                        <div class="js-toggle-switch d-inline-block"
+                             data-entity="page"
+                             data-entity-id="{{ page.id }}">
+                            {% set toggle_icon = '<i class="bi bi-check-circle-fill ' ~ (page.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-2"></i>' %}
+                            {{ form_macro.switch('page_is_public_' ~ page.id, toggle_icon, page.isPublic, null, 'is_public') }}
+                        </div>
                         {% if page.lang %}
                             <span class="badge badge-light-info">{{ page.lang }}</span>
                         {% endif %}
