@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller\Admin\Api\Web;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\AdminBaseController;
 use Sovic\Cms\Email\EmailManager;
@@ -52,6 +53,36 @@ class EmailController extends AdminBaseController
         }
 
         $this->data['message'] = $t->trans('api.test_sent', ['email_to' => $emailTo], 'email');
+
+        return $this->sendSuccess();
+    }
+
+    #[Route('/admin/api/web/email/{id}/delete',
+        name: 'admin:api:web:email:delete',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    public function delete(
+        int                    $id,
+        EntityManagerInterface $em,
+        TranslatorInterface    $t,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $repo = $em->getRepository(Email::class);
+        /** @var Email|null $email */
+        $email = $repo->find($id);
+        if (!$email) {
+            $this->data['errors'] = ['email.not_found'];
+
+            return $this->sendFail(404);
+        }
+
+        $email->setDeletedAt(new DateTimeImmutable());
+        $em->persist($email);
+        $em->flush();
+
+        $this->addFlash('info', $t->trans('email.action.success.delete', [], 'emails'));
 
         return $this->sendSuccess();
     }
