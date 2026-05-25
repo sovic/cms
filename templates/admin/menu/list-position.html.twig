@@ -3,6 +3,7 @@
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block title %}Menu – {{ position }}{% endblock %}
 
@@ -45,22 +46,19 @@
                     </a>
                 </div>
                 <div style="padding-left: {{ depth * 24 }}px;">
-                    <div class="js-toggle-switch"
+                    <div class="{{ theme.toggle_switch_class }}"
                          data-entity="menu-item"
-                         data-entity-id="{{ item.id }}"
-                            {% if depth > 0 %}
-                                style="padding-left: 20px; padding-top: 3px;"
-                            {% endif %}
-                    >
+                         data-entity-id="{{ item.id }}">
                         {% set icon = '<i class="bi bi-check-circle-fill ' ~ (item.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-4"></i>' %}
-                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, icon, item.isPublic, null, 'is_public') }}
+                        {% set icon_switched = '<i class="bi bi-check-circle-fill ' ~ (item.isPublic ? 'text-warning' : 'text-success') ~ ' fs-3 ms-1 me-4"></i>' %}
+                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, icon, item.isPublic, null, 'is_public', icon_switched) }}
                     </div>
                     {% if item.visibility %}
                         {% if item.visibility == 'auth' %}
-                            <span class="badge badge-light-primary">Pouze pro přihlášené</span>
+                            <span class="badge badge-light-primary ms-1">Pouze pro přihlášené</span>
                         {% endif %}
                         {% if item.visibility == 'not-auth' %}
-                            <span class="badge badge-light-primary">Pouze pro nepřihlášené</span>
+                            <span class="badge badge-light-primary ms-1">Pouze pro nepřihlášené</span>
                         {% endif %}
                     {% endif %}
                 </div>
@@ -167,9 +165,9 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.default.table_class }} dataTable">
+    <table class="{{ theme.table_class }} dataTable">
         <thead>
-        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class }}" role="row">
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
@@ -182,7 +180,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.default.tbody_class }}">
+        <tbody class="{{ theme.tbody_class }}">
         {{ _self.render_tree(tree, 0) }}
         </tbody>
         <tfoot></tfoot>

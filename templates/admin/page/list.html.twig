@@ -2,6 +2,7 @@
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block title %}Přehled stránek{% endblock %}
 
@@ -30,9 +31,9 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.default.table_class }} dataTable">
+    <table class="{{ theme.table_class }} dataTable">
         <thead>
-        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class }}" role="row">
             {% if is_group_actions_enabled %}
                 {{ data_list.checkbox_all() }}
             {% endif %}
@@ -47,7 +48,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.default.tbody_class }}">
+        <tbody class="{{ theme.tbody_class }}">
         {% for page in pages %}
             {% set detail_url = path('admin:page:edit', {'id': page.id}) %}
             <tr>
@@ -57,38 +58,40 @@
                     </td>
                 {% endif %}
                 <td>
-                    <div class="mt-1">
-                        <div class="js-toggle-switch d-inline-block"
-                             data-entity="page"
-                             data-entity-id="{{ page.id }}">
-                            {% set toggle_icon = '<i class="bi bi-check-circle-fill ' ~ (page.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-2"></i>' %}
-                            {{ form_macro.switch('page_is_public_' ~ page.id, toggle_icon, page.isPublic, null, 'is_public') }}
-                        </div>
-                        {% if page.lang %}
-                            <span class="badge badge-light-info">{{ page.lang }}</span>
-                        {% endif %}
-                    </div>
                     <div class="py-2">
                         <a href="{{ detail_url }}"
                            class="text-gray-800 text-hover-primary fs-5 fw-bold">
                             {{ page.name }}
+                            {% if page.lang %}
+                                <span class="badge badge-light-info">{{ page.lang }}</span>
+                            {% endif %}
                         </a>
                         {% if page.heading %}
                             <div class="text-muted fs-7">{{ page.heading }}</div>
                         {% endif %}
                     </div>
-                    <div>
-                        <a href="/{{ page.urlId }}" target="_blank" class="badge badge-light-info">
-                            {{ '/' ~ page.urlId }}
-                        </a>
+                    <div class="{{ theme.toggle_switch_class }}"
+                         data-entity="page"
+                         data-entity-id="{{ page.id }}">
+                        {% set toggle_icon = '<i class="bi bi-check-circle-fill ' ~ (page.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-2"></i>' %}
+                        {% set toggle_icon_switched = '<i class="bi bi-check-circle-fill ' ~ (page.isPublic ? 'text-warning' : 'text-success') ~ ' fs-3 ms-1 me-2"></i>' %}
+                        {{ form_macro.switch('page_is_public_' ~ page.id, toggle_icon, page.isPublic, null, 'is_public', toggle_icon_switched) }}
                     </div>
                 </td>
                 <td class="text-end">
                     {{ page.publishedAt ? page.publishedAt|format_date_time : '—' }}
                 </td>
                 <td class="text-end">
+                    {% set web_url = '/' ~ page.urlId %}
+
                     {% set actions = [] %}
                     {% set actions = actions|merge([
+                        {
+                            'url': web_url,
+                            'title': 'Zobrazit',
+                            'class': 'text-secondary',
+                            'icon': 'ki-duotone ki-eye',
+                        },
                         {
                             'url': detail_url,
                             'title': 'Upravit',
