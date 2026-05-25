@@ -6,6 +6,7 @@ use Sovic\Cms\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,6 +32,19 @@ class EmailSettingsGeneralForm extends AbstractType
                 'attr' => [
                     'length' => 200,
                 ],
+            ]
+        );
+
+        $builder->add(
+            'email_signature',
+            TextareaType::class,
+            [
+                'label' => 'Podpis e-mailu',
+                'required' => false,
+                'attr' => [
+                    'rows' => 6,
+                ],
+                'help' => 'Text zobrazený v patičce e-mailu. Může obsahovat HTML.',
             ]
         );
 

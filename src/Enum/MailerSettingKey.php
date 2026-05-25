@@ -5,6 +5,7 @@ namespace Sovic\Cms\Enum;
 enum MailerSettingKey: string implements SettingKeyInterface
 {
     case DefaultContactEmail = 'mailer_default_contact_email';
+    case EmailSignature = 'mailer_email_signature';
     case PrimaryColor = 'mailer_primary_color';
     case SecondaryColor = 'mailer_secondary_color';
 
@@ -22,6 +23,7 @@ enum MailerSettingKey: string implements SettingKeyInterface
     {
         return match ($this) {
             self::DefaultContactEmail => 'Výchozí kontaktní e-mail',
+            self::EmailSignature => 'Podpis e-mailu',
             self::PrimaryColor => 'Primární barva',
             self::SecondaryColor => 'Sekundární barva',
         };

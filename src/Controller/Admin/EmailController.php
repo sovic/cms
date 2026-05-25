@@ -156,6 +156,7 @@ class EmailController extends AdminBaseController
 
         $generalForm = $this->createForm(EmailSettingsGeneralForm::class, [
             MailerSettingKey::DefaultContactEmail->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::DefaultContactEmail->getFormField(), ''),
+            MailerSettingKey::EmailSignature->getFormField() => $this->getSettingValue(SettingGroupId::Mailer, MailerSettingKey::EmailSignature->getFormField(), ''),
         ]);
 
         $brandingForm = $this->createForm(EmailSettingsBrandingForm::class, [
@@ -170,17 +171,22 @@ class EmailController extends AdminBaseController
             if ($generalForm->isValid()) {
                 $data = $generalForm->getData();
 
-                $key = MailerSettingKey::DefaultContactEmail;
-                $this->persistSettingValue(
-                    SettingGroupId::Mailer,
-                    $key->getFormField(),
-                    $data[$key->getFormField()] ?? '',
-                    null,
-                    $key->getDescription(),
-                );
+                $keys = [
+                    MailerSettingKey::DefaultContactEmail,
+                    MailerSettingKey::EmailSignature,
+                ];
+                foreach ($keys as $key) {
+                    $this->persistSettingValue(
+                        SettingGroupId::Mailer,
+                        $key->getFormField(),
+                        $data[$key->getFormField()] ?? '',
+                        null,
+                        $key->getDescription(),
+                    );
+                }
 
                 try {
-                    $this->addFlash('success', $t->trans('flash.settings_saved', domain: 'email'));
+                    $this->addFlash('success', $t->trans('flash.saved', domain: 'email'));
                 } catch (Throwable) {
                 }
 
