@@ -33,9 +33,6 @@
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="min-w-100px" data-dt-column="2">
-                <span class="dt-column-title">URL</span>
-            </th>
             <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
@@ -51,10 +48,6 @@
                     </td>
                 {% endif %}
                 <td>
-                    <a href="{{ detail_url }}"
-                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
-                        {{ page.name }}
-                    </a>
                     <div class="mt-1">
                         {% if page.isPublic %}
                             <span class="badge badge-light-success">Publikováno</span>
@@ -65,15 +58,17 @@
                             <span class="badge badge-light-info">{{ page.lang }}</span>
                         {% endif %}
                     </div>
-                </td>
-                <td>
-                    <span class="text-muted small">
-                        <code>
-                        <a href="/{{ page.urlId }}" target="_blank">
+                    <div class="py-2">
+                        <a href="{{ detail_url }}"
+                           class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                            {{ page.name }}
+                        </a>
+                    </div>
+                    <div>
+                        <a href="/{{ page.urlId }}" target="_blank" class="badge badge-light-info">
                             {{ '/' ~ page.urlId }}
                         </a>
-                        </code>
-                    </span>
+                    </div>
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}
