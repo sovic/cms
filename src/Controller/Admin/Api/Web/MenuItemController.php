@@ -19,6 +19,66 @@ class MenuItemController extends AbstractBaseApiController
     ];
 
     #[Route(
+        '/admin/api/web/menu-item/{id}/move',
+        name: 'admin:api:web:menu-item:move',
+        requirements: ['id' => '\d+'],
+        methods: ['POST'],
+    )]
+    public function moveItem(
+        int                    $id,
+        EntityManagerInterface $em,
+        Request                $request,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $menuItem = $em->getRepository(MenuItem::class)->find($id);
+        if ($menuItem === null) {
+            return $this->sendFail(404);
+        }
+
+        $data = $this->getRequestData($request);
+        $direction = $data['direction'] ?? null;
+        if (!in_array($direction, ['up', 'down'], true)) {
+            $this->addError('invalid_direction');
+
+            return $this->sendFail();
+        }
+
+        $siblings = $em->getRepository(MenuItem::class)->findBy(
+            ['parentId' => $menuItem->getParentId()],
+            ['sequence' => 'ASC', 'id' => 'ASC'],
+        );
+
+        $currentIndex = null;
+        foreach ($siblings as $index => $sibling) {
+            if ($sibling->getId() === $menuItem->getId()) {
+                $currentIndex = $index;
+                break;
+            }
+        }
+
+        if ($currentIndex === null) {
+            return $this->sendFail();
+        }
+
+        $swapIndex = $direction === 'up' ? $currentIndex - 1 : $currentIndex + 1;
+        if (!isset($siblings[$swapIndex])) {
+            return $this->sendSuccess();
+        }
+
+        [$siblings[$currentIndex], $siblings[$swapIndex]] = [$siblings[$swapIndex], $siblings[$currentIndex]];
+
+        $seq = 1;
+        foreach ($siblings as $sibling) {
+            $sibling->setSequence($seq++);
+            $em->persist($sibling);
+        }
+        $em->flush();
+
+        return $this->sendSuccess();
+    }
+
+    #[Route(
         '/admin/api/web/menu-item/{id}/toggle-state',
         name: 'admin:api:web:menu-item:toggle-state',
         requirements: ['id' => '\d+'],

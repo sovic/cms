@@ -66,23 +66,47 @@
                 </div>
             </td>
             <td>
-                <div style="padding-left: {{ depth * 24 }}px;">
-                    <i class="bi bi-arrow-return-right text-muted me-2"></i>
-                    {% if depth > 0 %}
-                        <span class="text-muted small">{{ item.sequence }}</span>
+                <div class="d-flex align-items-center gap-1" style="padding-left: {{ depth * 24 }}px;">
+                    {% if not loop.first %}
+                        <button type="button"
+                                class="btn btn-sm btn-icon btn-light js-menu-reorder-btn"
+                                data-id="{{ item.id }}"
+                                data-direction="up"
+                                title="Nahoru">
+                            <i class="bi bi-arrow-up fs-8"></i>
+                        </button>
+                    {% else %}
+                        <span class="btn btn-sm btn-icon invisible">
+                            <i class="bi bi-arrow-up fs-8"></i>
+                        </span>
                     {% endif %}
 
+                    {% if not loop.last %}
+                        <button type="button"
+                                class="btn btn-sm btn-icon btn-light js-menu-reorder-btn"
+                                data-id="{{ item.id }}"
+                                data-direction="down"
+                                title="Dolů">
+                            <i class="bi bi-arrow-down fs-8"></i>
+                        </button>
+                    {% else %}
+                        <span class="btn btn-sm btn-icon invisible">
+                            <i class="bi bi-arrow-down fs-8"></i>
+                        </span>
+                    {% endif %}
                 </div>
             </td>
             <td>
                 {% if item.page %}
-                    <span class="text-muted small">
-                        <code>{{ item.page.urlId }}</code>
-                    </span>
+                    <a class="badge badge-info small"
+                       href="{{ item.page.urlId }}">
+                        {{ item.page.urlId }}
+                    </a>
                 {% elseif item.url %}
-                    <span class="text-muted small">
-                        <code>{{ item.url }}</code>
-                    </span>
+                    <a class="badge badge-info small"
+                       href="{{ item.url }}">
+                        {{ item.url }}
+                    </a>
                 {% endif %}
             </td>
             <td class="text-end">
@@ -107,6 +131,29 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
+    <!--suppress JSUnresolvedReference -->
+    <script>
+        (function () {
+            document.querySelectorAll('.js-menu-reorder-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const id = btn.dataset.id;
+                    const direction = btn.dataset.direction;
+                    btn.disabled = true;
+                    axios.post('/admin/api/web/menu-item/' + id + '/move', {direction: direction})
+                        .then(function (response) {
+                            if (response.data && response.data.status === 'success') {
+                                window.location.reload();
+                            } else {
+                                btn.disabled = false;
+                            }
+                        })
+                        .catch(function () {
+                            btn.disabled = false;
+                        });
+                });
+            });
+        })();
+    </script>
 {% endblock %}
 
 {% block data_list_table %}
@@ -116,9 +163,7 @@
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="min-w-120px" data-dt-column="2">
-                <span class="dt-column-title">Poř.</span>
-            </th>
+            <th class="min-w-120px" data-dt-column="2"></th>
             <th class="min-w-200px" data-dt-column="3">
                 <span class="dt-column-title">Odkaz</span>
             </th>
