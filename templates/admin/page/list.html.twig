@@ -39,6 +39,9 @@
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
+            <th class="text-end min-w-150px" data-dt-column="2">
+                <span class="dt-column-title">Publikováno</span>
+            </th>
             <th class="text-end min-w-125px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
@@ -70,12 +73,18 @@
                            class="text-gray-800 text-hover-primary fs-5 fw-bold">
                             {{ page.name }}
                         </a>
+                        {% if page.heading %}
+                            <div class="text-muted fs-7">{{ page.heading }}</div>
+                        {% endif %}
                     </div>
                     <div>
                         <a href="/{{ page.urlId }}" target="_blank" class="badge badge-light-info">
                             {{ '/' ~ page.urlId }}
                         </a>
                     </div>
+                </td>
+                <td class="text-end">
+                    {{ page.publishedAt ? page.publishedAt|format_date_time : '—' }}
                 </td>
                 <td class="text-end">
                     {% set actions = [] %}

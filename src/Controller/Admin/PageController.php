@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller\Admin;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Page;
@@ -84,6 +85,12 @@ class PageController extends AdminBaseController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                if ($page->isPublic() && $page->getPublishedAt() === null) {
+                    $page->setPublishedAt(new DateTimeImmutable());
+                } elseif (!$page->isPublic()) {
+                    $page->setPublishedAt(null);
+                }
+
                 $em->persist($page);
                 $em->flush();
 

@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller\Admin\Api\Web;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
 use Sovic\Cms\Entity\Page;
@@ -45,6 +46,12 @@ class PageController extends AbstractBaseApiController
 
         if ($field === 'is_public') {
             $page->setIsPublic($state);
+            if ($page->isPublic() && $page->getPublishedAt() === null) {
+                $page->setPublishedAt(new DateTimeImmutable());
+            } elseif (!$page->isPublic()) {
+                $page->setPublishedAt(null);
+            }
+
             $em->flush();
 
             $this->data['value'] = $page->isPublic();
