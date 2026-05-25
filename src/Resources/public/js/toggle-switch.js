@@ -22,31 +22,29 @@
             return;
         }
 
-        const newState = checkbox.checked;
+        const prevState = checkbox.checked;
         checkbox.disabled = true;
 
         axios.post(buildApiUrl(entity, entityId), {
             field: fieldName,
-            state: newState,
+            state: prevState,
         }).then(function (response) {
             const payload = response.data;
             if (payload && payload.status === 'success') {
-                if (payload.data && payload.data.value !== undefined) {
-                    checkbox.checked = payload.data.value;
-                }
-                const labelSpan = checkbox.closest('label').querySelector('.form-check-label[data-switched-label]');
-                if (labelSpan) {
-                    const current = labelSpan.innerHTML;
-                    labelSpan.innerHTML = labelSpan.dataset.switchedLabel;
-                    labelSpan.dataset.switchedLabel = current;
+                const newState = payload.data && payload.data.value !== undefined ? payload.data.value : !prevState;
+                checkbox.checked = newState;
+                const icon = checkbox.closest('label').querySelector('.form-check-label i');
+                if (icon) {
+                    icon.classList.toggle('text-success', newState);
+                    icon.classList.toggle('text-warning', !newState);
                 }
             } else {
                 console.error('[toggle-switch] Toggle failed', payload);
-                checkbox.checked = !newState;
+                checkbox.checked = !prevState;
             }
         }).catch(function (error) {
             console.error('[toggle-switch] Request error', error);
-            checkbox.checked = !newState;
+            checkbox.checked = !prevState;
         }).finally(function () {
             checkbox.disabled = false;
         });

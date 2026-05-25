@@ -1,4 +1,4 @@
-{% macro switch(id, label, checked, title = null, field = null, switched_label = null) %}
+{% macro switch(id, icon_class, switched_icon_class, checked, title = null, field = null) %}
     {% if title %}
         <span title="{{ title }}">
     {% endif %}
@@ -10,9 +10,15 @@
                 {{ field ? 'data-field=' ~ field : '' }}
                 {{ checked ? 'checked' : '' }}
         >
-        <span class="form-check-label fw-semibold text-muted"
-              {{ switched_label is not null ? 'data-switched-label="' ~ switched_label|e('html_attr') ~ '"' : '' }}>
-            {{ label|raw }}
+        {% if checked %}
+            {% set icon_class = icon_class ~ ' text-success' %}
+        {% else %}
+            {% set icon_class = icon_class ~ ' text-warning' %}
+        {% endif %}
+        <span class="form-check-label fw-semibold text-muted d-flex d-inline-block">
+            {% if icon_class %}
+                <i class="{{ icon_class }} fs-3 ms-1 me-4 m-0 p-0"></i>
+            {% endif %}
         </span>
     </label>
     {% if title %}

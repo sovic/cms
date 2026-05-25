@@ -37,13 +37,13 @@
             {% if is_group_actions_enabled %}
                 {{ data_list.checkbox_all() }}
             {% endif %}
-            <th class="min-w-300px" data-dt-column="1">
+            <th class="min-w-350px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
             <th class="text-end min-w-150px" data-dt-column="2">
                 <span class="dt-column-title">Publikováno</span>
             </th>
-            <th class="text-end min-w-125px" data-dt-column="3" aria-label="Akce">
+            <th class="text-end min-w-150px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>
@@ -73,9 +73,7 @@
                     <div class="{{ theme.toggle_switch_class }}"
                          data-entity="page"
                          data-entity-id="{{ page.id }}">
-                        {% set toggle_icon = '<i class="bi bi-check-circle-fill ' ~ (page.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-2"></i>' %}
-                        {% set toggle_icon_switched = '<i class="bi bi-check-circle-fill ' ~ (page.isPublic ? 'text-warning' : 'text-success') ~ ' fs-3 ms-1 me-2"></i>' %}
-                        {{ form_macro.switch('page_is_public_' ~ page.id, toggle_icon, page.isPublic, null, 'is_public', toggle_icon_switched) }}
+                        {{ form_macro.switch('page_is_public_' ~ page.id, 'bi bi-check-circle-fill', 'bi bi-check-circle-fill', page.isPublic, null, 'is_public') }}
                     </div>
                 </td>
                 <td class="text-end">

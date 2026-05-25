@@ -49,9 +49,7 @@
                     <div class="{{ theme.toggle_switch_class }}"
                          data-entity="menu-item"
                          data-entity-id="{{ item.id }}">
-                        {% set icon = '<i class="bi bi-check-circle-fill ' ~ (item.isPublic ? 'text-success' : 'text-warning') ~ ' fs-3 ms-1 me-4"></i>' %}
-                        {% set icon_switched = '<i class="bi bi-check-circle-fill ' ~ (item.isPublic ? 'text-warning' : 'text-success') ~ ' fs-3 ms-1 me-4"></i>' %}
-                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, icon, item.isPublic, null, 'is_public', icon_switched) }}
+                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, 'bi bi-check-circle-fill', 'bi bi-check-circle-fill', item.isPublic, null, 'is_public') }}
                     </div>
                     {% if item.visibility %}
                         {% if item.visibility == 'auth' %}

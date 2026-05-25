@@ -98,7 +98,7 @@
                     <div class="{{ theme.toggle_switch_class }}"
                          data-entity="post"
                          data-entity-id="{{ post.id }}">
-                        {{ form_macro.switch('post_is_published_' ~ post.id, 'Publikovaný', post.is_published, null, 'is_published') }}
+                        {{ form_macro.switch('post_is_published_' ~ post.id, 'bi bi-check-circle-fill', 'bi bi-check-circle-fill', post.is_published, null, 'is_published') }}
                     </div>
                 </td>
                 <td class="text-end">
