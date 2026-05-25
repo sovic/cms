@@ -118,6 +118,14 @@
                         'class': 'text-primary',
                         'icon': 'ki-duotone ki-pencil',
                     },
+                    {
+                        'url': '#',
+                        'title': 'Smazat',
+                        'method': 'menu-item/' ~ item.id ~ '/delete',
+                        'confirm': 'Opravdu chcete smazat tuto položku?',
+                        'btn_class': 'btn-active-light-danger action-button',
+                        'icon': 'ki-duotone ki-trash',
+                    },
                 ]) %}
                 {{ data_list.actions_icons(actions) }}
             </td>
@@ -167,7 +175,7 @@
             <th class="min-w-200px" data-dt-column="3">
                 <span class="dt-column-title">Odkaz</span>
             </th>
-            <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce">
+            <th class="text-end min-w-125px" data-dt-column="4" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>

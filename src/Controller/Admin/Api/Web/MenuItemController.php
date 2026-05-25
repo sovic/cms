@@ -5,10 +5,12 @@ namespace Sovic\Cms\Controller\Admin\Api\Web;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
 use Sovic\Cms\Entity\MenuItem;
+use Sovic\Cms\Menu\MenuCacheableData;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class MenuItemController extends AbstractBaseApiController
 {
@@ -17,6 +19,55 @@ class MenuItemController extends AbstractBaseApiController
     private const ToggleableFields = [
         'is_public',
     ];
+
+    #[Route(
+        '/admin/api/web/menu-item/{id}/delete',
+        name: 'admin:api:web:menu-item:delete',
+        requirements: ['id' => '\d+'],
+        methods: ['POST'],
+    )]
+    public function deleteItem(
+        int                    $id,
+        CacheInterface         $cache,
+        EntityManagerInterface $em,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $menuItem = $em->getRepository(MenuItem::class)->find($id);
+        if ($menuItem === null) {
+            return $this->sendFail(404);
+        }
+
+        $allItems = $em->getRepository(MenuItem::class)->findAll();
+        $toDelete = $this->collectDescendants($allItems, $id);
+        $toDelete[] = $menuItem;
+
+        foreach ($toDelete as $item) {
+            $em->remove($item);
+        }
+        $em->flush();
+
+        (new MenuCacheableData($cache, $em))->warmUp();
+
+        return $this->sendSuccess();
+    }
+
+    /**
+     * @param MenuItem[] $allItems
+     * @return MenuItem[]
+     */
+    private function collectDescendants(array $allItems, int $parentId): array
+    {
+        $descendants = [];
+        foreach ($allItems as $item) {
+            if ($item->getParentId() === $parentId) {
+                $descendants[] = $item;
+                $descendants = array_merge($descendants, $this->collectDescendants($allItems, $item->getId()));
+            }
+        }
+
+        return $descendants;
+    }
 
     #[Route(
         '/admin/api/web/menu-item/{id}/move',
@@ -109,6 +160,7 @@ class MenuItemController extends AbstractBaseApiController
         if ($field === 'is_public') {
             $menuItem->setIsPublic($state);
             $em->flush();
+
             $this->data['value'] = $menuItem->isPublic();
 
             return $this->sendSuccess();
