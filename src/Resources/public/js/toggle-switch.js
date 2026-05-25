@@ -34,6 +34,12 @@
                 if (payload.data && payload.data.value !== undefined) {
                     checkbox.checked = payload.data.value;
                 }
+                const labelSpan = checkbox.closest('label').querySelector('.form-check-label[data-switched-label]');
+                if (labelSpan) {
+                    const current = labelSpan.innerHTML;
+                    labelSpan.innerHTML = labelSpan.dataset.switchedLabel;
+                    labelSpan.dataset.switchedLabel = current;
+                }
             } else {
                 console.error('[toggle-switch] Toggle failed', payload);
                 checkbox.checked = !newState;
