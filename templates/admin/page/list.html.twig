@@ -8,7 +8,7 @@
 
 {% set allow_add = true %}
 {% set is_search_enabled = true %}
-{% set is_filters_enabled = false %}
+{% set is_filters_enabled = true %}
 {% set is_group_actions_enabled = false %}
 
 {% block data_list_title %}
@@ -23,6 +23,14 @@
             Nová stránka
         </a>
     {% endif %}
+{% endblock %}
+
+{% block filters %}
+    {{ data_list.list_filter_enum_select('Viditelnost', 'visibility', [
+        {value: 'all', trans: 'Vše'},
+        {value: 'public', trans: 'Publikováno'},
+        {value: 'private', trans: 'Nepublikováno'},
+    ], visibility) }}
 {% endblock %}
 
 {% block javascripts %}

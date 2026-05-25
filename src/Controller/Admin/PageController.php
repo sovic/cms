@@ -44,7 +44,10 @@ class PageController extends AdminBaseController
 
         $sr = $factory->createFromRequest($request);
         $sr->setPaginationRoute('admin:page:list');
-        $sr->setVisibilityId(VisibilityId::All);
+
+        if (!$request->query->has('visibility')) {
+            $sr->setVisibilityId(VisibilityId::All);
+        }
 
         /** @var PageRepository $repo */
         $repo = $em->getRepository(Page::class);
@@ -53,7 +56,7 @@ class PageController extends AdminBaseController
 
         $this->assign('pages', $pages);
         $this->assign('pagination', $sr->getPagination($total));
-        $this->assign('query', $sr->toArray());
+        $this->assign('query', array_merge($sr->toArray(), ['visibility' => $sr->getVisibilityId()->value]));
 
         return $this->render('@CmsBundle/admin/page/list.html.twig');
     }
