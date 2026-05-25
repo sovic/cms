@@ -131,6 +131,11 @@ class MenuItemController extends AdminBaseController
 
                 (new MenuCacheableData($cache, $em))->warmUp();
 
+                try {
+                    $this->addFlash('success', 'Uloženo');
+                } catch (Throwable) {
+                }
+
                 return $this->redirectToRoute('admin:menu:edit', ['id' => $menuItem->getId()]);
             }
 
