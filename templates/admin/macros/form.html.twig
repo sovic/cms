@@ -1,5 +1,5 @@
-{% macro switch(id, icon_class, switched_icon_class, checked, title = null, field = null) %}
-    {% if title %}
+{% macro switch(id, title, checked, icon_class = null, switched_icon_class = null, field = null) %}
+    {% if icon_class %}
         <span title="{{ title }}">
     {% endif %}
     <label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
@@ -10,18 +10,22 @@
                 {{ field ? 'data-field=' ~ field : '' }}
                 {{ checked ? 'checked' : '' }}
         >
-        {% if checked %}
-            {% set icon_class = icon_class ~ ' text-success' %}
-        {% else %}
-            {% set icon_class = icon_class ~ ' text-warning' %}
+        {% if icon_class %}
+            {% if checked %}
+                {% set icon_class = icon_class ~ ' text-success' %}
+            {% else %}
+                {% set icon_class = icon_class ~ ' text-muted' %}
+            {% endif %}
         {% endif %}
         <span class="form-check-label fw-semibold text-muted d-flex d-inline-block">
             {% if icon_class %}
                 <i class="{{ icon_class }} fs-3 ms-1 me-4 m-0 p-0"></i>
+            {% else %}
+                {{ title }}
             {% endif %}
         </span>
     </label>
-    {% if title %}
+    {% if icon_class %}
         </span>
     {% endif %}
 {% endmacro %}
