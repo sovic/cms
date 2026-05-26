@@ -49,7 +49,7 @@
                     <div class="{{ theme.toggle_switch_class }}"
                          data-entity="menu-item"
                          data-entity-id="{{ item.id }}">
-                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, 'bi bi-check-circle-fill', 'bi bi-check-circle-fill', item.isPublic, null, 'is_public') }}
+                        {{ form_macro.switch('menu_item_is_public_' ~ item.id, 'is_public', 'Publikováno', item.isPublic, 'bi bi-check-circle-fill') }}
                     </div>
                     {% if item.visibility %}
                         {% if item.visibility == 'auth' %}

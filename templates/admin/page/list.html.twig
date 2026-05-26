@@ -81,7 +81,7 @@
                     <div class="{{ theme.toggle_switch_class }}"
                          data-entity="page"
                          data-entity-id="{{ page.id }}">
-                        {{ form_macro.switch('page_is_public_' ~ page.id, 'bi bi-check-circle-fill', 'bi bi-check-circle-fill', page.isPublic, null, 'is_public') }}
+                        {{ form_macro.switch('page_is_public_' ~ page.id, 'is_public', 'Publikováno', page.isPublic, 'bi bi-check-circle-fill') }}
                     </div>
                 </td>
                 <td class="text-end">

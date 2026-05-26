@@ -56,7 +56,7 @@
                         <div class="{{ theme.toggle_switch_class }}"
                              data-entity="setting"
                              data-entity-id="{{ s.id }}">
-                            {{ form_macro.switch('setting_value_' ~ s.id, null, s.value, null, 'value') }}
+                            {{ form_macro.switch('setting_value_' ~ s.id, 'value', null, s.value) }}
                         </div>
                     {% else %}
                         <div style="max-height: 80px; overflow: scroll;">
