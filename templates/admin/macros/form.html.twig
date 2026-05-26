@@ -1,4 +1,4 @@
-{% macro switch(id, title, checked, icon_class = null, switched_icon_class = null, field = null) %}
+{% macro switch(id, field, title, checked, icon_class = null) %}
     {% if icon_class %}
         <span title="{{ title }}">
     {% endif %}
@@ -7,7 +7,7 @@
                type="checkbox"
                id="{{ id }}"
                autocomplete="off"
-                {{ field ? 'data-field=' ~ field : '' }}
+               data-field="{{ field }}"
                 {{ checked ? 'checked' : '' }}
         >
         {% if icon_class %}
