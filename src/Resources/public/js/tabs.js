@@ -15,6 +15,12 @@
             history.pushState(null, '', '#' + tabId);
             updateHideExceptTab(tabId);
             window.scrollTo({top: 0, behavior: 'instant'});
+
+            const pane = document.querySelector(target);
+            const firstCollapse = pane && pane.querySelector('.accordion-collapse');
+            if (firstCollapse) {
+                bootstrap.Collapse.getOrCreateInstance(firstCollapse, {toggle: false}).show();
+            }
         });
 
         function activateTabFromHash(hash) {

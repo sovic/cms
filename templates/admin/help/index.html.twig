@@ -1,0 +1,85 @@
+{% extends '@CmsBundle/admin/layout/admin.html.twig' %}
+
+{% block title %}Nápověda{% endblock %}
+
+{% block content %}
+    <div class="app-container container-fluid">
+        <div class="py-5">
+            <h1 class="fw-bold mb-7">Nápověda</h1>
+
+            {# Tab navigation #}
+            <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6" id="help-tabs">
+                {% for section in sections %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if loop.first %}active{% endif %}"
+                           data-bs-toggle="tab"
+                           data-bs-target="#tab-{{ section.value }}"
+                           href="#tab-{{ section.value }}">
+                            {{ section.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            {# Tab content #}
+            <div class="tab-content">
+                {% for section in sections %}
+                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}"
+                         id="tab-{{ section.value }}">
+
+                        {% if section.template %}
+                            {% include section.template %}
+                        {% else %}
+                            {{ block('faq') }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block faq %}
+    <div class="accordion" id="accordion-{{ section.value }}">
+        {% for item in section.items %}
+            {% set item_id = 'item-' ~ section.value ~ '-' ~ loop.index %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-{{ item_id }}">
+                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %} fs-5 fw-bold text-dark"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#{{ item_id }}"
+                            aria-expanded="{{ loop.first ? 'true' : 'false' }}"
+                            aria-controls="{{ item_id }}">
+                        <i class="ki-outline ki-question-2 fs-3 me-3 text-primary"></i>
+                        {{ item.question|raw }}
+                    </button>
+                </h2>
+                <div id="{{ item_id }}"
+                     class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                     aria-labelledby="heading-{{ item_id }}"
+                     data-bs-parent="#accordion-{{ section.value }}">
+                    <div class="accordion-body text-gray-700 ps-14">
+                        {{ item.answer|raw }}
+                        {% if item.links is defined and item.links|length > 0 %}
+                            <div class="mt-3 d-flex flex-wrap gap-2">
+                                {% for link in item.links %}
+                                    <a href="{{ path(link.route, link.params) }}"
+                                       class="btn btn-sm btn-light-primary">
+                                        <i class="ki-outline ki-arrow-right fs-5"></i>
+                                        {{ link.label }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
+{% endblock %}
