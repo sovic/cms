@@ -44,7 +44,7 @@ class EmailSettingsGeneralForm extends AbstractType
                 'attr' => [
                     'rows' => 6,
                 ],
-                'help' => 'Text zobrazený v patičce e-mailu. Může obsahovat HTML.',
+                'help' => 'Text zobrazený v patičce e-mailu. Povolené HTML tagy: <br>, <strong>, <a>.',
             ]
         );
 

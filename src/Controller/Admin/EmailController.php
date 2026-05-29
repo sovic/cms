@@ -176,10 +176,14 @@ class EmailController extends AdminBaseController
                     MailerSettingKey::EmailSignature,
                 ];
                 foreach ($keys as $key) {
+                    $value = $data[$key->getFormField()] ?? '';
+                    if ($key === MailerSettingKey::EmailSignature) {
+                        $value = strip_tags($value, ['br', 'strong', 'a']);
+                    }
                     $this->persistSettingValue(
                         SettingGroupId::Mailer,
                         $key->getFormField(),
-                        $data[$key->getFormField()] ?? '',
+                        $value,
                         null,
                         $key->getDescription(),
                     );
