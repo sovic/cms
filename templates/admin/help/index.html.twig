@@ -27,7 +27,7 @@
                     <div class="tab-pane fade {% if loop.first %}show active{% endif %}"
                          id="tab-{{ section.value }}">
 
-                        {% if section.template %}
+                        {% if section.template is defined and section.template is not empty %}
                             {% include section.template %}
                         {% else %}
                             {{ block('faq') }}
