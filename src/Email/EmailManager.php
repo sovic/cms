@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Sovic\Cms\Email\Model\EmailModelInterface;
 use Sovic\Cms\Entity\Email;
 use Sovic\Cms\Entity\EmailLog;
+use Sovic\Common\Project\Settings;
 use Sovic\Common\Validator\EmailValidator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -19,6 +20,7 @@ class EmailManager implements EmailManagerInterface
     protected EmailThemeInterface $emailTheme;
     protected EntityManagerInterface $em;
     protected MailerInterface $mailer;
+    protected Settings $settings;
 
     #[Required]
     public function setEntityManager(EntityManagerInterface $em): void
@@ -36,6 +38,12 @@ class EmailManager implements EmailManagerInterface
     public function setTheme(EmailThemeInterface $theme): void
     {
         $this->emailTheme = $theme;
+    }
+
+    #[Required]
+    public function setSettings(Settings $settings): void
+    {
+        $this->settings = $settings;
     }
 
     public function send(
@@ -131,8 +139,10 @@ class EmailManager implements EmailManagerInterface
         $data['subject'] = $subject;
         $data['theme'] = $theme->getTheme();
         $data['recipient_email'] = $emailTo;
-        if (!empty($data['email_signature'])) {
-            $data['email_signature'] = $theme->getFormattedFooterHtml($data['email_signature']);
+
+        $emailSignature = $this->settings->get('mailer', 'email_signature');
+        if (!empty($emailSignature)) {
+            $data['email_signature'] = $theme->getFormattedFooterHtml($emailSignature);
         }
 
         $senderAddress = null;
