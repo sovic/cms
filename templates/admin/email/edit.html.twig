@@ -2,11 +2,12 @@
 {% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.default.card_class }}">
-            {{ form_macro.card_header(theme, 'Editace šablony') }}
+            {{ form_macro.card_header(theme, icons.back_to_list(path('admin:email:list')) ~ 'Editace šablony', '') }}
 
             <div class="card-body">
                 {{ block('edit_form') }}
