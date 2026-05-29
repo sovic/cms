@@ -1,10 +1,66 @@
+<!DOCTYPE html>
 <!--suppress CssRedundantUnit, HtmlDeprecatedAttribute, CssReplaceWithShorthandSafely, CssUnknownProperty, CssUnusedSymbol -->
-<html style="margin: 0; padding: 0;" lang="cs">
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style media="all" type="text/css">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>{{ subject }}</title>
+
+    <!-- Makes background images in 72ppi Outlook render at correct size -->
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
+
+    <!-- Outlook font fallback: Word renderer ignores web fonts -->
+    <!--[if mso]>
+    <style>
+        * { font-family: sans-serif !important; }
+    </style>
+    <![endif]-->
+
+    <style type="text/css">
+        /* Reset */
+        html, body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Outlook table spacing */
+        table, td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            margin: 0 auto !important;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
         /* -------------------------------------
             BUTTONS
         ------------------------------------- */
@@ -29,7 +85,7 @@
 
         .btn a {
             background-color: #ffffff;
-            border: solid 1px{{ theme.primary_color }};
+            border: solid 1px {{ theme.primary_color }};
             border-radius: 5px;
             box-sizing: border-box;
             color: {{ theme.primary_color }};
@@ -38,7 +94,7 @@
             font-size: 14px;
             font-weight: bold;
             margin: 0;
-            padding: 10px 25px 10px 25px;
+            padding: 10px 25px;
             text-decoration: none;
         }
 
@@ -60,109 +116,190 @@
             background-color: {{ theme.secondary_color }} !important;
             border-color: {{ theme.secondary_color }} !important;
         }
+
+        /* -------------------------------------
+            CONTENT ELEMENTS
+            Common styles for HTML written in admin email templates.
+            Most email clients support <style> tags; for maximum
+            compatibility with Gmail (which strips <style> in some
+            contexts) prefer inline styles when writing templates.
+        ------------------------------------- */
+
+        /* Horizontal rule */
+        hr {
+            border: 0;
+            border-top: 1px solid #e9eaed;
+            margin: 24px 0;
+        }
+
+        /* Paragraphs */
+        p {
+            margin: 0 0 16px;
+        }
+
+        /* Headings */
+        h1, h2, h3, h4 {
+            font-weight: bold;
+            line-height: 1.3;
+            margin: 0 0 16px;
+        }
+
+        h1 { font-size: 28px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
+        h4 { font-size: 16px; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* Blockquote */
+        blockquote {
+            border-left: 4px solid {{ theme.primary_color }};
+            color: #555555;
+            margin: 0 0 16px;
+            padding: 8px 16px;
+        }
+
+        /* Inline code / preformatted */
+        pre, code {
+            background-color: #f4f4f4;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        code {
+            padding: 2px 5px;
+        }
+
+        pre {
+            margin: 0 0 16px;
+            padding: 12px 16px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Content links */
+        .content a {
+            color: {{ theme.primary_color }};
+            text-decoration: underline;
+        }
     </style>
-    <title>{{ subject }}</title>
 </head>
 
 {% if content_wrapper is not defined %}
-    {% set content_wrapper = 'container' %}
+    {% set content_wrapper = '' %}
 {% endif %}
 
-{% if content_wrapper == 'container' %}
-    {% set container_style = 'box-sizing: border-box; display: block; font-family: ' ~ theme.font_family ~ '; font-size: 1rem; margin: 0 auto; max-width: 600px; padding-left: 0.75rem; padding-right: 0.75rem; vertical-align: top; width: auto;' %}
-{% else %}
-    {% set container_style = 'box-sizing: border-box; display: block; font-family: ' ~ theme.font_family ~ '; font-size: 1rem; margin: 0 auto; vertical-align: top; width: auto;' %}
-{% endif %}
-<body style="-ms-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; font-family: {{ theme.font_family }}; font-size: 1rem; height: 100%; line-height: 1.5; margin: 0; padding: 0; width: 100%;">
-<table class="main"
-       style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding-bottom: 2rem; padding-top: 2rem; width: 100%;">
-    <tr>
-        <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-            valign="top"></td>
-        <td class="container"
-            style="{{ container_style }}"
-            valign="top">
-        <span class="visually-hidden"
-              style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; mso-hide: all; opacity: 0; overflow: hidden; visibility: hidden; width: 0;">
-            {{ subject }}</span>
-            <table class="mb-6" cellpadding="0" cellspacing="0"
-                   style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; margin-bottom: 1rem; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                <tr>
-                    <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-                        valign="top">
-                        <img src="{{ email.image('@images/' ~ email_logo_path) }}" height="60"
-                             alt="{{ email_signature is defined and email_signature is not empty ? email_signature : subject }}"
-                             style="-ms-interpolation-mode: bicubic; min-width: 40px; max-height: 60px;">
-                    </td>
-                </tr>
-            </table>
+<body style="-ms-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; font-family: {{ theme.font_family }}; font-size: 16px; height: 100%; line-height: 1.5; margin: 0; mso-line-height-rule: exactly; padding: 32px 0; width: 100%;">
+<center style="width: 100%;">
+    <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr><td>
+    <![endif]-->
 
-            <table cellpadding="0" cellspacing="0"
-                   style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                <tr>
-                    <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-                        valign="top">
-                        <table cellpadding="0" cellspacing="0"
-                               style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                            <tr>
-                                <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-                                    valign="top">
-                                    {{ body|raw }}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <table cellpadding="0" cellspacing="0"
-                   style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                <tr>
-                    <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-                        valign="top">
-                        <table class="divider " cellpadding="0" cellspacing="0"
-                               style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding-bottom: 2rem; padding-top: 2rem; width: 100%;">
-                            <tr>
-                                <td class="border-style-"
-                                    style="border-top: 1px solid #e9eaed; box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 0; height: 1px; line-height: 0; margin: 0; padding: 0; vertical-align: top;"
-                                    valign="top"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <table cellpadding="0" cellspacing="0"
-                   style="border-collapse: separate; border-spacing: 0; box-sizing: border-box; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                <tr>
-                    <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-                        valign="top">
-                        <p class="fs-sm text-body-secondary mb-0"
-                           style="{{ theme.footer_link_style }}">
-                            {% if recipient_email is defined %}
-                                Tento e-mail je určen pro:
-                                <a style="{{ theme.footer_link_style }}"
-                                   href="mailto:{{ recipient_email }}">{{ recipient_email }}</a>.
-                                <br>
-                            {% endif %}
-                            {% if unsubscribe_url is defined and unsubscribe_url is not empty %}
-                                Pokud si nepřejete dostávat další e-maily, můžete se
-                                <a style="{{ theme.footer_link_style }}" href="{{ unsubscribe_url }}">odhlásit zde</a>.
-                                <br>
-                            {% endif %}
-                            {% if email_signature is defined and email_signature is not empty %}
-                                {% set email_signature = email_signature|replace({'<a ': '<a style="' ~ theme.footer_link_style ~ '" '}) %}
-                                {{ email_signature|raw }} ©{{ "now"|date("Y") }}
-                            {% else %}
-                                ©{{ "now"|date("Y") }}
-                            {% endif %}
-                        </p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td style="box-sizing: border-box; font-family: {{ theme.font_family }}; font-size: 1rem; vertical-align: top;"
-            valign="top"></td>
-    </tr>
-</table>
+    {% if content_wrapper == 'container' %}
+        <div style="max-width: 600px; margin: 0 auto;">
+            <!--[if mso]>
+            <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+            <tr><td>
+            <![endif]-->
+    {% else %}
+        <div style="margin: 0 auto;">
+            <!--[if mso]>
+            <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr><td>
+            <![endif]-->
+    {% endif %}
+
+        <!-- Visually Hidden Preheader -->
+        <div style="display: none; max-height: 0; mso-hide: all; overflow: hidden;">{{ subject }}</div>
+
+        <!-- Logo : BEGIN -->
+        <table align="center" role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td style="font-family: {{ theme.font_family }}; font-size: 16px; vertical-align: top;" valign="top">
+                    <img src="{{ email.image('@images/' ~ email_logo_path) }}"
+                         height="60"
+                         alt="{{ (email_signature is defined and email_signature is not empty ? email_signature : subject)|striptags }}"
+                         border="0"
+                         style="-ms-interpolation-mode: bicubic; display: block; height: 60px; max-height: 60px; min-width: 40px; width: auto;">
+                </td>
+            </tr>
+            <tr>
+                <td aria-hidden="true" height="16" style="font-size: 0; line-height: 0;">&nbsp;</td>
+            </tr>
+        </table>
+        <!-- Logo : END -->
+
+        <!-- Body : BEGIN -->
+        <table align="center" role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td style="font-family: {{ theme.font_family }}; font-size: 16px; vertical-align: top;" valign="top">
+                    {{ body|raw }}
+                </td>
+            </tr>
+        </table>
+        <!-- Body : END -->
+
+        <!-- Divider : BEGIN -->
+        <table align="center" role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td aria-hidden="true" height="32" style="font-size: 0; line-height: 0;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="border-top: 1px solid #e9eaed; font-size: 0; height: 1px; line-height: 0; padding: 0;"
+                    height="1">&nbsp;</td>
+            </tr>
+            <tr>
+                <td aria-hidden="true" height="32" style="font-size: 0; line-height: 0;">&nbsp;</td>
+            </tr>
+        </table>
+        <!-- Divider : END -->
+
+        <!-- Footer : BEGIN -->
+        <table align="center" role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td style="font-family: {{ theme.font_family }}; font-size: 16px; vertical-align: top;" valign="top">
+                    <p style="{{ theme.footer_link_style }}">
+                        {% if recipient_email is defined %}
+                            Tento e-mail je určen pro:
+                            <a style="{{ theme.footer_link_style }}"
+                               href="mailto:{{ recipient_email }}">{{ recipient_email }}</a>.<br>
+                        {% endif %}
+                        {% if unsubscribe_url is defined and unsubscribe_url is not empty %}
+                            Pokud si nepřejete dostávat další e-maily, můžete se
+                            <a style="{{ theme.footer_link_style }}"
+                               href="{{ unsubscribe_url }}">odhlásit zde</a>.<br>
+                        {% endif %}
+                        {% if email_signature is defined and email_signature is not empty %}
+                            {% set email_signature = email_signature|replace({'<a ': '<a style="' ~ theme.footer_link_style ~ '" '}) %}
+                            {{ email_signature|raw }}
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <!-- Footer : END -->
+
+        <!--[if mso]>
+        </td></tr>
+        </table>
+        <![endif]-->
+    </div>
+
+    <!--[if mso | IE]>
+    </td></tr>
+    </table>
+    <![endif]-->
+</center>
 </body>
 
 </html>
