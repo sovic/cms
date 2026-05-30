@@ -28,8 +28,8 @@ Renders a collapsible sidebar group with sub-items.
 @param string current_route Current active route name (from `menu` variable)
 #}
 {% macro menu_group(icon, title, items, current_route) %}
-    {% set current_ns = current_route|split(':')[1] ?? '' %}
-    {% set is_active = current_route in items|map(i => i.route) or (current_ns and current_ns in items|map(i => i.route|split(':')[1] ?? '')) %}
+    {% set current_ns = (current_route|split(':')[1]) ?? '' %}
+    {% set is_active = current_route in items|map(i => i.route) or (current_ns and current_ns in items|map(i => (i.route|split(':')[1]) ?? '')) %}
     <div data-kt-menu-trigger="click"
          class="menu-item menu-accordion{% if is_active %} show{% endif %}">
         <span class="menu-link">
