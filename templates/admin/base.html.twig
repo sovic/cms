@@ -1,17 +1,4 @@
 {% import '@CmsBundle/admin/macros/layout.html.twig' as layout %}
-{% set theme = {
-    default: {
-        card_class: 'card card-flush card-bleed shadow-light-lg mb-6 mb-lg-9',
-        card_header_class: 'card-header align-items-center py-5 gap-2 gap-md-5',
-        filters_item_class: 'py-2',
-        table_class: 'table table-row-dashed align-middle gy-5',
-        tbody_class: 'fs-6 fw-semibold',
-        thead_tr_class: 'text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0',
-        btn_action_sm_class: 'btn btn-sm btn-flex btn-light-primary shadow-sm',
-        btn_list_sm_class: 'btn btn-sm btn-light btn-flex btn-center btn-active-light-primary',
-        toggle_switch_class: 'js-toggle-switch d-inline-flex align-items-center bg-light rounded-1 mt-2 px-2 py-1',
-    }
-} %}
 {% if theme_mode is not defined %}
     {% set theme_mode = 'light' %}
 {% endif %}

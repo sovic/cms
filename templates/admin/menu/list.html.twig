@@ -1,6 +1,7 @@
 {% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block title %}Menu{% endblock %}
 
@@ -24,9 +25,9 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.default.table_class }} dataTable">
+    <table class="{{ theme.table_class }} dataTable">
         <thead>
-        <tr class="{{ theme.default.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class }}" role="row">
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
@@ -35,7 +36,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.default.tbody_class }}">
+        <tbody class="{{ theme.tbody_class }}">
         {% for item in items %}
             {% set list_url = path('admin:menu:list:position', {'position': item.position}) %}
             <tr>

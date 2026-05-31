@@ -1,6 +1,7 @@
 {% extends '@CmsBundle/admin/layout/admin.html.twig' %}
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% if query is not defined %}
     {% set query = {} %}
@@ -24,8 +25,8 @@
 {% block content %}
     <div class="app-container container-fluid">
         <form method="get" id="search" class="border-0">
-            <div class="{{ theme.default.card_class }}">
-                <div class="{{ theme.default.card_header_class }}">
+            <div class="{{ theme.card_class }}">
+                <div class="{{ theme.card_header_class }}">
                     <div class="card-title">
                         {% if is_search_enabled %}
                             {{ data_list.list_header_search(search) }}
