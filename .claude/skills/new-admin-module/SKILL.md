@@ -398,57 +398,61 @@ class {Name}Controller extends AdminBaseController
 
 ```twig
 {% extends '@CmsBundle/admin/layout/admin.html.twig' %}
-
 {% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
-
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
-{% block title %}{{ editing ? 'Upravit záznam' : 'Nový záznam' }}{% endblock %}
-
 {% block content %}
-    <div class="d-flex align-items-center mb-5 gap-3">
-        {{ icons.back_to_list(path('admin:{names}:list')) }}
-        <h1 class="mb-0">{{ editing ? 'Upravit záznam' : 'Nový záznam' }}</h1>
-    </div>
+    <div class="app-container container">
+        <div class="{{ theme.card_class }}">
+            {{ form_macro.card_header(theme, icons.back_to_list(path('admin:{names}:list')) ~ (editing ? 'Upravit záznam' : 'Nový záznam')) }}
 
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block edit_form %}
     {{ form_start(form) }}
     {{ form_errors(form) }}
 
-    <div class="{{ theme.default.card_class() }}">
-        <div class="{{ theme.default.card_header_class() }}">
-            {{ form_macro.card_header(theme, 'Základní informace') }}
-        </div>
-        <div class="card-body py-5">
+    {{ form_macro.section_header('Základní informace') }}
+    <div class="row">
+        <div class="col-12 col-md-6">
             {{ form_row(form.name) }}
-            {{ form_row(form.isPublic) }}
         </div>
     </div>
 
-    {# Add more card sections for additional field groups #}
+    {# Add more section_header + row blocks for additional field groups #}
 
-    {# Sticky submit bar #}
-    <div class="fixed-bottom bg-white border-top py-3 px-5 d-flex justify-content-end">
-        {{ form_row(form._token) }}
-        {{ form_widget(form.save) }}
+    <div class="{{ theme.form_sticky_bar_class() }}">
+        {% if form._token is defined %}
+            {{ form_row(form._token) }}
+        {% endif %}
+        {{ form_row(form.save) }}
     </div>
+    <div class="mt-n5"></div>
 
-    {{ form_end(form, { render_rest: false }) }}
+    {{ form_end(form, {render_rest: false}) }}
 {% endblock %}
 ```
 
 **Conventions:**
 
 - Always use `@CmsBundle/admin/forms/form-narrow.html.twig` as form theme
-- Group fields into cards with `form_macro.card_header(theme, 'Section Title')`
-- Sticky bottom bar for the submit button
+- Always import `theme.html.twig` as `theme` and use its macros: `theme.card_class`, `theme.card_header_class`, `theme.form_sticky_bar_class()`, etc.
+- Back-to-list: always use `icons.back_to_list(url)` concatenated into the `card_header` title — never use a toolbar button for navigation. Import `icons.html.twig` as `icons`.
+- Card header: `form_macro.card_header(theme, icons.back_to_list(...) ~ 'Page Title')`
+- Group fields with `form_macro.section_header('Section Title')` + a `<div class="row">` block
+- Sticky submit bar uses `theme.form_sticky_bar_class()` macro
 - If module has gallery, add tabs and include `gallery_macro.gallery_tabs_nav(galleries)` /
   `gallery_macro.gallery_tabs_panes(model, entity.id, galleries)` and
   `{% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}`
 - If module has rich text content, import `content_editor` macro and call
   `{{ content_editor.content_editor_basic('#entity_content') }}`
-- Back-to-list link always at top using `icons.back_to_list()`
 
 ---
 
