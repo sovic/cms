@@ -122,7 +122,7 @@ class PageController extends AdminBaseController
         $this->assign('form', $form->createView());
         $this->assign('page', $page);
 
-        return $this->render('@CmsBundle/admin/page/edit.html.twig');
+        return $this->render('@CmsBundle/admin/page/detail.html.twig');
     }
 
     #[Route(

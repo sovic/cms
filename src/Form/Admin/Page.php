@@ -27,8 +27,6 @@ class Page extends AbstractType
     {
         /** @var \Sovic\Cms\Entity\Page $page */
         $page = $builder->getData();
-
-        /** @noinspection PhpUnusedLocalVariableInspection */
         $editing = $page && $this->entityManager->contains($page);
 
         $builder->setMethod('POST');
@@ -79,14 +77,16 @@ class Page extends AbstractType
             ]
         );
 
-        $builder->add(
-            'isPublic',
-            CheckboxType::class,
-            [
-                'label' => 'Publikováno',
-                'required' => false,
-            ]
-        );
+        if (!$editing) {
+            $builder->add(
+                'isPublic',
+                CheckboxType::class,
+                [
+                    'label' => 'Publikováno',
+                    'required' => false,
+                ]
+            );
+        }
 
         $builder->add(
             'lang',
@@ -117,25 +117,27 @@ class Page extends AbstractType
 
         // settings
 
-        $builder->add(
-            'hasToc',
-            CheckboxType::class,
-            [
-                'label' => 'Obsah (TOC)',
-                'required' => false,
-                'getter' => fn(\Sovic\Cms\Entity\Page $page) => $page->hasToc(),
-                'setter' => fn(\Sovic\Cms\Entity\Page $page, bool $value) => $page->setHasToc($value),
-            ]
-        );
+        if (!$editing) {
+            $builder->add(
+                'hasToc',
+                CheckboxType::class,
+                [
+                    'label' => 'Obsah (TOC)',
+                    'required' => false,
+                    'getter' => fn(\Sovic\Cms\Entity\Page $page) => $page->hasToc(),
+                    'setter' => fn(\Sovic\Cms\Entity\Page $page, bool $value) => $page->setHasToc($value),
+                ]
+            );
 
-        $builder->add(
-            'isInSitemap',
-            CheckboxType::class,
-            [
-                'label' => 'Zobrazit v sitemap.xml',
-                'required' => false,
-            ]
-        );
+            $builder->add(
+                'isInSitemap',
+                CheckboxType::class,
+                [
+                    'label' => 'Zobrazit v sitemap.xml',
+                    'required' => false,
+                ]
+            );
+        }
 
         $builder->add(
             'contentType',

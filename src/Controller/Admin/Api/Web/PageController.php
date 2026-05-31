@@ -14,6 +14,8 @@ class PageController extends AbstractBaseApiController
 {
     private const ToggleableFields = [
         'is_public',
+        'is_in_sitemap',
+        'has_toc',
     ];
 
     #[Route(
@@ -55,6 +57,24 @@ class PageController extends AbstractBaseApiController
             $em->flush();
 
             $this->data['value'] = $page->isPublic();
+
+            return $this->sendSuccess();
+        }
+
+        if ($field === 'is_in_sitemap') {
+            $page->setIsInSitemap($state);
+            $em->flush();
+
+            $this->data['value'] = $page->isInSitemap();
+
+            return $this->sendSuccess();
+        }
+
+        if ($field === 'has_toc') {
+            $page->setHasToc($state);
+            $em->flush();
+
+            $this->data['value'] = $page->hasToc();
 
             return $this->sendSuccess();
         }
