@@ -2,6 +2,9 @@
 
 namespace Sovic\Cms\Page;
 
+use Doctrine\ORM\Query\Expr\Join;
+use Sovic\Cms\Entity\PageTag;
+use Sovic\Cms\Entity\Tag as TagEntity;
 use Sovic\Common\Model\AbstractEntityModel;
 use Sovic\Cms\Entity\GalleryModelInterface;
 use Sovic\Cms\Model\Trait\GalleryModelTrait;
@@ -65,6 +68,87 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
         }
 
         return $breadcrumbs;
+    }
+
+    /**
+     * @return TagEntity[]
+     */
+    public function getTags(): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('t');
+        $qb->from(TagEntity::class, 't');
+        $qb->leftJoin(PageTag::class, 'pt', Join::WITH, 't.id = pt.tagId');
+        $qb->where('pt.pageId = :page_id');
+        $qb->setParameter('page_id', $this->getId());
+        $qb->addOrderBy('t.name', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function addTag(TagEntity $tag): void
+    {
+        $em = $this->getEntityManager();
+        $pageTag = $em->getRepository(PageTag::class)->findOneBy(
+            ['pageId' => $this->getId(), 'tagId' => $tag->getId()]
+        );
+        if (!$pageTag) {
+            $pageTag = new PageTag();
+            $pageTag->setPageId($this->getId());
+            $pageTag->setPage($this->entity);
+            $pageTag->setTagId($tag->getId());
+            $pageTag->setTag($tag);
+            $em->persist($pageTag);
+            $em->flush();
+        }
+    }
+
+    public function removeTag(TagEntity $tag): void
+    {
+        $em = $this->getEntityManager();
+        $pageTag = $em->getRepository(PageTag::class)->findOneBy(
+            ['pageId' => $this->getId(), 'tagId' => $tag->getId()]
+        );
+        if ($pageTag) {
+            $em->remove($pageTag);
+            $em->flush();
+        }
+    }
+
+    /**
+     * @param string[] $tagNames
+     */
+    public function syncTagsByNames(array $tagNames): void
+    {
+        $em = $this->getEntityManager();
+
+        $existingPageTags = $em->getRepository(PageTag::class)->findBy(['pageId' => $this->getId()]);
+        $existingTagIds = array_map(fn(PageTag $pt) => $pt->getTagId(), $existingPageTags);
+
+        $newTagEntities = [];
+        if (!empty($tagNames)) {
+            $newTagEntities = $em->getRepository(TagEntity::class)->findBy(['name' => array_values($tagNames)]);
+        }
+        $newTagIds = array_map(fn(TagEntity $t) => $t->getId(), $newTagEntities);
+
+        foreach ($existingPageTags as $pageTag) {
+            if (!in_array($pageTag->getTagId(), $newTagIds, true)) {
+                $em->remove($pageTag);
+            }
+        }
+
+        foreach ($newTagEntities as $tag) {
+            if (!in_array($tag->getId(), $existingTagIds, true)) {
+                $pageTag = new PageTag();
+                $pageTag->setPageId($this->getId());
+                $pageTag->setPage($this->entity);
+                $pageTag->setTagId($tag->getId());
+                $pageTag->setTag($tag);
+                $em->persist($pageTag);
+            }
+        }
+
+        $em->flush();
     }
 
     /**

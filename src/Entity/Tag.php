@@ -31,10 +31,10 @@ class Tag
     protected Project $project;
 
     #[Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
-    protected string $name;
+    protected ?string $name = null;
 
     #[Column(name: 'url_id', type: Types::STRING, length: 100, nullable: true)]
-    protected string $urlId;
+    protected ?string $urlId = null;
 
     #[Column(name: 'is_public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $isPublic = false;
@@ -43,7 +43,7 @@ class Tag
     protected ?string $lang = 'cs';
 
     #[Column(name: 'group_id', type: Types::INTEGER, nullable: true)]
-    protected int $groupId;
+    protected ?int $groupId = null;
 
     public function getId(): int
     {
@@ -65,22 +65,22 @@ class Tag
         $this->project = $project;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
 
-    public function getUrlId(): string
+    public function getUrlId(): ?string
     {
         return $this->urlId;
     }
 
-    public function setUrlId(string $urlId): void
+    public function setUrlId(?string $urlId): void
     {
         $this->urlId = $urlId;
     }
@@ -105,12 +105,12 @@ class Tag
         $this->lang = $lang;
     }
 
-    public function getGroupId(): int
+    public function getGroupId(): ?int
     {
         return $this->groupId;
     }
 
-    public function setGroupId(int $groupId): void
+    public function setGroupId(?int $groupId): void
     {
         $this->groupId = $groupId;
     }
