@@ -22,6 +22,7 @@ use Sovic\Common\Entity\Project;
 #[Table(name: 'page')]
 #[Index(name: 'project_id', columns: ['project_id'])]
 #[Index(name: 'url_id', columns: ['url_id'])]
+#[Index(name: 'group_id', columns: ['group_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PageRepository::class)]
 class Page
@@ -57,8 +58,9 @@ class Page
     #[Column(name: 'lang', length: 5, nullable: true, options: ['default' => null])]
     protected ?string $lang = null;
 
-    #[Column(name: 'group_id', type: Types::INTEGER, nullable: true, options: ['default' => null])]
-    protected ?int $groupId = null;
+    #[ManyToOne(targetEntity: PageGroup::class)]
+    #[JoinColumn(name: 'group_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL', options: ['default' => null])]
+    protected ?PageGroup $pageGroup = null;
 
     #[Column(name: 'toc', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     protected bool $hasToc = false;
@@ -158,14 +160,14 @@ class Page
         $this->lang = $lang;
     }
 
-    public function getGroupId(): ?int
+    public function getPageGroup(): ?PageGroup
     {
-        return $this->groupId;
+        return $this->pageGroup;
     }
 
-    public function setGroupId(?int $groupId): void
+    public function setPageGroup(?PageGroup $pageGroup): void
     {
-        $this->groupId = $groupId;
+        $this->pageGroup = $pageGroup;
     }
 
     public function hasToc(): bool

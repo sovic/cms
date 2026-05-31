@@ -28,12 +28,19 @@
 {% block sidebar %}
     <div class="flex-column flex-lg-row-auto w-100 w-xl-300px mb-10">
         <div class="{{ theme.card_class }}">
-            <div class="card-body pt-15">
+            <div class="card-body pt-15 d-flex flex-column gap-3">
                 {% if editing %}
                     <a class="btn btn-flex btn-sm btn-light-primary w-100" href="/{{ page.urlId }}" target="_blank">
                         <i class="bi bi-globe me-1"></i>
                         Stránka na webu
                     </a>
+                    {% if page.pageGroup %}
+                        <a class="btn btn-flex btn-sm btn-light-info w-100"
+                           href="{{ path('admin:page:list', {'group_id': page.pageGroup.id}) }}">
+                            <i class="bi bi-folder me-1"></i>
+                            {{ page.pageGroup.name }}
+                        </a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -105,14 +112,17 @@
     {{ form_macro.section_header('Základní') }}
 
     <div class="row mb-4">
-        <div class="col-12 col-lg-6">
+        <div class="col-12 col-md-6">
             {{ form_row(form.name) }}
         </div>
         <div class="col-12 col-lg-6">
-            {{ form_row(form.urlId) }}
+            {{ form_row(form.pageGroup) }}
         </div>
-        <div class="col-12">
+        <div class="col-12 col-lg-6">
             {{ form_row(form.heading) }}
+        </div>
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.urlId) }}
         </div>
         {% if not editing %}
             <div class="col-12">
@@ -148,7 +158,7 @@
         </div>
     </div>
 
-    <div class="position-sticky bottom-0 mt-2 py-5 bg-body border-top"
+    <div class="{{ theme.form_sticky_bar_class() }}"
          id="page-sticky-bar"
          data-hide-except-tab="tab-form">
         {% if form._token is defined %}

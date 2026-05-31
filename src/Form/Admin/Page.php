@@ -3,9 +3,11 @@
 namespace Sovic\Cms\Form\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Entity\PageGroup;
 use Sovic\Cms\Form\Admin\Trait\MetaFormTrait;
 use Sovic\Cms\Form\FormTheme;
 use Sovic\Cms\Repository\MenuItemRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -160,6 +162,18 @@ class Page extends AbstractType
                 'attr' => [
                     'length' => 255,
                 ],
+            ]
+        );
+
+        $builder->add(
+            'pageGroup',
+            EntityType::class,
+            [
+                'label' => 'Skupina stránek',
+                'class' => PageGroup::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => '— bez skupiny —',
             ]
         );
 

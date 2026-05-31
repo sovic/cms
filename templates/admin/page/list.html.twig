@@ -7,15 +7,30 @@
 {% block title %}Přehled stránek{% endblock %}
 
 {% set allow_add = true %}
-{% set is_search_enabled = true %}
+{% set is_search_enabled = view == 'pages' %}
 {% set is_filters_enabled = true %}
 {% set is_group_actions_enabled = false %}
 
 {% block data_list_title %}
-    <h2>Stránky</h2>
+    {% if view == 'pages' %}
+        <h2>
+            <a class="text-gray-500 text-hover-primary me-2" href="{{ path('admin:page:list') }}">Stránky</a>
+            <span class="text-gray-400 me-2">/</span>
+            {{ current_group ? current_group.name : 'Nezařazené stránky' }}
+        </h2>
+    {% else %}
+        <h2>Stránky</h2>
+    {% endif %}
 {% endblock %}
 
 {% block add_item %}
+    {% if view == 'groups' %}
+        <a class="btn btn-flex btn-light-primary"
+           href="{{ path('admin:page-group:edit') }}">
+            <i class="ki-outline ki-message-add fs-3"></i>
+            Nová skupina
+        </a>
+    {% endif %}
     {% if allow_add %}
         <a class="btn btn-flex btn-light-primary"
            href="{{ path('admin:page:edit') }}">
@@ -39,6 +54,71 @@
 {% endblock %}
 
 {% block data_list_table %}
+    {% if view == 'groups' %}
+        {{ block('groups_table') }}
+    {% else %}
+        {{ block('pages_table') }}
+    {% endif %}
+{% endblock %}
+
+{% block groups_table %}
+    <table class="{{ theme.table_class }} dataTable">
+        <thead>
+        <tr class="{{ theme.thead_tr_class }}" role="row">
+            <th class="min-w-350px">
+                <span class="dt-column-title">Název skupiny</span>
+            </th>
+            <th class="text-end min-w-100px">
+                <span class="dt-column-title">Stránek</span>
+            </th>
+            <th class="text-end min-w-150px" aria-label="Akce">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.tbody_class }}">
+        {% for group in groups %}
+            <tr>
+                <td>
+                    <a href="{{ path('admin:page:list', {'group_id': group.id}) }}"
+                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                        {{ group.name }}
+                    </a>
+                </td>
+                <td class="text-end">
+                    {{ group_counts[group.id] ?? 0 }}
+                </td>
+                <td class="text-end">
+                    {% set actions = [
+                        {
+                            'url': path('admin:page-group:edit', {'id': group.id}),
+                            'title': 'Upravit',
+                            'class': 'text-primary',
+                            'icon': 'ki-duotone ki-pencil',
+                        },
+                    ] %}
+                    {{ data_list.actions_icons(actions) }}
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>
+                <a href="{{ path('admin:page:list', {'group_id': 0}) }}"
+                   class="text-gray-600 text-hover-primary fs-5 fw-semibold">
+                    Nezařazené stránky
+                </a>
+            </td>
+            <td class="text-end text-muted">
+                {{ unsorted_count }}
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+{% endblock %}
+
+{% block pages_table %}
     <table class="{{ theme.table_class }} dataTable">
         <thead>
         <tr class="{{ theme.thead_tr_class }}" role="row">

@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
 use Sovic\Cms\Entity\Page;
+use Sovic\Cms\Entity\PageGroup;
 use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\DataList\SearchRequestInterface;
 use Sovic\Common\Project\Project;
@@ -51,6 +52,79 @@ class PageRepository extends EntityRepository
         $qb->select('COUNT(p.id)');
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return Page[]
+     */
+    public function findByGroupId(int $groupId, SearchRequestInterface $searchRequest): array
+    {
+        $qb = $this->buildGroupQuery($groupId);
+        $qb->addOrderBy('p.id', 'DESC');
+        $qb->setFirstResult($searchRequest->getOffset());
+        $qb->setMaxResults($searchRequest->getLimit());
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countByGroupId(int $groupId): int
+    {
+        $qb = $this->buildGroupQuery($groupId);
+        $qb->select('COUNT(p.id)');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Returns counts keyed by PageGroup id.
+     *
+     * @param PageGroup[] $groups
+     * @return array<int, int>
+     */
+    public function countPerGroup(array $groups): array
+    {
+        if (empty($groups)) {
+            return [];
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('IDENTITY(p.pageGroup) AS group_id, COUNT(p.id) AS cnt');
+        $qb->from(Page::class, 'p');
+        $qb->where('p.pageGroup IN (:groups)');
+        $qb->setParameter('groups', $groups);
+        $qb->groupBy('p.pageGroup');
+
+        $counts = [];
+        foreach ($qb->getQuery()->getResult() as $row) {
+            $counts[(int) $row['group_id']] = (int) $row['cnt'];
+        }
+
+        return $counts;
+    }
+
+    public function countUnsorted(): int
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('COUNT(p.id)');
+        $qb->from(Page::class, 'p');
+        $qb->where('p.pageGroup IS NULL');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    private function buildGroupQuery(int $groupId): QueryBuilder
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('p')->from(Page::class, 'p');
+
+        if ($groupId === 0) {
+            $qb->where('p.pageGroup IS NULL');
+        } else {
+            $qb->where('IDENTITY(p.pageGroup) = :groupId');
+            $qb->setParameter('groupId', $groupId);
+        }
+
+        return $qb;
     }
 
     private function prepareQueryBuilder(SearchRequestInterface $searchRequest): QueryBuilder
