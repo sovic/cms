@@ -12,11 +12,12 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
+use Sovic\Cms\Repository\TagRepository;
 use Sovic\Common\Entity\Project;
 
 #[Table(name: 'tag')]
 #[Index(name: 'project_id', columns: ['project_id'])]
-#[Entity]
+#[Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
     use PrivateSlugTrait;

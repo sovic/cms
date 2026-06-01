@@ -3,6 +3,7 @@
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/gallery.html.twig' as gallery_macro %}
+{% import '@CmsBundle/admin/macros/tags.html.twig' as tags %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block content %}
@@ -129,6 +130,11 @@
                 {{ form_row(form.isPublic) }}
             </div>
         {% endif %}
+    </div>
+
+    {{ form_macro.section_header('Štítky') }}
+    <div class="row mb-4">
+        {{ tags.tags('page_tags', page_tags) }}
     </div>
 
     {{ form_macro.section_header('Obsah stránky') }}

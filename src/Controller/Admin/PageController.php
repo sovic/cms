@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\PageGroup;
+use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Page\PageFactory;
 use Sovic\Cms\Repository\PageGroupRepository;
 use Sovic\Cms\Repository\PageRepository;
@@ -115,6 +116,14 @@ class PageController extends AdminBaseController
                 $em->persist($page);
                 $em->flush();
 
+                $pageTagsRaw = $request->request->get('page_tags', '');
+                $tagNames = [];
+                if ($pageTagsRaw !== '') {
+                    $pageTagsData = json_decode($pageTagsRaw, true, 512, JSON_THROW_ON_ERROR) ?: [];
+                    $tagNames = array_values(array_filter(array_column($pageTagsData, 'value')));
+                }
+                $pageFactory->loadByEntity($page)->syncTagsByNames($tagNames);
+
                 try {
                     $this->addFlash('success', $t->trans('flash.saved', domain: 'page'));
                 } catch (Throwable) {
@@ -131,14 +140,17 @@ class PageController extends AdminBaseController
 
         $editing = $id > 0;
 
+        $pageTags = [];
         if ($editing && $page->getId() !== null) {
             $model = $pageFactory->loadByEntity($page);
             $this->assignGalleries($model, ['page'], $this->galleryBaseUrl);
+            $pageTags = array_map(static fn(Tag $tag) => $tag->getName(), $model->getTags());
         }
 
         $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
         $this->assign('page', $page);
+        $this->assign('page_tags', $pageTags);
 
         return $this->render('@CmsBundle/admin/page/detail.html.twig');
     }

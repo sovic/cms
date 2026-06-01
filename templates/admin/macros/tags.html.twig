@@ -1,0 +1,60 @@
+{% macro tags(field_name, current_tags) %}
+    {% set input_id = field_name ~ '_tagify' %}
+    <div class="col-12">
+        <label for="{{ input_id }}">
+            <input class="form-control form-control-solid"
+                   type="text"
+                   name="{{ field_name }}"
+                   id="{{ input_id }}"
+                   value="{{ current_tags is defined and current_tags|length > 0 ? current_tags|join(',') : '' }}"/>
+        </label>
+    </div>
+
+    <!--suppress JSUnresolvedReference -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.querySelector('#{{ input_id }}');
+            let controller;
+
+            const tagify = new Tagify(input, {
+                enforceWhitelist: true,
+                maxTags: 10,
+                dropdown: {
+                    maxItems: 20,
+                    classname: 'tagify__inline__suggestions',
+                    enabled: 0,
+                    closeOnSelect: false
+                }
+            });
+
+            function loadSuggestions(q) {
+                controller && controller.abort();
+                controller = new AbortController();
+
+                tagify.whitelist = null;
+                tagify.loading(true).dropdown.hide();
+
+                fetch('/admin/api/web/tag/suggestions?q=' + encodeURIComponent(q), {signal: controller.signal})
+                    .then(function (r) {
+                        return r.json();
+                    })
+                    .then(function (names) {
+                        tagify.whitelist = names;
+                        tagify.loading(false).dropdown.show(q);
+                    })
+                    .catch(function (err) {
+                        if (err.name !== 'AbortError') {
+                            tagify.loading(false);
+                        }
+                    });
+            }
+
+            tagify.on('input', function (e) {
+                loadSuggestions(e.detail.value);
+            });
+            tagify.on('focus', function () {
+                loadSuggestions('');
+            });
+        });
+    </script>
+{% endmacro %}
