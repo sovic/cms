@@ -123,13 +123,13 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
         $em = $this->getEntityManager();
 
         $existingPageTags = $em->getRepository(PageTag::class)->findBy(['pageId' => $this->getId()]);
-        $existingTagIds = array_map(fn(PageTag $pt) => $pt->getTagId(), $existingPageTags);
+        $existingTagIds = array_map(static fn(PageTag $pt) => $pt->getTagId(), $existingPageTags);
 
         $newTagEntities = [];
         if (!empty($tagNames)) {
             $newTagEntities = $em->getRepository(TagEntity::class)->findBy(['name' => array_values($tagNames)]);
         }
-        $newTagIds = array_map(fn(TagEntity $t) => $t->getId(), $newTagEntities);
+        $newTagIds = array_map(static fn(TagEntity $t) => $t->getId(), $newTagEntities);
 
         foreach ($existingPageTags as $pageTag) {
             if (!in_array($pageTag->getTagId(), $newTagIds, true)) {
@@ -152,7 +152,7 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
     }
 
     /**
-     * Double check what you add to this method, this will be loaded on every page!
+     * Double-check what you add to this method, this will be loaded on every page!
      */
     public function toArray(): array
     {

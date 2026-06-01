@@ -55,7 +55,7 @@ readonly class EmailTheme implements EmailThemeInterface
     {
         $themeData = $this->getTheme();
 
-        // replace <a class="cta_button"> with styled button
+        // replace it <a class="cta_button"> with styled button
         $ctaButtonStyle = $themeData['cta_button_style'] ?? '';
         /** @noinspection HtmlDeprecatedAttribute */
         /** @noinspection HtmlUnknownAttribute */
@@ -90,7 +90,7 @@ readonly class EmailTheme implements EmailThemeInterface
         // update paragraph style
         $paragraphStyle = $themeData['paragraph_style'] ?? '';
         /** @noinspection PhpUnnecessaryLocalVariableInspection */
-        $html = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $html);
+        $html = (string) str_replace('<p>', '<p style="' . $paragraphStyle . '">', $html);
 
         return $html;
     }
