@@ -1,7 +1,7 @@
 {% macro tags(field_name, current_tags) %}
     {% set input_id = field_name ~ '_tagify' %}
     <div class="col-12">
-        <label for="{{ input_id }}">
+        <label for="{{ input_id }}" class="w-100">
             <input class="form-control form-control-solid"
                    type="text"
                    name="{{ field_name }}"

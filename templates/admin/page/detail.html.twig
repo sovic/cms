@@ -132,16 +132,16 @@
         {% endif %}
     </div>
 
-    {{ form_macro.section_header('Štítky') }}
-    <div class="row mb-4">
-        {{ tags.tags('page_tags', page_tags) }}
-    </div>
-
     {{ form_macro.section_header('Obsah stránky') }}
     <div class="row mb-4">
         <div class="col-12">
             {{ form_row(form.content) }}
         </div>
+    </div>
+
+    {{ form_macro.section_header('Štítky') }}
+    <div class="row mb-4">
+        {{ tags.tags('page_tags', page_tags) }}
     </div>
 
     {#    {{ form_macro.section_header('Nastavení') }} #}
