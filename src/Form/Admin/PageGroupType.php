@@ -2,7 +2,10 @@
 
 namespace Sovic\Cms\Form\Admin;
 
+use Sovic\Cms\Entity\MenuItem;
 use Sovic\Cms\Form\FormTheme;
+use Sovic\Cms\Repository\MenuItemRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,6 +26,19 @@ class PageGroupType extends AbstractType
                 'attr' => [
                     'length' => 255,
                 ],
+            ]
+        );
+
+        $builder->add(
+            'menuItem',
+            EntityType::class,
+            [
+                'label' => 'Menu pro tuto skupinu stránek',
+                'class' => MenuItem::class,
+                'choice_label' => fn(MenuItem $item) => $item->getName() ?? $item->getPosition(),
+                'required' => false,
+                'placeholder' => '— bez položky menu —',
+                'query_builder' => fn(MenuItemRepository $repo) => $repo->createRootQueryBuilder(),
             ]
         );
 

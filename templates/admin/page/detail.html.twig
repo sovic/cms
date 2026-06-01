@@ -144,12 +144,12 @@
         {{ tags.tags('page_tags', page_tags) }}
     </div>
 
-    {#    {{ form_macro.section_header('Nastavení') }} #}
-    {#    <div class="row"> #}
-    {#        <div class="col-12 col-md-6"> #}
-    {#            {{ form_row(form.sideMenuId) }} #}
-    {#        </div> #}
-    {#    </div> #}
+    {{ form_macro.section_header('Nastavení') }}
+    <div class="row mb-4">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.menuItem) }}
+        </div>
+    </div>
 
     {{ form_macro.section_header('Metadata') }}
     <div class="row">

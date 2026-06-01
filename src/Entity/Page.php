@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Entity\Trait\IsPublicTrait;
+use Sovic\Cms\Entity\Trait\MenuItemTrait;
 use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Entity\Trait\PublishedAtTrait;
 use Sovic\Cms\Repository\PageRepository;
@@ -23,13 +24,15 @@ use Sovic\Common\Entity\Project;
 #[Index(name: 'project_id', columns: ['project_id'])]
 #[Index(name: 'url_id', columns: ['url_id'])]
 #[Index(name: 'group_id', columns: ['group_id'])]
+#[Index(name: 'menu_item_id', columns: ['menu_item_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PageRepository::class)]
 class Page
 {
+    use IsPublicTrait;
+    use MenuItemTrait;
     use MetaColumnsTrait;
     use PublishedAtTrait;
-    use IsPublicTrait;
 
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
@@ -76,9 +79,6 @@ class Page
 
     #[Column(name: 'last_update_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $lastUpdateDate = null;
-
-    #[Column(name: 'side_menu_id', type: Types::STRING, length: 255, nullable: true, options: ['default' => null])]
-    protected ?string $sideMenuId = null;
 
     public function getId(): int
     {
@@ -228,16 +228,6 @@ class Page
     public function setLastUpdateDate(?DateTimeImmutable $lastUpdateDate): void
     {
         $this->lastUpdateDate = $lastUpdateDate;
-    }
-
-    public function getSideMenuId(): ?string
-    {
-        return $this->sideMenuId;
-    }
-
-    public function setSideMenuId(?string $sideMenuId): void
-    {
-        $this->sideMenuId = $sideMenuId;
     }
 
     public function __clone()

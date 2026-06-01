@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Sovic\Cms\Entity\MenuItem;
 
 /**
@@ -35,10 +36,7 @@ class MenuItemRepository extends EntityRepository
         );
     }
 
-    /**
-     * @return MenuItem[]
-     */
-    public function findRootWithPosition(): array
+    public function createRootQueryBuilder(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('m');
         $qb->where('m.position IS NOT NULL');
@@ -46,7 +44,15 @@ class MenuItemRepository extends EntityRepository
         $qb->addOrderBy('m.name', 'ASC');
         $qb->addOrderBy('m.id', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb;
+    }
+
+    /**
+     * @return MenuItem[]
+     */
+    public function findRootWithPosition(): array
+    {
+        return $this->createRootQueryBuilder()->getQuery()->getResult();
     }
 
     /**
