@@ -47,6 +47,10 @@ class PageController extends AdminBaseController
         /** @var PageRepository $repo */
         $repo = $em->getRepository(Page::class);
 
+        /** @var PageGroupRepository $groupRepo */
+        $groupRepo = $em->getRepository(PageGroup::class);
+        $groups = $groupRepo->findAllOrderedByName();
+
         if ($request->query->has('group_id')) {
             $groupId = (int) $request->query->get('group_id');
 
@@ -67,15 +71,11 @@ class PageController extends AdminBaseController
             $this->assign('query', array_merge($sr->toArray(), ['group_id' => $groupId]));
             $this->assign('view', 'pages');
         } else {
-            /** @var PageGroupRepository $groupRepo */
-            $groupRepo = $em->getRepository(PageGroup::class);
-            $groups = $groupRepo->findAllOrderedByName();
-
-            $this->assign('groups', $groups);
             $this->assign('group_counts', $repo->countPerGroup($groups));
             $this->assign('unsorted_count', $repo->countUnsorted());
             $this->assign('view', 'groups');
         }
+        $this->assign('groups', $groups);
 
         return $this->render('@CmsBundle/admin/page/list.html.twig');
     }

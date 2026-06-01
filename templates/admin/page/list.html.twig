@@ -2,6 +2,7 @@
 
 {% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block title %}Přehled stránek{% endblock %}
@@ -41,11 +42,14 @@
 {% endblock %}
 
 {% block filters %}
-    {{ data_list.list_filter_enum_select('Viditelnost', 'visibility', [
-        {value: 'all', trans: 'Vše'},
-        {value: 'public', trans: 'Publikováno'},
-        {value: 'private', trans: 'Nepublikováno'},
-    ], visibility) }}
+    {% if view != 'groups' %}
+        {{ data_list.list_filter_enum_select('Viditelnost', 'visibility', [
+            {value: 'all', trans: 'Vše'},
+            {value: 'public', trans: 'Publikováno'},
+            {value: 'private', trans: 'Nepublikováno'},
+        ], visibility) }}
+        {{ data_list.list_filter_id_name_select('Skupina', 'group_id', groups, group_id ?? '') }}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
@@ -80,10 +84,13 @@
         {% for group in groups %}
             <tr>
                 <td>
-                    <a href="{{ path('admin:page:list', {'group_id': group.id}) }}"
-                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
-                        {{ group.name }}
-                    </a>
+                    <div class="d-flex align-items-center gap-3">
+                        {{ icons.icon_symbol_50px('bi bi-collection') }}
+                        <a href="{{ path('admin:page:list', {'group_id': group.id}) }}"
+                           class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                            {{ group.name }}
+                        </a>
+                    </div>
                 </td>
                 <td class="text-end">
                     {{ group_counts[group.id] ?? 0 }}
@@ -103,10 +110,13 @@
         {% endfor %}
         <tr>
             <td>
-                <a href="{{ path('admin:page:list', {'group_id': 0}) }}"
-                   class="text-gray-600 text-hover-primary fs-5 fw-semibold">
-                    Nezařazené stránky
-                </a>
+                <div class="d-flex align-items-center gap-3">
+                    {{ icons.icon_symbol_50px('bi bi-collection') }}
+                    <a href="{{ path('admin:page:list', {'group_id': 0}) }}"
+                       class="text-gray-600 text-hover-primary fs-5 fw-semibold">
+                        Nezařazené stránky
+                    </a>
+                </div>
             </td>
             <td class="text-end text-muted">
                 {{ unsorted_count }}
