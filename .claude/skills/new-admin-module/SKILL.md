@@ -445,7 +445,7 @@ class {Name}Controller extends AdminBaseController
 - Always use `@CmsBundle/admin/forms/form-narrow.html.twig` as form theme
 - Always import `theme.html.twig` as `theme` and use its macros: `theme.card_class`, `theme.card_header_class`, `theme.form_sticky_bar_class()`, etc.
 - Back-to-list: always use `icons.back_to_list(url)` concatenated into the `card_header` title — never use a toolbar button for navigation. Import `icons.html.twig` as `icons`.
-- Card header: `form_macro.card_header(theme, icons.back_to_list(...) ~ 'Page Title')`
+- Card header: `form_macro.card_header(icons.back_to_list(...) ~ 'Page Title')`
 - Group fields with `form_macro.section_header('Section Title')` + a `<div class="row">` block
 - Sticky submit bar uses `theme.form_sticky_bar_class()` macro
 - If module has gallery, add tabs and include `gallery_macro.gallery_tabs_nav(galleries)` /

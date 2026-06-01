@@ -8,7 +8,7 @@
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.card_class }}">
-            {{ form_macro.card_header(theme, icons.back_to_list(path('admin:email:list')) ~ 'Editace šablony', '') }}
+            {{ form_macro.card_header(icons.back_to_list(path('admin:email:list')) ~ 'Editace šablony', '') }}
 
             <div class="card-body">
                 {{ block('edit_form') }}

@@ -30,7 +30,9 @@
     {% endif %}
 {% endmacro %}
 
-{% macro card_header(theme, title, toolbar) %}
+{% macro card_header(title, toolbar) %}
+    {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+
     <div class="{{ theme.card_header_class }}">
         <div class="card-title">
             <h2>

@@ -14,7 +14,7 @@
             {% else %}
                 {% set back_url = path('admin:menu:list') %}
             {% endif %}
-            {{ form_macro.card_header(theme, icons.back_to_list(back_url) ~ 'Editace položky menu') }}
+            {{ form_macro.card_header(icons.back_to_list(back_url) ~ 'Editace položky menu') }}
 
             <div class="card-body">
                 {{ block('edit_form') }}
