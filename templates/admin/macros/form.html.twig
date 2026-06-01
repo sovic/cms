@@ -73,3 +73,11 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro sticky_submit(form) %}
+    {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+    <div class="{{ theme.form_sticky_bar_class() }}">
+        {{ form_row(form.save) }}
+    </div>
+    <div class="mt-n5"></div>
+{% endmacro %}

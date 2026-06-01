@@ -4,10 +4,14 @@
 {% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
+{% block title %}
+    {{ editing ? 'Editace skupiny stránek' : 'Nová skupina stránek' }}
+{% endblock %}
+
 {% block content %}
     <div class="app-container container">
         <div class="{{ theme.card_class }}">
-            {{ form_macro.card_header(icons.back_to_list(path('admin:page:list')) ~ (editing ? 'Editace skupiny stránek' : 'Nová skupina stránek')) }}
+            {{ form_macro.card_header(icons.back_to_list(path('admin:page:list')) ~ block('title')) }}
 
             <div class="card-body">
                 {{ block('edit_form') }}
@@ -22,18 +26,16 @@
 
     {{ form_macro.section_header('Základní informace') }}
     <div class="row">
-        <div class="col-12 col-md-6">
+        <div class="col-12">
             {{ form_row(form.name) }}
         </div>
     </div>
 
-    <div class="{{ theme.form_sticky_bar_class() }}">
-        {% if form._token is defined %}
-            {{ form_row(form._token) }}
-        {% endif %}
-        {{ form_row(form.save) }}
-    </div>
-    <div class="mt-n5"></div>
+    {{ form_macro.sticky_submit(form) }}
+
+    {% if form._token is defined %}
+        {{ form_row(form._token) }}
+    {% endif %}
 
     {{ form_end(form, {render_rest: false}) }}
 {% endblock %}
