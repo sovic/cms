@@ -80,6 +80,11 @@ class Page
     #[Column(name: 'last_update_date', type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default' => null])]
     protected ?DateTimeImmutable $lastUpdateDate = null;
 
+    public function __construct()
+    {
+        $this->lang = 'cs';
+    }
+
     public function getId(): int
     {
         return $this->id;
