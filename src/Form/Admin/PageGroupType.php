@@ -37,7 +37,7 @@ class PageGroupType extends AbstractType
                 'class' => MenuItem::class,
                 'choice_label' => fn(MenuItem $item) => $item->getName() ?? $item->getPosition(),
                 'required' => false,
-                'placeholder' => '— bez položky menu —',
+                'placeholder' => '— bez menu —',
                 'query_builder' => fn(MenuItemRepository $repo) => $repo->createRootQueryBuilder(),
             ]
         );

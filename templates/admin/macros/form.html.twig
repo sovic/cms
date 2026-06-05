@@ -1,4 +1,4 @@
-{% macro switch(id, field, title, checked, icon_class = null) %}
+{% macro switch(id, field, title, checked, icon_class = null, tooltip = null) %}
     {% if icon_class %}
         <span title="{{ title }}">
     {% endif %}
@@ -17,13 +17,26 @@
                 {% set icon_class = icon_class ~ ' text-muted' %}
             {% endif %}
         {% endif %}
-        <span class="form-check-label fw-semibold text-muted d-flex d-inline-block pe-4">
+        <span class="form-check-label fw-semibold text-muted d-flex d-inline-block pe-3">
             {% if icon_class %}
-                <i class="{{ icon_class }} fs-3 ms-1 m-0 p-0"></i>
+                <i class="{{ icon_class }} fs-3 m-0 p-0"
+                    {% if tooltip %}
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="{{ tooltip }}"
+                    {% endif %}
+                ></i>
             {% else %}
                 {{ title }}
             {% endif %}
         </span>
+
+        {% if tooltip and not icon_class %}
+            <i class="bi bi-info-circle fs-6 m-0 p-0 me-3"
+               data-bs-toggle="tooltip"
+               data-bs-placement="top"
+               title="{{ tooltip }}"></i>
+        {% endif %}
     </label>
     {% if icon_class %}
         </span>

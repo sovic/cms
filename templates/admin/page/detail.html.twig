@@ -29,13 +29,20 @@
 {% block sidebar %}
     <div class="flex-column flex-lg-row-auto w-100 w-xl-300px mb-10">
         <div class="{{ theme.card_class }}">
-            <div class="card-body pt-15 d-flex flex-column gap-3">
+            <div class="{{ theme.card_body_class }}">
+                <div class="d-flex flex-column mb-2">
+                    <span class="fw-bold fs-3 text-gray-800">
+                    {% if editing %}
+                        {{ page.name }}
+                    {% else %}
+                        Nová stránka
+                    {% endif %}
+                    </span>
+                </div>
+
                 {% if editing %}
-                    <a class="btn btn-flex btn-sm btn-light-primary w-100" href="/{{ page.urlId }}" target="_blank">
-                        <i class="bi bi-globe me-1"></i>
-                        Stránka na webu
-                    </a>
                     {% if page.pageGroup %}
+                        <span class="fw-bold fs-6 text-gray-800">Sekce</span>
                         <a class="btn btn-flex btn-sm btn-light-info w-100"
                            href="{{ path('admin:page:list', {'group_id': page.pageGroup.id}) }}">
                             <i class="bi bi-folder me-1"></i>
@@ -43,6 +50,18 @@
                         </a>
                     {% endif %}
                 {% endif %}
+            </div>
+        </div>
+        {% if editing %}
+            {{ block('quick_settings') }}
+        {% endif %}
+
+        <div class="{{ theme.card_class }}">
+            <div class="card-body pt-8 d-flex flex-column gap-3">
+                <a class="btn btn-flex btn-sm btn-light-primary w-100" href="/{{ page.urlId }}" target="_blank">
+                    <i class="bi bi-globe me-1"></i>
+                    Stránka na webu
+                </a>
             </div>
         </div>
     </div>
@@ -68,27 +87,26 @@
 {% endblock %}
 
 {% block tab_content %}
-    {% if editing %}
-        {{ block('quick_settings') }}
-    {% endif %}
-
     {{ block('edit_card') }}
 {% endblock %}
 
 {% block quick_settings %}
     <div class="{{ theme.card_class }}">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <h2>Rychlé nastavení</h2>
-            </div>
-        </div>
-        <div class="card-body pt-0 pb-8">
-            <div class="{{ theme.toggle_switch_class() }}"
+        <div class="card-body py-8">
+            {{ form_macro.section_header('Rychlé akce') }}
+
+            <div class="js-toggle-switch pt-2"
                  data-entity="page"
                  data-entity-id="{{ page.id }}">
-                {{ form_macro.switch('page_is_public_' ~ page.id, 'is_public', 'Publikováno', page.isPublic) }}
-                {{ form_macro.switch('page_is_in_sitemap_' ~ page.id, 'is_in_sitemap', 'Sitemap', page.isInSitemap) }}
-                {{ form_macro.switch('page_has_toc_' ~ page.id, 'has_toc', 'TOC', page.hasToc) }}
+                <div class="mb-4">
+                    {{ form_macro.switch('page_is_public_' ~ page.id, 'is_public', 'Publikováno', page.isPublic, null, 'Stránka je viditelná pro návštěvníky webu') }}
+                </div>
+                <div class="mb-4">
+                    {{ form_macro.switch('page_is_in_sitemap_' ~ page.id, 'is_in_sitemap', 'Sitemap', page.isInSitemap, null, 'Stránka je zahrnuta v sitemap.xml') }}
+                </div>
+                <div>
+                    {{ form_macro.switch('page_has_toc_' ~ page.id, 'has_toc', 'TOC', page.hasToc, null, 'Zobrazí obsah stránky (Table of Contents)') }}
+                </div>
             </div>
         </div>
     </div>
@@ -113,7 +131,7 @@
 {% endblock %}
 
 {% block edit_form %}
-    {{ form_macro.section_header('Základní') }}
+    {{ form_macro.section_header('Základní údaje') }}
 
     <div class="row mb-4">
         <div class="col-12 col-md-6">
