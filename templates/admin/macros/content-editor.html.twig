@@ -1,9 +1,9 @@
-{% macro content_editor_basic(selector, base_url = null, language = 'cs') %}
-    <style>{{ selector }}
-        {
-            visibility: hidden
-        ;
-        }</style>
+{% macro content_editor_basic(selector, language, base_url = null, tinymce_content_css = null) %}
+    <style>
+        {{ selector }} {
+            visibility: hidden;
+        }
+    </style>
     <script src="{{ asset('bundles/cms/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
     <!--suppress JSUnresolvedReference, SpellCheckingInspection -->
     <script>
@@ -29,6 +29,7 @@
                     {title: 'CTA link', value: 'int_cta_link'},
                 ],
                 content_style: ".int_cta_link { display: inline-block; padding: 9px 20px 10px 20px; background-color: #007bff; color: #ffffff !important; text-decoration: none; border-radius: 5px; }",
+                {% if tinymce_content_css %}content_css: "{{ tinymce_content_css }}",{% endif %}
                 init_instance_callback: function (editor) {
                     editor.getContainer().style.visibility = 'visible';
                 },

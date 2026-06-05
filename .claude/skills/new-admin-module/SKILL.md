@@ -452,7 +452,7 @@ class {Name}Controller extends AdminBaseController
   `gallery_macro.gallery_tabs_panes(model, entity.id, galleries)` and
   `{% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}`
 - If module has rich text content, import `content_editor` macro and call
-  `{{ content_editor.content_editor_basic('#entity_content') }}`
+  `{{ content_editor.content_editor_basic('#entity_content', 'cs') }}`
 
 ---
 

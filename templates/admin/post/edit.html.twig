@@ -111,7 +111,7 @@
 
     {{ form_end(form, {render_rest: true}) }}
 
-    {{ content_editor.content_editor_basic('#post_content') }}
+    {{ content_editor.content_editor_basic('#post_content', 'cs', null, tinymce_content_css) }}
 {% endblock %}
 
 {% block javascripts %}
