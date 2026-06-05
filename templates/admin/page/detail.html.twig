@@ -20,6 +20,10 @@
                     <div class="tab-pane fade show active" role="tabpanel">
                         {{ block('tab_content') }}
                     </div>
+
+                    {% if editing %}
+                        {{ gallery_macro.gallery_tabs_panes('page', page.id, galleries) }}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -162,11 +166,16 @@
 
     {{ form_macro.section_header('Štítky') }}
     <div class="row mb-4">
-        {{ tags.tags('page_tags', page_tags) }}
+        <div class="mb-2">
+            {{ tags.tags('page_tags', page_tags) }}
+        </div>
     </div>
 
     {{ form_macro.section_header('Nastavení') }}
     <div class="row mb-4">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.contentType) }}
+        </div>
         <div class="col-12 col-md-6">
             {{ form_row(form.menuItem) }}
         </div>

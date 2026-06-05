@@ -11,6 +11,7 @@ use Sovic\Cms\Repository\MenuItemRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -143,13 +144,15 @@ class Page extends AbstractType
 
         $builder->add(
             'contentType',
-            TextType::class,
+            ChoiceType::class,
             [
                 'label' => 'Typ obsahu',
                 'required' => false,
-                'attr' => [
-                    'length' => 255,
+                'choices' => [
+                    'Obsahová stránka' => 'content',
+                    'Stránka s příspěvky se štítky' => 'tags',
                 ],
+                'placeholder' => false,
             ]
         );
 
