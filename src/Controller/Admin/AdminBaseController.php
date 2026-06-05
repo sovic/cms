@@ -4,11 +4,22 @@ namespace Sovic\Cms\Controller\Admin;
 
 use Sovic\Cms\Controller\BaseController;
 use Sovic\Common\Controller\Trait\BaseControllerTrait;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class AdminBaseController extends BaseController
 {
     use BaseControllerTrait;
+
+    protected string $tinymceContentCss;
+
+    #[Required]
+    public function setTinymceContentCss(
+        #[Autowire('%tinymce_content_css%')] string $tinymceContentCss,
+    ): void {
+        $this->tinymceContentCss = $tinymceContentCss;
+    }
 
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
@@ -44,6 +55,7 @@ class AdminBaseController extends BaseController
 
         // misc
         $parameters['local_debug'] = !empty($_ENV['APP_LOCAL_DEBUG']);
+        $parameters['tinymce_content_css'] = $this->tinymceContentCss;
 
         return parent::render($view, $parameters, $response);
     }
