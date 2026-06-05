@@ -25,7 +25,7 @@ class PostController extends AdminBaseController
 
     public function __construct(
         EntityManagerInterface                   $entityManager,
-        #[Autowire('%gallery_base_url%')] string $galleryBaseUrl,
+        #[Autowire('%base_gallery_url%')] string $galleryBaseUrl,
     ) {
         parent::__construct($entityManager);
         $this->galleryBaseUrl = $galleryBaseUrl;

@@ -31,6 +31,11 @@ class Page extends AbstractEntityModel implements GalleryModelInterface
         return $this->getId();
     }
 
+    public function getPublicUrl(string $baseUrl): string
+    {
+        return rtrim($baseUrl, '/') . '/' . $this->entity->getUrlId();
+    }
+
     public function getHeading(): array
     {
         return explode('/', $this->entity->getHeading());

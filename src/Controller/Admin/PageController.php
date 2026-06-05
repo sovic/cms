@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller\Admin;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use JsonException;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\PageGroup;
@@ -23,14 +24,17 @@ class PageController extends AdminBaseController
 {
     use GalleryControllerTrait;
 
-    protected string $galleryBaseUrl;
+    protected string $basePublicUrl;
+    protected string $baseGalleryUrl;
 
     public function __construct(
         EntityManagerInterface                   $entityManager,
-        #[Autowire('%gallery_base_url%')] string $galleryBaseUrl,
+        #[Autowire('%base_public_url%')] string  $basePublicUrl,
+        #[Autowire('%base_gallery_url%')] string $baseGalleryUrl,
     ) {
         parent::__construct($entityManager);
-        $this->galleryBaseUrl = $galleryBaseUrl;
+        $this->basePublicUrl = $basePublicUrl;
+        $this->baseGalleryUrl = $baseGalleryUrl;
     }
 
     #[Route(
@@ -80,6 +84,9 @@ class PageController extends AdminBaseController
         return $this->render('@CmsBundle/admin/page/list.html.twig');
     }
 
+    /**
+     * @throws JsonException
+     */
     #[Route(
         '/admin/page/edit/{id}',
         name: 'admin:page:edit',
@@ -141,15 +148,18 @@ class PageController extends AdminBaseController
         $editing = $id > 0;
 
         $pageTags = [];
+        $pagePublicUrl = $this->basePublicUrl;
         if ($editing && $page->getId() !== null) {
             $model = $pageFactory->loadByEntity($page);
-            $this->assignGalleries($model, ['page'], $this->galleryBaseUrl);
+            $this->assignGalleries($model, ['page'], $this->baseGalleryUrl);
             $pageTags = array_map(static fn(Tag $tag) => $tag->getName(), $model->getTags());
+            $pagePublicUrl = $model->getPublicUrl($this->basePublicUrl);
         }
 
         $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
         $this->assign('page', $page);
+        $this->assign('page_public_url', $pagePublicUrl);
         $this->assign('page_tags', $pageTags);
 
         return $this->render('@CmsBundle/admin/page/detail.html.twig');

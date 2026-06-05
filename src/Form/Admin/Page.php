@@ -72,7 +72,7 @@ class Page extends AbstractType
             'heading',
             TextType::class,
             [
-                'label' => 'Nadpis',
+                'label' => 'Nadpis (H1)',
                 'required' => false,
                 'attr' => [
                     'length' => 150,
