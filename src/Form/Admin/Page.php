@@ -91,17 +91,17 @@ class Page extends AbstractType
             );
         }
 
-        $builder->add(
-            'lang',
-            TextType::class,
-            [
-                'label' => 'Jazyk',
-                'required' => false,
-                'attr' => [
-                    'length' => 5,
-                ],
-            ]
-        );
+//        $builder->add(
+//            'lang',
+//            TextType::class,
+//            [
+//                'label' => 'Jazyk',
+//                'required' => false,
+//                'attr' => [
+//                    'length' => 5,
+//                ],
+//            ]
+//        );
 
         // content
 
