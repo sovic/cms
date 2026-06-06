@@ -17,7 +17,7 @@
                 {{ block('tabs') }}
 
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" role="tabpanel">
+                    <div class="tab-pane fade show active" id="tab-form" role="tabpanel">
                         {{ block('tab_content') }}
                     </div>
 
@@ -86,7 +86,7 @@
                     Stránka
                 </button>
             </li>
-            {{ gallery_macro.gallery_tabs_nav(galleries) }}
+            {{ gallery_macro.gallery_tabs_nav(galleries, 'page') }}
         </ul>
     {% endif %}
 {% endblock %}

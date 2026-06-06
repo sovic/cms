@@ -5,7 +5,7 @@
     </div>
 {% endmacro %}
 
-{% macro gallery_tabs_nav(galleries) %}
+{% macro gallery_tabs_nav(galleries, entity_name) %}
     {% for gallery_name, items in galleries %}
         <li class="nav-item" role="presentation">
             <button class="nav-link"
@@ -15,7 +15,7 @@
                     type="button"
                     role="tab"
                     aria-selected="false">
-                {{ gallery_name|capitalize }}
+                {{ gallery_name == entity_name ? 'Galerie' : gallery_name|capitalize }}
                 <span class="badge badge-circle badge-sm badge-light-primary ms-2 {{ items|length > 0 ? '' : 'd-none' }}"
                       id="gallery-count-badge-{{ gallery_name }}">{{ items|length }}</span>
             </button>
