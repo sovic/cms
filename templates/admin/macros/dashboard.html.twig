@@ -1,4 +1,5 @@
-{% macro card(theme, title, subtitle = null, buttons = '') %}
+{% macro card(title, subtitle = null, buttons = '') %}
+    {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
     <div class="{{ theme.card_class }} bg-primary">
         <div class="card-body p-0">
             <div class="card-px text-center py-8 my-10">
