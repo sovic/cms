@@ -84,7 +84,7 @@
     {% if actions|length > 0 %}
         {% if wrapper %}
             <div class="actions-wrapper d-inline-flex">
-            <div class="my-3 ms-3 text-end">
+            <div class="ms-3 text-end">
         {% endif %}
         {% for action in actions %}
             {% set icon = action.icon is defined ? action.icon : 'ki-duotone ki-pencil' %}
