@@ -364,6 +364,24 @@
     </div>
 {% endmacro %}
 
+{% macro list_filter_date_range(selected_from = '', selected_to = '') %}
+    <div class="py-2 w-100">
+        <div class="form-label fs-6 fw-semibold">Od - do</div>
+        <div class="d-flex flex-column flex-lg-row gap-2">
+            <!--suppress HtmlFormInputWithoutLabel -->
+            <input type="date"
+                   name="date_from"
+                   class="form-control form-control-solid"
+                   value="{{ selected_from }}">
+            <!--suppress HtmlFormInputWithoutLabel -->
+            <input type="date"
+                   name="date_to"
+                   class="form-control form-control-solid"
+                   value="{{ selected_to }}">
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro group_action_button(method, label, tooltip = '', confirm = false, parameters = {}) %}
     <a href="#"
        class="link-underline badge badge-light-primary group-action"
