@@ -126,6 +126,19 @@
             });
         });
 
+        $form.querySelectorAll('.basic-filters input[type="date"]').forEach(function (input) {
+            input.addEventListener('change', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('page');
+                if (input.value) {
+                    url.searchParams.set(input.name, input.value);
+                } else {
+                    url.searchParams.delete(input.name);
+                }
+                window.location.href = url.toString();
+            });
+        });
+
         let $resetEl = $form.querySelector('button[type="reset"]');
         if ($resetEl) {
             $resetEl.addEventListener('click', function (e) {
