@@ -23,7 +23,7 @@ class Gallery
     #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[Column(name: 'session_id', type: 'string', length: 32, nullable: true, options: ['default' => 'NULL'])]
+    #[Column(name: 'session_id', type: 'string', length: 32, nullable: true, options: ['default' => null])]
     protected ?string $sessionId;
 
     #[Column(name: 'model', type: 'string', length: 100, nullable: false)]
@@ -35,10 +35,10 @@ class Gallery
     #[Column(name: 'name', type: 'string', length: 100, nullable: false)]
     protected string $name;
 
-    #[Column(name: 'timestamp', type: 'integer', nullable: true, options: ['default' => 'NULL'])]
+    #[Column(name: 'timestamp', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $timestamp;
 
-    #[Column(name: 'users_id', type: 'integer', nullable: true, options: ['default' => 'NULL'])]
+    #[Column(name: 'users_id', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $usersId;
 
     #[Column(name: 'is_processed', type: 'boolean', nullable: false, options: ['default' => '0'])]

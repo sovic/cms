@@ -28,8 +28,8 @@ class Tag
     protected int $id;
 
     #[ManyToOne(targetEntity: Project::class)]
-    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    protected Project $project;
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE', options: ['default' => null])]
+    protected ?Project $project = null;
 
     #[Column(name: 'name', type: Types::STRING, length: 100, nullable: true)]
     protected ?string $name = null;
@@ -37,7 +37,7 @@ class Tag
     #[Column(name: 'url_id', type: Types::STRING, length: 100, nullable: true)]
     protected ?string $urlId = null;
 
-    #[Column(name: 'is_public', type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_public', type: Types::BOOLEAN, nullable: false, options: ['default' => 0])]
     protected bool $isPublic = false;
 
     #[Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
@@ -56,12 +56,12 @@ class Tag
         $this->id = $id;
     }
 
-    public function getProject(): Project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProject(Project $project): void
+    public function setProject(?Project $project): void
     {
         $this->project = $project;
     }

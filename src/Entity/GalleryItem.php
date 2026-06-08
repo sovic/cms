@@ -3,77 +3,87 @@
 namespace Sovic\Cms\Entity;
 
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
 use Sovic\Cms\Repository\GalleryItemRepository;
 
-#[ORM\Table(name: 'gallery_item')]
-#[ORM\Entity(repositoryClass: GalleryItemRepository::class)]
+#[Table(name: 'gallery_item')]
+#[Index(name: 'gallery_id', columns: ['gallery_id'])]
+#[Index(name: 'model_model_id', columns: ['model', 'model_id'])]
+#[Index(name: 'temp', columns: ['temp'])]
+#[Entity(repositoryClass: GalleryItemRepository::class)]
 class GalleryItem
 {
-    #[ORM\Column(name: 'id', type: 'integer')]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Column(name: 'id', type: 'integer')]
+    #[Id]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(name: 'gallery_id', type: 'integer')]
+    #[Column(name: 'gallery_id', type: 'integer')]
     protected int $galleryId;
 
-    #[ORM\Column(name: 'extension', type: 'string', length: 50, nullable: true, options: ['default' => null])]
+    #[Column(name: 'extension', type: 'string', length: 50, nullable: true, options: ['default' => null])]
     protected ?string $extension = null;
 
-    #[ORM\Column(name: 'description', type: 'text', length: 65535, nullable: true, options: ['default' => null])]
+    #[Column(name: 'description', type: 'text', length: 65535, nullable: true, options: ['default' => null])]
     protected ?string $description = null;
 
-    #[ORM\Column(name: 'filesize', type: 'integer', nullable: true, options: ['default' => null])]
+    #[Column(name: 'filesize', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $filesize = null;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: true, options: ['default' => null])]
+    #[Column(name: 'name', type: 'string', length: 100, nullable: true, options: ['default' => null])]
     protected ?string $name = null;
 
-    #[ORM\Column(name: 'sequence', type: 'integer', nullable: true, options: ['default' => null])]
+    #[Column(name: 'sequence', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $sequence;
 
-    #[ORM\Column(name: 'width', type: 'integer', nullable: true, options: ['default' => null])]
+    #[Column(name: 'width', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $width = null;
 
-    #[ORM\Column(name: 'height', type: 'integer', nullable: true, options: ['default' => null])]
+    #[Column(name: 'height', type: 'integer', nullable: true, options: ['default' => null])]
     protected ?int $height = null;
 
-    #[ORM\Column(name: 'model', type: 'string', length: 100)]
+    #[Column(name: 'model', type: 'string', length: 100)]
     protected string $model;
 
-    #[ORM\Column(name: 'model_id', type: 'integer')]
+    #[Column(name: 'model_id', type: 'integer')]
     protected int $modelId;
 
-    #[ORM\Column(name: 'is_processed', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_processed', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isProcessed = false;
 
-    #[ORM\Column(name: 'is_cover', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_cover', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isCover = false;
 
-    #[ORM\Column(name: 'is_optimized', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_optimized', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isOptimized = false;
 
-    #[ORM\Column(name: 'is_temp', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_temp', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isTemp = false;
 
-    #[ORM\Column(name: 'is_hero', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_hero', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isHero = false;
 
-    #[ORM\Column(name: 'is_hero_mobile', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_hero_mobile', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isHeroMobile = false;
 
-    #[ORM\Column(name: 'is_meta_image', type: 'boolean', nullable: false, options: ['default' => false])]
+    #[Column(name: 'is_meta_image', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $isMetaImage = false;
 
-    #[ORM\JoinColumn(name: 'gallery_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: Gallery::class, inversedBy: 'galleryItems')]
+    #[JoinColumn(name: 'gallery_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ManyToOne(targetEntity: Gallery::class, inversedBy: 'galleryItems')]
     protected Gallery $gallery;
 
-    #[ORM\Column(name: 'create_date', type: 'datetime_immutable', nullable: false)]
+    #[Column(name: 'create_date', type: 'datetime_immutable', nullable: false)]
     protected DateTimeImmutable $createDate;
 
-    #[ORM\Column(name: 'path', type: 'string', length: 255, nullable: true, options: ['default' => null])]
+    #[Column(name: 'path', type: 'string', length: 255, nullable: true, options: ['default' => null])]
     protected ?string $path = null;
 
     public function getId(): int

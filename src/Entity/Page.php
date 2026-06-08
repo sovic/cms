@@ -14,10 +14,12 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Sovic\Cms\Entity\Trait\IsPublicTrait;
+use Sovic\Cms\Entity\Trait\LoggableEntityTrait;
 use Sovic\Cms\Entity\Trait\MenuItemTrait;
 use Sovic\Cms\Entity\Trait\MetaColumnsTrait;
 use Sovic\Cms\Entity\Trait\PublishedAtTrait;
 use Sovic\Cms\Repository\PageRepository;
+use Sovic\Common\Entity\LoggableEntityInterface;
 use Sovic\Common\Entity\Project;
 
 #[Table(name: 'page')]
@@ -27,12 +29,14 @@ use Sovic\Common\Entity\Project;
 #[Index(name: 'menu_item_id', columns: ['menu_item_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PageRepository::class)]
-class Page
+class Page implements LoggableEntityInterface
 {
     use IsPublicTrait;
     use MenuItemTrait;
     use MetaColumnsTrait;
     use PublishedAtTrait;
+
+    use LoggableEntityTrait;
 
     #[Column(name: 'id', type: Types::INTEGER)]
     #[Id]
@@ -238,5 +242,10 @@ class Page
     public function __clone()
     {
         unset($this->id);
+    }
+
+    public function getIdentifier(): int
+    {
+        return $this->getId();
     }
 }
