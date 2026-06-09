@@ -1,0 +1,41 @@
+{% extends '@CmsBundle/admin/layout/admin.html.twig' %}
+{% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/icons.html.twig' as icons %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+
+{% block title %}
+    {{ editing ? 'Editace štítku' : 'Nový štítek' }}
+{% endblock %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.card_class }}">
+            {{ form_macro.card_header(icons.back_to_list(path('admin:tag:list')) ~ block('title')) }}
+
+            <div class="card-body">
+                {{ block('edit_form') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block edit_form %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_macro.section_header('Základní informace') }}
+    <div class="row">
+        <div class="col-12">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+
+    {{ form_macro.sticky_submit(form) }}
+
+    {% if form._token is defined %}
+        {{ form_row(form._token) }}
+    {% endif %}
+
+    {{ form_end(form, {render_rest: false}) }}
+{% endblock %}

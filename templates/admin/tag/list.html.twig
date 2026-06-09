@@ -1,0 +1,92 @@
+{% extends '@CmsBundle/admin/layout/data-list.html.twig' %}
+
+{% import '@CmsBundle/admin/macros/data-list.html.twig' as data_list %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+
+{% block title %}Přehled štítků{% endblock %}
+
+{% set allow_add = true %}
+{% set is_search_enabled = true %}
+{% set is_filters_enabled = false %}
+{% set is_group_actions_enabled = false %}
+
+{% block add_item %}
+    {% if allow_add %}
+        <a class="btn btn-flex btn-light-primary"
+           href="{{ path('admin:tag:edit') }}">
+            <i class="ki-outline ki-plus fs-3"></i>
+            Nový štítek
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block data_list_table %}
+    <table class="{{ theme.table_class }} dataTable">
+        <colgroup>
+            <col data-dt-column="0" style="">
+            <col data-dt-column="1" style="width: 15%;">
+            <col data-dt-column="2" style="width: 10%;">
+        </colgroup>
+        <thead>
+        <tr class="{{ theme.thead_tr_class }}" role="row">
+            <th class="min-w-100px" data-dt-column="0">
+                <span class="dt-column-title">Název</span>
+            </th>
+            <th class="min-w-100px" data-dt-column="1">
+                <span class="dt-column-title">Publikováno</span>
+            </th>
+            <th class="text-end min-w-70px" data-dt-column="2" aria-label="Akce">
+                <span class="dt-column-title">Akce</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="{{ theme.tbody_class }}">
+        {% for tag in tags %}
+            {% set detail_url = path('admin:tag:edit', {'id': tag.id}) %}
+            <tr>
+                <td class="align-middle">
+                    <a href="{{ detail_url }}"
+                       class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                        {{ tag.name }}
+                    </a>
+                </td>
+                <td class="align-middle">
+                    <div class="{{ theme.toggle_switch_class }}"
+                         data-entity="tag"
+                         data-entity-id="{{ tag.id }}">
+                        {{ form_macro.switch('tag_is_public_' ~ tag.id, 'is_public', 'Publikováno', tag.isPublic, 'bi bi-check-circle-fill') }}
+                    </div>
+                </td>
+                <td class="text-end">
+                    {% set actions = [
+                        {
+                            'url': detail_url,
+                            'title': 'Upravit',
+                            'class': 'text-primary',
+                            'icon': 'ki-duotone ki-pencil',
+                        },
+                        {
+                            'url': '#',
+                            'title': 'Smazat',
+                            'method': 'tag/' ~ tag.id ~ '/delete',
+                            'confirm': 'Opravdu chcete smazat tento štítek?',
+                            'btn_class': 'btn-active-light-danger action-button',
+                            'icon': 'ki-duotone ki-trash',
+                        }
+                    ] %}
+                    {{ data_list.actions_icons(actions) }}
+                </td>
+            </tr>
+        {% else %}
+            {{ data_list.no_items_row(3, 'Žádné štítky') }}
+        {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
+{% endblock %}

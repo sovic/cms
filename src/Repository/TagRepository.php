@@ -3,7 +3,12 @@
 namespace Sovic\Cms\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Common\DataList\SearchRequestInterface;
+use Sovic\Common\Entity\Project;
 
 /**
  * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
@@ -13,6 +18,55 @@ use Sovic\Cms\Entity\Tag;
  */
 class TagRepository extends EntityRepository
 {
+    /**
+     * @return Tag[]
+     */
+    public function findBySearchRequest(
+        SearchRequestInterface $searchRequest,
+        ?Project $project = null,
+    ): array {
+        $qb = $this->buildQuery($searchRequest, $project);
+        $qb->orderBy('t.name', 'ASC');
+        $qb->setFirstResult($searchRequest->getOffset());
+        $qb->setMaxResults($searchRequest->getLimit());
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countBySearchRequest(
+        SearchRequestInterface $searchRequest,
+        ?Project $project = null,
+    ): int {
+        $qb = $this->buildQuery($searchRequest, $project);
+        $qb->select('COUNT(t.id)');
+
+        try {
+            return (int) $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException | NonUniqueResultException) {
+            return 0;
+        }
+    }
+
+    private function buildQuery(
+        SearchRequestInterface $searchRequest,
+        ?Project $project,
+    ): QueryBuilder {
+        $qb = $this->createQueryBuilder('t');
+
+        if ($project !== null) {
+            $qb->andWhere('t.project = :project');
+            $qb->setParameter('project', $project);
+        }
+
+        $search = $searchRequest->getSearch();
+        if ($search) {
+            $qb->andWhere('t.name LIKE :search');
+            $qb->setParameter('search', '%' . $search . '%');
+        }
+
+        return $qb;
+    }
+
     /**
      * @return string[]
      */
