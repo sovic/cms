@@ -23,6 +23,7 @@ use Sovic\Common\Entity\Project;
 #[Index(name: 'published', columns: ['published'])]
 #[Index(name: 'project_id', columns: ['project_id'])]
 #[Index(name: 'import_service_import_id', columns: ['import_service', 'import_id'])]
+#[Index(name: 'authorsusers_id_public', columns: ['authorsusers_id', 'public'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PostRepository::class)]
 class Post
