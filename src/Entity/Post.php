@@ -37,8 +37,8 @@ class Post
     public int $id;
 
     #[ManyToOne(targetEntity: Project::class)]
-    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    protected Project $project;
+    #[JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    protected ?Project $project = null;
 
     #[Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     protected string $name;
@@ -132,12 +132,12 @@ class Post
         return $this->id;
     }
 
-    public function getProject(): Project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProject(Project $project): void
+    public function setProject(?Project $project): void
     {
         $this->project = $project;
     }
