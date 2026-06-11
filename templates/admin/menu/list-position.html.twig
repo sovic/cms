@@ -95,8 +95,7 @@
             <td>
                 {% if item.page %}
                     <a class="badge badge-info small"
-                       target="_blank"
-                       href="{{ item.page.urlId }}">
+                       href="{{ path('admin:page:edit', {'id': item.page.id}) }}">
                         {{ item.page.urlId }}
                     </a>
                 {% elseif item.url %}
