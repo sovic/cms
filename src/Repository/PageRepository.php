@@ -59,7 +59,7 @@ class PageRepository extends EntityRepository
      */
     public function findByGroupId(int $groupId, SearchRequestInterface $searchRequest): array
     {
-        $qb = $this->buildGroupQuery($groupId);
+        $qb = $this->buildGroupQuery($groupId, $searchRequest);
         $qb->addOrderBy('p.id', 'DESC');
         $qb->setFirstResult($searchRequest->getOffset());
         $qb->setMaxResults($searchRequest->getLimit());
@@ -67,9 +67,9 @@ class PageRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countByGroupId(int $groupId): int
+    public function countByGroupId(int $groupId, SearchRequestInterface $searchRequest): int
     {
-        $qb = $this->buildGroupQuery($groupId);
+        $qb = $this->buildGroupQuery($groupId, $searchRequest);
         $qb->select('COUNT(p.id)');
 
         return (int) $qb->getQuery()->getSingleScalarResult();
@@ -112,16 +112,22 @@ class PageRepository extends EntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    private function buildGroupQuery(int $groupId): QueryBuilder
+    private function buildGroupQuery(int $groupId, ?SearchRequestInterface $searchRequest = null): QueryBuilder
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('p')->from(Page::class, 'p');
+        $qb->select('p');
+        $qb->from(Page::class, 'p');
 
         if ($groupId === 0) {
             $qb->where('p.pageGroup IS NULL');
         } else {
             $qb->where('IDENTITY(p.pageGroup) = :groupId');
             $qb->setParameter('groupId', $groupId);
+        }
+
+        if ($searchRequest && $searchRequest->getSearch()) {
+            $qb->andWhere('(p.name LIKE :search OR p.heading LIKE :search)');
+            $qb->setParameter('search', '%' . $searchRequest->getSearch() . '%');
         }
 
         return $qb;

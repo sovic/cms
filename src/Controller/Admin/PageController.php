@@ -62,7 +62,7 @@ class PageController extends AdminBaseController
             $sr->setPaginationRoute('admin:page:list');
 
             $pages = $repo->findByGroupId($groupId, $sr);
-            $total = $repo->countByGroupId($groupId);
+            $total = $repo->countByGroupId($groupId, $sr);
 
             $currentGroup = $groupId > 0
                 ? $em->getRepository(PageGroup::class)->find($groupId)
