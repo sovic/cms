@@ -23,7 +23,7 @@ class Page extends AbstractType
     use MetaFormTrait;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface                 $entityManager,
         #[Autowire('%page_enable_tags%')] private readonly bool $enableTags,
     ) {
     }
@@ -70,17 +70,17 @@ class Page extends AbstractType
             ]
         );
 
-        $builder->add(
-            'heading',
-            TextType::class,
-            [
-                'label' => 'Nadpis (H1)',
-                'required' => false,
-                'attr' => [
-                    'length' => 150,
-                ],
-            ]
-        );
+//        $builder->add(
+//            'heading',
+//            TextType::class,
+//            [
+//                'label' => 'Nadpis (H1)',
+//                'required' => false,
+//                'attr' => [
+//                    'length' => 150,
+//                ],
+//            ]
+//        );
 
         if (!$editing) {
             $builder->add(
