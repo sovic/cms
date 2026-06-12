@@ -5,6 +5,7 @@ namespace Sovic\Cms\Controller\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Repository\TagRepository;
+use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,6 +72,8 @@ class TagController extends AdminBaseController
 //                if (!$em->contains($tag)) {
 //                    $tag->setProject($this->project->getEntity());
 //                }
+
+                $tag->setName(TagName::normalize((string) $tag->getName()));
 
                 $em->persist($tag);
                 $em->flush();

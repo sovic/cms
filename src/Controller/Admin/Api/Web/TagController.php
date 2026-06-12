@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Repository\TagRepository;
+use Sovic\Cms\Tag\TagName;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,9 +51,9 @@ class TagController extends AbstractBaseApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $data = $this->getRequestData($request);
-        $name = trim((string) ($data['name'] ?? ''));
+        $name = TagName::normalize((string) ($data['name'] ?? ''));
         if ($name === '') {
-            $this->addError('empty_name');
+            $this->addError('invalid_name');
 
             return $this->sendFail();
         }

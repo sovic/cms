@@ -25,8 +25,9 @@
     <table class="{{ theme.table_class }} dataTable">
         <colgroup>
             <col data-dt-column="0" style="">
-            <col data-dt-column="1" style="width: 15%;">
-            <col data-dt-column="2" style="width: 10%;">
+            <col data-dt-column="1" style="width: 20%;">
+            <col data-dt-column="2" style="width: 15%;">
+            <col data-dt-column="3" style="width: 10%;">
         </colgroup>
         <thead>
         <tr class="{{ theme.thead_tr_class }}" role="row">
@@ -34,9 +35,12 @@
                 <span class="dt-column-title">Název</span>
             </th>
             <th class="min-w-100px" data-dt-column="1">
+                <span class="dt-column-title">Náhled</span>
+            </th>
+            <th class="min-w-100px" data-dt-column="2">
                 <span class="dt-column-title">Publikováno</span>
             </th>
-            <th class="text-end min-w-70px" data-dt-column="2" aria-label="Akce">
+            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>
@@ -50,6 +54,9 @@
                        class="text-gray-800 text-hover-primary fs-5 fw-bold">
                         {{ tag.name }}
                     </a>
+                </td>
+                <td class="align-middle">
+                    <span class="badge badge-light-primary">{{ tag.name }}</span>
                 </td>
                 <td class="align-middle">
                     <div class="{{ theme.toggle_switch_class }}"
@@ -79,7 +86,7 @@
                 </td>
             </tr>
         {% else %}
-            {{ data_list.no_items_row(3, 'Žádné štítky') }}
+            {{ data_list.no_items_row(4, 'Žádné štítky') }}
         {% endfor %}
         </tbody>
         <tfoot></tfoot>
