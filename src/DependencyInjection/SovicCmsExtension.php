@@ -20,5 +20,6 @@ class SovicCmsExtension extends Extension
         $container->setParameter('base_gallery_url', $config['base_gallery_url']);
         $container->setParameter('base_public_url', $config['base_public_url']);
         $container->setParameter('tinymce_content_css', $config['tinymce_content_css']);
+        $container->setParameter('page_enable_tags', $config['page']['enable_tags']);
     }
 }

@@ -165,12 +165,14 @@
         </div>
     </div>
 
-    {{ form_macro.section_header('Štítky') }}
-    <div class="row mb-4">
-        <div class="mb-2">
-            {{ tags.tags('page_tags', page_tags, true) }}
+    {% if page_enable_tags %}
+        {{ form_macro.section_header('Štítky') }}
+        <div class="row mb-4">
+            <div class="mb-2">
+                {{ tags.tags('page_tags', page_tags, true) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {{ form_macro.section_header('Nastavení') }}
     <div class="row mb-4">

@@ -26,15 +26,18 @@ class PageController extends AdminBaseController
 
     protected string $basePublicUrl;
     protected string $baseGalleryUrl;
+    protected bool $enableTags;
 
     public function __construct(
         EntityManagerInterface                   $entityManager,
         #[Autowire('%base_public_url%')] string  $basePublicUrl,
         #[Autowire('%base_gallery_url%')] string $baseGalleryUrl,
+        #[Autowire('%page_enable_tags%')] bool   $enableTags,
     ) {
         parent::__construct($entityManager);
         $this->basePublicUrl = $basePublicUrl;
         $this->baseGalleryUrl = $baseGalleryUrl;
+        $this->enableTags = $enableTags;
     }
 
     #[Route(
@@ -161,6 +164,7 @@ class PageController extends AdminBaseController
         $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
         $this->assign('page', $page);
+        $this->assign('page_enable_tags', $this->enableTags);
         $this->assign('page_public_url', $pagePublicUrl);
         $this->assign('page_tags', $pageTags);
 

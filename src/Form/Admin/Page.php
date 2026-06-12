@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class Page extends AbstractType
 {
@@ -23,6 +24,7 @@ class Page extends AbstractType
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        #[Autowire('%page_enable_tags%')] private readonly bool $enableTags,
     ) {
     }
 
@@ -142,16 +144,21 @@ class Page extends AbstractType
             );
         }
 
+        $contentTypeChoices = [
+            'Obsahová stránka' => 'content',
+            'Galerie' => 'gallery',
+        ];
+        if ($this->enableTags) {
+            $contentTypeChoices['Stránka s příspěvky se štítky'] = 'tags';
+        }
+
         $builder->add(
             'contentType',
             ChoiceType::class,
             [
                 'label' => 'Typ obsahu',
                 'required' => false,
-                'choices' => [
-                    'Obsahová stránka' => 'content',
-                    'Stránka s příspěvky se štítky' => 'tags',
-                ],
+                'choices' => $contentTypeChoices,
                 'placeholder' => false,
             ]
         );

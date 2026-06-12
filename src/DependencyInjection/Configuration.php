@@ -25,6 +25,15 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('')
                     ->info('Custom CSS file URL loaded into the TinyMCE content editor.')
                 ->end()
+                ->arrayNode('page')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enable_tags')
+                            ->defaultFalse()
+                            ->info('Show the tag field in the page edit form and the tags content type option.')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
