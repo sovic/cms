@@ -126,8 +126,10 @@ class PageController extends AdminBaseController
                 $pageTagsRaw = $request->request->get('page_tags', '');
                 $tagNames = [];
                 if ($pageTagsRaw !== '') {
-                    $pageTagsData = json_decode($pageTagsRaw, true, 512, JSON_THROW_ON_ERROR) ?: [];
-                    $tagNames = array_values(array_filter(array_column($pageTagsData, 'value')));
+                    // TODO tagify js plugin not working
+                    $tagNames = explode(',', $pageTagsRaw);
+                    //$pageTagsData = json_decode($pageTagsRaw, true, 512, JSON_THROW_ON_ERROR) ?: [];
+                    //$tagNames = array_values(array_filter(array_column($pageTagsData, 'value')));
                 }
                 $pageFactory->loadByEntity($page)->syncTagsByNames($tagNames);
 
@@ -187,6 +189,7 @@ class PageController extends AdminBaseController
         $clone->setUrlId($source->getUrlId() . '-copy-' . time());
         $clone->setName($source->getName() . ' (kopie)');
         $clone->setIsPublic(false);
+        $clone->setIsInSitemap(true);
         $clone->setPublishedAt(null);
         $clone->setLastUpdateDate(null);
 
