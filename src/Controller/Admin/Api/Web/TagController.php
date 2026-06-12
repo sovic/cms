@@ -39,6 +39,44 @@ class TagController extends AbstractBaseApiController
     }
 
     #[Route(
+        '/admin/api/web/tag/create',
+        name: 'admin:api:web:tag:create',
+        methods: ['POST'],
+    )]
+    public function create(
+        EntityManagerInterface $em,
+        Request                $request,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $data = $this->getRequestData($request);
+        $name = trim((string) ($data['name'] ?? ''));
+        if ($name === '') {
+            $this->addError('empty_name');
+
+            return $this->sendFail();
+        }
+
+        /** @var TagRepository $repo */
+        $repo = $em->getRepository(Tag::class);
+
+        $tag = $repo->findOneBy(['name' => $name]);
+        if ($tag === null) {
+            $tag = new Tag();
+            $tag->setName($name);
+            $tag->setIsPublic(true);
+
+            $em->persist($tag);
+            $em->flush();
+        }
+
+        $this->data['id'] = $tag->getId();
+        $this->data['name'] = $tag->getName();
+
+        return $this->sendSuccess();
+    }
+
+    #[Route(
         '/admin/api/web/tag/{id}/delete',
         name: 'admin:api:web:tag:delete',
         requirements: ['id' => '\d+'],

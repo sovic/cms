@@ -1,31 +1,70 @@
-{% macro tags(field_name, current_tags) %}
+{% macro tags(field_name, current_tags, allow_create = false) %}
     {% set input_id = field_name ~ '_tagify' %}
+    {% set modal_id = field_name ~ '_create_modal' %}
+    {% set name_input_id = field_name ~ '_create_name' %}
     <div class="col-12">
-        <label for="{{ input_id }}" class="w-100">
-            <input class="form-control form-control-solid"
-                   type="text"
-                   name="{{ field_name }}"
-                   id="{{ input_id }}"
-                   value="{{ current_tags is defined and current_tags|length > 0 ? current_tags|join(',') : '' }}"/>
-        </label>
+        <div class="d-flex align-items-start gap-2">
+            <label for="{{ input_id }}" class="w-100 mb-0">
+                <input class="form-control form-control-solid"
+                       type="text"
+                       name="{{ field_name }}"
+                       id="{{ input_id }}"
+                       value="{{ current_tags is defined and current_tags|length > 0 ? current_tags|join(',') : '' }}"/>
+            </label>
+            {% if allow_create %}
+                <button type="button"
+                        class="btn btn-light-primary btn-icon flex-shrink-0"
+                        data-bs-toggle="modal"
+                        data-bs-target="#{{ modal_id }}"
+                        title="Nový štítek">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            {% endif %}
+        </div>
     </div>
 
-    <!--suppress JSUnresolvedReference -->
+    {% if allow_create %}
+        <div class="modal fade" id="{{ modal_id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nový štítek</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="{{ name_input_id }}" class="form-label">Název štítku</label>
+                        <input type="text"
+                               class="form-control form-control-solid"
+                               id="{{ name_input_id }}"
+                               maxlength="100"/>
+                        <div class="text-danger mt-2 d-none" id="{{ name_input_id }}_error"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Zrušit</button>
+                        <button type="button" class="btn btn-primary" id="{{ name_input_id }}_save">Uložit a přidat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!--suppress JSUnresolvedReference, JSUnusedLocalSymbols -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const input = document.querySelector('#{{ input_id }}');
+            // const input = document.querySelector('#{{ input_id }}');
             let controller;
 
-            const tagify = new Tagify(input, {
-                enforceWhitelist: true,
-                maxTags: 10,
-                dropdown: {
-                    maxItems: 20,
-                    classname: 'tagify__inline__suggestions',
-                    enabled: 0,
-                    closeOnSelect: false
-                }
-            });
+            // const tagify = new Tagify(input, {
+            //     enforceWhitelist: true,
+            //     maxTags: 10,
+            //     dropdown: {
+            //         maxItems: 20,
+            //         classname: 'tagify__inline__suggestions',
+            //         enabled: 0,
+            //         closeOnSelect: false
+            //     }
+            // });
 
             function loadSuggestions(q) {
                 controller && controller.abort();
@@ -49,12 +88,76 @@
                     });
             }
 
-            tagify.on('input', function (e) {
-                loadSuggestions(e.detail.value);
-            });
-            tagify.on('focus', function () {
-                loadSuggestions('');
-            });
+            // tagify.on('input', function (e) {
+            //     loadSuggestions(e.detail.value);
+            // });
+            // tagify.on('focus', function () {
+            //     loadSuggestions('');
+            // });
+
+            {% if allow_create %}
+            (function () {
+                const inputEl = document.querySelector('#{{ input_id }}');
+                const modalEl = document.querySelector('#{{ modal_id }}');
+                const nameInput = document.querySelector('#{{ name_input_id }}');
+                const saveBtn = document.querySelector('#{{ name_input_id }}_save');
+                const errorEl = document.querySelector('#{{ name_input_id }}_error');
+                if (!modalEl || !nameInput || !saveBtn) {
+                    return;
+                }
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+                modalEl.addEventListener('shown.bs.modal', function () {
+                    nameInput.value = '';
+                    errorEl.classList.add('d-none');
+                    nameInput.focus();
+                });
+
+                function submit() {
+                    const name = nameInput.value.trim();
+                    if (name === '') {
+                        return;
+                    }
+
+                    saveBtn.disabled = true;
+                    errorEl.classList.add('d-none');
+
+                    fetch('/admin/api/web/tag/create', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({name: name})
+                    })
+                        .then(function (r) {
+                            return r.json();
+                        })
+                        .then(function (res) {
+                            if (!res || res.status !== 'success') {
+                                throw new Error('fail');
+                            }
+                            const tagName = res.data.name;
+                            // tagify.whitelist = (tagify.whitelist || []).concat([tagName]);
+                            // tagify.addTags([tagName]);
+                            inputEl.value = tagName;
+                            modal.hide();
+                        })
+                        .catch(function () {
+                            errorEl.textContent = 'Štítek se nepodařilo uložit.';
+                            errorEl.classList.remove('d-none');
+                        })
+                        .finally(function () {
+                            saveBtn.disabled = false;
+                        });
+                }
+
+                saveBtn.addEventListener('click', submit);
+                nameInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        submit();
+                    }
+                });
+            })();
+            {% endif %}
         });
     </script>
 {% endmacro %}
