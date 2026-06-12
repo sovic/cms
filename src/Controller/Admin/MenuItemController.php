@@ -124,6 +124,9 @@ class MenuItemController extends AdminBaseController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $pageId = $menuItem->getPageId();
+                $menuItem->setPage($pageId !== null ? $em->getRepository(Page::class)->find($pageId) : null);
+
                 $em->persist($menuItem);
                 $em->flush();
 
