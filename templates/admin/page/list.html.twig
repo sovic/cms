@@ -26,18 +26,10 @@
 
 {% block add_item %}
     {% if view == 'groups' %}
-        <a class="btn btn-flex btn-light-primary"
-           href="{{ path('admin:page-group:edit') }}">
-            <i class="ki-outline ki-message-add fs-3"></i>
-            Nová skupina
-        </a>
+        {{ data_list.add_button('Nová skupina', 'admin:page-group:edit') }}
     {% endif %}
     {% if allow_add %}
-        <a class="btn btn-flex btn-light-primary"
-           href="{{ path('admin:page:edit') }}">
-            <i class="ki-outline ki-message-add fs-3"></i>
-            Nová stránka
-        </a>
+        {{ data_list.add_button('Nová stránka', 'admin:page:edit') }}
     {% endif %}
 {% endblock %}
 
@@ -149,7 +141,7 @@
         <tbody class="{{ theme.tbody_class }}">
         {% for page in pages %}
             {% set detail_url = path('admin:page:edit', {'id': page.id}) %}
-            {% set web_url = '/' ~ page.urlId %}
+            {% set public_url = base_public_url ~ '/' ~ page.urlId %}
             <tr>
                 {% if is_group_actions_enabled %}
                     <td>
@@ -164,8 +156,16 @@
                         </a>
                     </div>
                     <div class="mb-2">
-                        {% if web_url %}
-                            <div class="badge badge-light-info me-2">{{ web_url }}</div>
+                        {% if public_url %}
+                            <a href="{{ public_url }}"
+                               target="_blank"
+                               rel="noopener">
+                                <span class="badge badge-light-info small me-2">
+                                    {{ public_url }}
+                                    <i class="bi bi-box-arrow-up-right text-info ms-2 me-1"
+                                       style="font-size: 0.8rem;"></i>
+                                </span>
+                            </a>
                         {% endif %}
                         {% if page.lang %}
                             <span class="badge badge-light-info me-2">{{ page.lang }}</span>
@@ -184,7 +184,7 @@
                     {% set actions = [] %}
                     {% set actions = actions|merge([
                         {
-                            'url': web_url,
+                            'url': public_url,
                             'title': 'Zobrazit',
                             'class': 'text-secondary',
                             'icon': 'ki-duotone ki-eye',

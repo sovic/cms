@@ -16,16 +16,12 @@
 
 {% block add_item %}
     {% if allow_add %}
-        <a class="btn btn-flex btn-light-primary"
-           href="{{ path('admin:menu:edit') }}">
-            <i class="ki-outline ki-message-add fs-3"></i>
-            Nová položka
-        </a>
+        {{ data_list.add_button('Nová položka', 'admin:menu:edit') }}
     {% endif %}
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class }}">
         <thead>
         <tr class="{{ theme.thead_tr_class }}" role="row">
             <th class="min-w-300px" data-dt-column="1">

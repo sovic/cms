@@ -424,3 +424,13 @@
         </td>
     </tr>
 {% endmacro %}
+
+{% macro add_button(label, route, params = {}) %}
+    <a class="btn btn-flex btn-light-primary"
+       href="{{ path(route, params) }}">
+        <i class="ki-outline ki-message-add fs-3 py-1 pe-0"></i>
+        <span class="d-none d-md-inline-block ps-2">
+            {{ label }}
+        </span>
+    </a>
+{% endmacro %}

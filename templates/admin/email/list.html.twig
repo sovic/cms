@@ -21,11 +21,7 @@
 
 {% block add_item %}
     {% if allow_add %}
-        <a class="btn btn-flex btn-light-primary"
-           href="{{ path('admin:email:edit') }}">
-            <i class="ki-outline ki-message-add fs-3"></i>
-            Nová šablona
-        </a>
+        {{ data_list.add_button('Nová šablona', 'admin:email:edit') }}
     {% endif %}
 {% endblock %}
 

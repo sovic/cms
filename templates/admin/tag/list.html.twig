@@ -13,11 +13,7 @@
 
 {% block add_item %}
     {% if allow_add %}
-        <a class="btn btn-flex btn-light-primary"
-           href="{{ path('admin:tag:edit') }}">
-            <i class="ki-outline ki-plus fs-3"></i>
-            Nový štítek
-        </a>
+        {{ data_list.add_button('Nový štítek', 'admin:tag:edit') }}
     {% endif %}
 {% endblock %}
 

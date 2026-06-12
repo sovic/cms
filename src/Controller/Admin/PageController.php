@@ -71,6 +71,7 @@ class PageController extends AdminBaseController
                 ? $em->getRepository(PageGroup::class)->find($groupId)
                 : null;
 
+            $this->assign('base_public_url', $this->basePublicUrl);
             $this->assign('current_group', $currentGroup);
             $this->assign('group_id', $groupId);
             $this->assign('pages', $pages);
