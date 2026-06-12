@@ -60,7 +60,7 @@ class PageRepository extends EntityRepository
     public function findByGroupId(int $groupId, SearchRequestInterface $searchRequest): array
     {
         $qb = $this->buildGroupQuery($groupId, $searchRequest);
-        $qb->addOrderBy('p.id', 'DESC');
+        $qb->addOrderBy('p.name', 'ASC');
         $qb->setFirstResult($searchRequest->getOffset());
         $qb->setMaxResults($searchRequest->getLimit());
 
