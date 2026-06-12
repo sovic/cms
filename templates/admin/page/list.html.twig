@@ -149,6 +149,7 @@
         <tbody class="{{ theme.tbody_class }}">
         {% for page in pages %}
             {% set detail_url = path('admin:page:edit', {'id': page.id}) %}
+            {% set web_url = '/' ~ page.urlId %}
             <tr>
                 {% if is_group_actions_enabled %}
                     <td>
@@ -160,12 +161,14 @@
                         <a href="{{ detail_url }}"
                            class="text-gray-800 text-hover-primary fs-5 fw-bold">
                             {{ page.name }}
-                            {% if page.lang %}
-                                <span class="badge badge-light-info">{{ page.lang }}</span>
-                            {% endif %}
                         </a>
-                        {% if page.heading %}
-                            <div class="text-muted fs-7">{{ page.heading }}</div>
+                    </div>
+                    <div class="mb-2">
+                        {% if web_url %}
+                            <div class="badge badge-light-info me-2">{{ web_url }}</div>
+                        {% endif %}
+                        {% if page.lang %}
+                            <span class="badge badge-light-info me-2">{{ page.lang }}</span>
                         {% endif %}
                     </div>
                     <div class="{{ theme.toggle_switch_class }}"
@@ -178,8 +181,6 @@
                     {{ page.publishedAt ? page.publishedAt|format_date_time : '—' }}
                 </td>
                 <td class="text-end">
-                    {% set web_url = '/' ~ page.urlId %}
-
                     {% set actions = [] %}
                     {% set actions = actions|merge([
                         {
