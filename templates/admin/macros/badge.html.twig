@@ -1,7 +1,15 @@
+{#
+# Badge macros for displaying status indicators in the admin interface.
+# @param badges: An array of badge objects, each containing 'label', 'variant', and optional 'url'.
+#}
 {% macro badge_group(badges) %}
     <div class="badge-group">
         {% for badge in badges %}
-            <span class="badge badge-light-{{ badge.variant }} me-1">{{ badge.label }}</span>
+            {% if badge.url is defined and badge.url %}
+                <a href="{{ badge.url }}" class="badge badge-light-{{ badge.variant }} me-1">{{ badge.label }}</a>
+            {% else %}
+                <span class="badge badge-light-{{ badge.variant }} me-1">{{ badge.label }}</span>
+            {% endif %}
         {% endfor %}
     </div>
 {% endmacro %}
