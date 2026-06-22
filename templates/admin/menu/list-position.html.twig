@@ -21,7 +21,7 @@
 
 {% block add_item %}
     {% if allow_add %}
-        {% set params = tree[0] is defined ? {'parent_id': tree[0].item.id} : {}) %}
+        {% set params = tree[0] is defined ? {'parent_id': tree[0].item.id} : {} %}
         {{ data_list.add_button('Nová položka', 'admin:menu:edit', params) }}
     {% endif %}
 {% endblock %}
