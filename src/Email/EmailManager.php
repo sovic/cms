@@ -101,7 +101,7 @@ class EmailManager implements EmailManagerInterface
     public function sendTest(Email $email, string $emailTo): bool
     {
         $message = $this->buildMessage($email, [], $emailTo);
-        $message->subject('[TEST] ' . $email->getSubject());
+        $message->subject('(TEST) ' . $email->getSubject());
 
         $error = $this->sendMessage($message);
 
