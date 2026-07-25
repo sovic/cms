@@ -202,7 +202,7 @@
                     }
                 });
 
-                modal.querySelectorAll('input[type="text"], input[type="number"]').forEach(function (field) {
+                modal.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]').forEach(function (field) {
                     if (!field.name) return;
                     if (field.value) {
                         url.searchParams.set(field.name, field.value);
@@ -224,7 +224,7 @@
                 modal.querySelectorAll('input[type="checkbox"]').forEach(function (field) {
                     field.checked = false;
                 });
-                modal.querySelectorAll('input[type="text"], input[type="number"]').forEach(function (field) {
+                modal.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]').forEach(function (field) {
                     field.value = '';
                 });
             });
