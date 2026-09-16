@@ -3,12 +3,21 @@ Renders a single sidebar sub-item.
 
 @param string label         Visible label
 @param string route         Symfony route name
-@param string current_route Current active route name (from `menu` variable)
+@param array  route_params  Route parameters (item is active only when all of them match the current request)
+@param string|false icon    KTIcons icon name, bullet is rendered when false
 #}
-{% macro menu_item(label, route, current_route, icon = false) %}
+{% macro menu_item(label, route, route_params = {}, icon = false) %}
+    {% set current_route = app.request.attributes.get('_route') %}
+    {% set current_params = app.request.attributes.get('_route_params', {}) %}
+    {% set is_active = current_route == route %}
+    {% for key, value in route_params %}
+        {% if current_params[key] is not defined or current_params[key] != value %}
+            {% set is_active = false %}
+        {% endif %}
+    {% endfor %}
     <div class="menu-item">
-        <a class="menu-link{% if current_route == route %} active{% endif %}"
-           href="{{ path(route) }}">
+        <a class="menu-link{% if is_active %} active{% endif %}"
+           href="{{ path(route, route_params) }}">
             {% if icon %}
                 <span class="menu-icon"><i class="ki-outline ki-{{ icon }} fs-2"></i></span>
             {% else %}
@@ -24,10 +33,10 @@ Renders a collapsible sidebar group with sub-items.
 
 @param string icon          KTIcons icon name (e.g. 'book-open', 'setting')
 @param string title         Group heading label
-@param array  items         List of {label, route, visible} hashes
-@param string current_route Current active route name (from `menu` variable)
+@param array  items         List of {label, route, route_params, visible} hashes
 #}
-{% macro menu_group(icon, title, items, current_route) %}
+{% macro menu_group(icon, title, items) %}
+    {% set current_route = app.request.attributes.get('_route', '') %}
     {% set current_ns = (current_route|split(':')[1]) is defined ? (current_route|split(':')[1]) : '' %}
     {% set is_active = current_route in items|map(i => i.route) or (current_ns and current_ns in items|map(i => (i.route|split(':')[1]) is defined ? (i.route|split(':')[1]) : '')) %}
     <div data-kt-menu-trigger="click"
@@ -41,7 +50,7 @@ Renders a collapsible sidebar group with sub-items.
             {% for item in items %}
                 {% set item = item|merge({visible: item.visible is not defined or item.visible}) %}
                 {% if item.visible %}
-                    {{ _self.menu_item(item.label, item.route, current_route) }}
+                    {{ _self.menu_item(item.label, item.route, item.route_params ?? {}) }}
                 {% endif %}
             {% endfor %}
         </div>
