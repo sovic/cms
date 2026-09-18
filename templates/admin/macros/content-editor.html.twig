@@ -17,7 +17,8 @@
                     "undo redo | styleselect | bold italic | nonbreaking | bullist numlist | link | image | code | fullscreen | visualblocks"
                 ],
                 plugins: "autolink link code lists image fullscreen nonbreaking visualblocks",
-                relative_urls: false,
+                relative_urls: true,
+                remove_script_host: true,
                 extended_valid_elements: 'i[class|style|aria-hidden]',
                 {% if base_url %}document_base_url: '{{ base_url }}',{% endif %}
                 browser_spellcheck: true,
@@ -46,8 +47,8 @@
                     if (url.indexOf('{') !== -1) {
                         return url;
                     }
-                    // use documentBaseURI.toAbsolute to avoid recursive call back into urlconverter_callback
-                    return this.documentBaseURI.toAbsolute(url);
+                    // use documentBaseURI.toRelative to avoid recursive call back into urlconverter_callback
+                    return this.documentBaseURI.toRelative(url);
                 },
             };
 
