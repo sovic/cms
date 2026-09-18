@@ -18,6 +18,7 @@
                 ],
                 plugins: "autolink link code lists image fullscreen nonbreaking visualblocks",
                 relative_urls: false,
+                extended_valid_elements: 'i[class|style|aria-hidden]',
                 {% if base_url %}document_base_url: '{{ base_url }}',{% endif %}
                 browser_spellcheck: true,
                 body_attrs: {spellcheck: 'true'},
@@ -30,6 +31,13 @@
                 ],
                 content_style: "body { padding: 12px 12px; } .int_cta_link { display: inline-block; padding: 9px 20px 10px 20px; background-color: #007bff; color: #ffffff !important; text-decoration: none; border-radius: 5px; }",
                 {% if tinymce_content_css %}content_css: "{{ tinymce_content_css }}",{% endif %}
+                setup: function (editor) {
+                    // keep empty <i> tags (e.g. Bootstrap/Font Awesome icons) from being stripped on save
+                    editor.on('PreInit', function () {
+                        editor.schema.getNonEmptyElements()['I'] = {};
+                        editor.schema.getNonEmptyElements()['i'] = {};
+                    });
+                },
                 init_instance_callback: function (editor) {
                     editor.getContainer().style.visibility = 'visible';
                 },
