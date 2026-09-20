@@ -11,12 +11,35 @@
     const POLL_MAX_TRIES = 40;
 
     /**
+     * @param {string|undefined} value JSON encoded list of strings
+     * @returns {string[]}
+     */
+    function parseList(value) {
+        if (!value) {
+            return [];
+        }
+        try {
+            const parsed = JSON.parse(value);
+            return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    /**
      * @param {HTMLElement} drawer
      */
     function AiAssistant(drawer) {
         this.drawer = drawer;
         this.apiBase = drawer.dataset.apiBase;
         this.contentCss = drawer.dataset.contentCss || '';
+        this.previewCss = parseList(drawer.dataset.previewCss);
+        this.previewBase = drawer.dataset.previewBase || '';
+        this.previewBodyClass = drawer.dataset.previewBodyClass || '';
+        this.previewWrapperClass = drawer.dataset.previewWrapperClass || '';
+        if (this.previewCss.length === 0 && this.contentCss) {
+            this.previewCss = [this.contentCss];
+        }
         this.settingsUrl = drawer.dataset.settingsUrl;
         this.messages = drawer.querySelector('#ai-messages');
         this.empty = drawer.querySelector('#ai-empty');
@@ -286,7 +309,9 @@
         if (!isUser && message.html) {
             this.htmlByMessage[String(message.id)] = message.html;
             const preview = element.querySelector('.js-ai-preview');
-            preview.querySelector('iframe').srcdoc = this.buildPreviewDocument(message.html);
+            const frame = preview.querySelector('iframe');
+            this.autoSize(frame);
+            frame.srcdoc = this.buildPreviewDocument(message.html);
             preview.hidden = false;
         }
 
@@ -301,15 +326,68 @@
      * @returns {string}
      */
     AiAssistant.prototype.buildPreviewDocument = function (html) {
-        let head = '<meta charset="utf-8"><base target="_blank">';
-        if (this.contentCss) {
-            const link = document.createElement('link');
+        const doc = document.implementation.createHTMLDocument('');
+
+        const meta = doc.createElement('meta');
+        meta.setAttribute('charset', 'utf-8');
+        doc.head.appendChild(meta);
+
+        const base = doc.createElement('base');
+        if (this.previewBase) {
+            // relative stylesheet, image and link paths resolve against the public website
+            base.href = this.previewBase.replace(/\/+$/, '') + '/';
+        }
+        base.target = '_blank';
+        doc.head.appendChild(base);
+
+        this.previewCss.forEach(function (href) {
+            const link = doc.createElement('link');
             link.rel = 'stylesheet';
-            link.href = this.contentCss;
-            head += link.outerHTML;
+            link.href = href;
+            doc.head.appendChild(link);
+        });
+
+        if (this.previewBodyClass) {
+            doc.body.className = this.previewBodyClass;
         }
 
-        return '<!doctype html><html><head>' + head + '</head><body style="padding: 12px;">' + html + '</body></html>';
+        let target = doc.body;
+        if (this.previewWrapperClass) {
+            const wrapper = doc.createElement('div');
+            wrapper.className = this.previewWrapperClass;
+            doc.body.appendChild(wrapper);
+            target = wrapper;
+        }
+        target.innerHTML = html;
+
+        return '<!doctype html>' + doc.documentElement.outerHTML;
+    };
+
+    /**
+     * Grows the preview to the height of its content, so the page is not scrolled inside a small box.
+     *
+     * @param {HTMLIFrameElement} frame
+     */
+    AiAssistant.prototype.autoSize = function (frame) {
+        const resize = function () {
+            try {
+                const body = frame.contentDocument ? frame.contentDocument.body : null;
+                if (!body) {
+                    return;
+                }
+                const height = Math.max(body.scrollHeight, body.offsetHeight);
+                frame.style.height = Math.min(Math.max(height + 24, 200), 900) + 'px';
+            } catch (e) {
+                // preview is not readable, keep the default height
+            }
+        };
+
+        frame.addEventListener('load', function () {
+            resize();
+            // stylesheets and images may still be loading and change the height
+            setTimeout(resize, 400);
+            setTimeout(resize, 1500);
+        });
     };
 
     /**
@@ -318,6 +396,15 @@
      */
     AiAssistant.prototype.apply = function (action, html) {
         if (!html) {
+            return;
+        }
+
+        if (action === 'fullscreen') {
+            const modal = document.getElementById('ai-preview-modal');
+            if (modal) {
+                document.getElementById('ai-preview-modal-frame').srcdoc = this.buildPreviewDocument(html);
+                bootstrap.Modal.getOrCreateInstance(modal).show();
+            }
             return;
         }
 

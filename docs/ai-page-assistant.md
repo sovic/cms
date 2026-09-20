@@ -14,6 +14,7 @@ sovic_cms:
         components_dir: '%kernel.project_dir%/templates/components'
         styleguide_file: '%kernel.project_dir%/templates/components/STYLEGUIDE.md'
         model: 'claude-opus-5'   # default, users can override it in their AI settings
+        effort: 'medium'         # low | medium | high | xhigh | max
         max_tokens: 16000        # max output tokens of one response
         history_limit: 20        # previous messages sent to the model
 ```
@@ -35,6 +36,35 @@ New entities `UserAiSetting`, `AiConversation`, `AiMessage` (tables `user_ai_set
 API keys are per user. Each admin opens *AI asistent* in the user menu (`/admin/ai/settings`) and enters their own
 Anthropic API key. Keys are stored encrypted with a key derived from `kernel.secret`; changing the secret makes
 stored keys unreadable and users have to enter them again.
+
+## Preview styles
+
+The assistant shows a preview of the generated content in a sandboxed iframe. To make it look like the real page,
+point `preview_css` at the stylesheets of the public website:
+
+```yaml
+sovic_cms:
+    base_public_url: 'https://www.example.com'
+    ai:
+        preview_css:
+            - '/build/app.css'
+        preview_body_class: ''
+        preview_wrapper_class: 'container'
+```
+
+- `preview_css` takes one path or a list of paths. Relative paths resolve against `base_public_url`, so the
+  stylesheet of the public site can be reused as it is, including the fonts and images it references. When left
+  empty, the preview falls back to `tinymce_content_css`.
+- `preview_body_class` and `preview_wrapper_class` reproduce the wrapper markup of the public page template, for
+  styles that depend on it (a container class, a page modifier class on the body).
+- The preview grows to the height of its content and every answer has a *Velký náhled* button that opens the
+  content full screen in the same styles.
+- Scripts never run in the preview, so components that need JavaScript (sliders, accordions) show their static
+  markup only.
+
+The stylesheet is used for rendering the preview only, it is not sent to the model. What the model may use is
+defined by the component snippets and the styleguide file. Describe the available classes and when to use them in
+the styleguide rather than attaching the whole CSS, which would be large and expensive on every request.
 
 ## Speed and cost
 

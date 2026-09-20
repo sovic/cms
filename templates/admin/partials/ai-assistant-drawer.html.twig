@@ -8,6 +8,10 @@
      data-kt-drawer-width="{default:'100%', 'md': '640px'}"
      data-api-base="{{ api_base_url|default('/admin') }}/api/web/ai/page/{{ page.id }}"
      data-content-css="{{ tinymce_content_css|default('') }}"
+     data-preview-css="{{ ai_preview_css|default([])|json_encode }}"
+     data-preview-base="{{ base_public_url|default('') }}"
+     data-preview-body-class="{{ ai_preview_body_class|default('') }}"
+     data-preview-wrapper-class="{{ ai_preview_wrapper_class|default('') }}"
      data-settings-url="{{ path('admin:ai:settings') }}"
      style="z-index: 1150;">
 
@@ -78,7 +82,14 @@
             </div>
             <div class="js-ai-text rounded p-4 fs-6" style="white-space: pre-wrap;"></div>
             <div class="js-ai-preview mt-3" hidden>
-                <iframe class="w-100 border rounded bg-white"
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span class="text-gray-500 fs-8">Náhled ve stylech webu</span>
+                    <button type="button" class="btn btn-sm btn-link" data-ai-action="fullscreen">
+                        <i class="bi bi-arrows-fullscreen me-1"></i>
+                        Velký náhled
+                    </button>
+                </div>
+                <iframe class="w-100 border rounded bg-white js-ai-frame"
                         sandbox="allow-same-origin"
                         style="height: 360px;"
                         title="Náhled obsahu"></iframe>
@@ -99,4 +110,24 @@
             </div>
         </div>
     </template>
+</div>
+
+<div class="modal fade" id="ai-preview-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header py-3">
+                <h5 class="modal-title">
+                    <i class="bi bi-eye me-2"></i>
+                    Náhled obsahu ve stylech webu
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe class="w-100 h-100 border-0 bg-white"
+                        id="ai-preview-modal-frame"
+                        sandbox="allow-same-origin"
+                        title="Náhled obsahu"></iframe>
+            </div>
+        </div>
+    </div>
 </div>

@@ -33,6 +33,9 @@ class SovicCmsExtension extends Extension
         $container->setParameter('ai_styleguide_file', $ai['styleguide_file']);
         $container->setParameter('ai_model', $ai['model']);
         $container->setParameter('ai_effort', $ai['effort']);
+        $container->setParameter('ai_preview_css', $ai['preview_css']);
+        $container->setParameter('ai_preview_body_class', $ai['preview_body_class']);
+        $container->setParameter('ai_preview_wrapper_class', $ai['preview_wrapper_class']);
         $container->setParameter('ai_max_tokens', $ai['max_tokens']);
         $container->setParameter('ai_history_limit', $ai['history_limit']);
         $container->setParameter('ai_enabled', !empty($ai['components_dir']));
