@@ -2,3 +2,11 @@ sovic_cms:
     base_gallery_url: ''
     base_public_url: ''
     tinymce_content_css: ''
+
+    ai:
+        # AI page assistant is enabled when components_dir is set
+        components_dir: '%kernel.project_dir%/templates/components'
+        styleguide_file: '%kernel.project_dir%/templates/components/STYLEGUIDE.md'
+        model: 'claude-opus-5'
+        max_tokens: 16000
+        history_limit: 20

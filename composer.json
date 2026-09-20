@@ -33,6 +33,7 @@
         "php": "^8.2",
         "ext-imagick": "*",
         "ext-intl": "*",
+        "ext-sodium": "*",
         "ext-zip": "*",
         "cocur/slugify": "^4.0",
         "doctrine/doctrine-bundle": "^2.18",
@@ -47,7 +48,9 @@
         "symfony/twig-bundle": "^7.3",
         "symfony/validator": "^7.3",
         "league/flysystem": "^3.33",
-        "league/flysystem-bundle": "^3.7"
+        "league/flysystem-bundle": "^3.7",
+        "anthropic-ai/sdk": "^0.50.0",
+        "symfony/http-client": "^7.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^12.5",
@@ -56,7 +59,8 @@
     },
     "config": {
         "allow-plugins": {
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": false
         }
     }
 }
