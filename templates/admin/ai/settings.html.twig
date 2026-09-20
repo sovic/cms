@@ -1,0 +1,55 @@
+{% extends '@CmsBundle/admin/layout/admin.html.twig' %}
+
+{% form_theme form '@CmsBundle/admin/forms/form-narrow.html.twig' %}
+
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+
+{% block content %}
+    <div class="app-container container">
+        <div class="{{ theme.card_class }}">
+            {{ form_macro.card_header('AI asistent', '') }}
+
+            <div class="card-body">
+                <div class="alert {{ has_api_key ? 'alert-success' : 'alert-warning' }} d-flex align-items-center mb-8">
+                    <i class="bi {{ has_api_key ? 'bi-key' : 'bi-exclamation-triangle' }} fs-2 me-4"></i>
+                    <div>
+                        {% if has_api_key %}
+                            API klíč je nastaven (končí na <strong>…{{ key_hint }}</strong>).
+                        {% else %}
+                            API klíč není nastaven, AI asistent na stránkách nebude fungovat.
+                        {% endif %}
+                        <div class="text-gray-700 fs-7 mt-1">
+                            Asistent používá váš vlastní klíč k Anthropic API, spotřeba se účtuje na váš účet.
+                            Klíč vytvoříte na <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+                            Výchozí model: <code>{{ default_model }}</code>.
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+                <div class="row">
+                    <div class="col-12">
+                        {{ form_row(form.api_key) }}
+                    </div>
+                    <div class="col-12">
+                        {{ form_row(form.model) }}
+                    </div>
+                    {% if has_api_key %}
+                        <div class="col-12">
+                            {{ form_row(form.remove_key) }}
+                        </div>
+                    {% else %}
+                        {% do form.remove_key.setRendered %}
+                    {% endif %}
+                </div>
+                <div class="{{ theme.form_sticky_bar_class() }}">
+                    {{ form_row(form.save) }}
+                </div>
+                <div class="mt-n5"></div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

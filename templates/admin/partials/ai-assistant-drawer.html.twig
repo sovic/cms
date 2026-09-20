@@ -1,0 +1,102 @@
+<div id="kt-drawer-ai"
+     class="bg-white"
+     data-kt-drawer="true"
+     data-kt-drawer-activate="true"
+     data-kt-drawer-toggle="#ai-assistant-toggle"
+     data-kt-drawer-close="#kt-drawer-ai-close"
+     data-kt-drawer-direction="end"
+     data-kt-drawer-width="{default:'100%', 'md': '640px'}"
+     data-api-base="{{ api_base_url|default('/admin') }}/api/web/ai/page/{{ page.id }}"
+     data-content-css="{{ tinymce_content_css|default('') }}"
+     data-settings-url="{{ path('admin:ai:settings') }}"
+     style="z-index: 1150;">
+
+    <div class="card w-100 rounded-0 d-flex flex-column h-100">
+        <div class="card-header pe-5 flex-shrink-0">
+            <div class="card-title">
+                <i class="bi bi-stars fs-2 text-success me-2"></i>
+                AI asistent
+            </div>
+
+            <div class="card-toolbar gap-2">
+                <button type="button"
+                        class="btn btn-sm btn-light"
+                        id="ai-reset"
+                        title="Začít novou konverzaci">
+                    <i class="bi bi-plus-lg"></i>
+                    Nová konverzace
+                </button>
+                <div class="btn btn-sm btn-icon btn-active-light-primary" id="kt-drawer-ai-close">
+                    <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body scroll-y flex-grow-1" id="ai-messages">
+            <div class="text-gray-600 fs-6" id="ai-empty">
+                <p class="mb-3">
+                    Popište, jak má stránka vypadat, a vložte texty, které na ní mají být.
+                    Asistent připraví obsah z komponent webu, takže bude vypadat stejně jako zbytek stránek.
+                </p>
+                <p class="mb-2 fw-semibold">Například:</p>
+                <ul class="mb-0">
+                    <li>Připrav stránku O nás: nahoře úvod, pak tři karty s našimi hodnotami a na konci výzva ke kontaktu. Texty: …</li>
+                    <li>Zkrať druhou sekci a přidej odkaz na kontakt.</li>
+                    <li>Uprav texty na stránce, aby byly srozumitelnější.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-footer flex-shrink-0 py-5">
+            <textarea class="form-control form-control-solid mb-3"
+                      id="ai-input"
+                      rows="4"
+                      maxlength="20000"
+                      placeholder="Napište, co má asistent udělat… (Ctrl+Enter odešle)"></textarea>
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="text-gray-500 fs-8">
+                    Vložení do editoru stránku neuloží, nezapomeňte ji uložit.
+                </span>
+                <button type="button" class="btn btn-sm btn-success" id="ai-send">
+                    <span class="indicator-label">
+                        <i class="bi bi-send me-1"></i>
+                        Odeslat
+                    </span>
+                    <span class="indicator-progress">
+                        Připravuji…
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <template id="ai-message-tpl">
+        <div class="ai-message mb-6">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge js-ai-role"></span>
+            </div>
+            <div class="js-ai-text rounded p-4 fs-6" style="white-space: pre-wrap;"></div>
+            <div class="js-ai-preview mt-3" hidden>
+                <iframe class="w-100 border rounded bg-white"
+                        sandbox="allow-same-origin"
+                        style="height: 360px;"
+                        title="Náhled obsahu"></iframe>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button type="button" class="btn btn-sm btn-primary" data-ai-action="replace">
+                        <i class="bi bi-arrow-repeat me-1"></i>
+                        Nahradit obsah
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light-primary" data-ai-action="insert">
+                        <i class="bi bi-cursor-text me-1"></i>
+                        Vložit na pozici kurzoru
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light" data-ai-action="copy">
+                        <i class="bi bi-clipboard me-1"></i>
+                        Kopírovat HTML
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>

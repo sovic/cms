@@ -1,0 +1,18 @@
+flash:
+  saved: 'Nastavení AI asistenta uloženo.'
+  form_error: 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.'
+api:
+  disabled: 'AI asistent není v této instalaci zapnutý.'
+  not_found: 'Stránka nebyla nalezena.'
+  empty_message: 'Napište prosím zprávu.'
+  message_too_long: 'Zpráva je příliš dlouhá.'
+  missing_api_key: 'Nemáte nastavený API klíč. Zadejte jej v nastavení AI asistenta.'
+  authentication_error: 'API klíč byl odmítnut. Zkontrolujte jej v nastavení AI asistenta.'
+  rate_limit: 'Překročen limit požadavků, zkuste to prosím za chvíli.'
+  overloaded: 'Služba je dočasně přetížená, zkuste to prosím znovu.'
+  connection_error: 'Nepodařilo se spojit s AI službou, zkuste to prosím znovu.'
+  provider_error: 'Komunikace s AI službou selhala.'
+  refusal: 'Asistent tento požadavek odmítl zpracovat.'
+  truncated: 'Odpověď byla příliš dlouhá, zkuste požadavek rozdělit na menší části.'
+  invalid_response: 'Asistent vrátil neplatnou odpověď, zkuste to prosím znovu.'
+  library_error: 'Knihovnu komponent se nepodařilo načíst, kontaktujte správce webu.'

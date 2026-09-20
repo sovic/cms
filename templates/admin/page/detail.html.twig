@@ -28,6 +28,10 @@
             </div>
         </div>
     </div>
+
+    {% if editing and ai_enabled|default(false) %}
+        {% include '@CmsBundle/admin/partials/ai-assistant-drawer.html.twig' %}
+    {% endif %}
 {% endblock %}
 
 {% block sidebar %}
@@ -67,6 +71,14 @@
                     <i class="bi bi-globe me-1"></i>
                     Stránka na webu
                 </a>
+                {% if editing and ai_enabled|default(false) %}
+                    <button type="button"
+                            class="btn btn-flex btn-sm btn-light-success w-100"
+                            id="ai-assistant-toggle">
+                        <i class="bi bi-stars me-1"></i>
+                        AI asistent
+                    </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -213,4 +225,7 @@
     <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
     <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
+    {% if editing and ai_enabled|default(false) %}
+        <script src="{{ asset('bundles/cms/js/ai-assistant.js') }}"></script>
+    {% endif %}
 {% endblock %}
