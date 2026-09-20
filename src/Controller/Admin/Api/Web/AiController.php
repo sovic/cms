@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller\Admin\Api\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Ai\AiPageAssistant;
+use Sovic\Cms\Ai\AiRequestLock;
 use Sovic\Cms\Ai\Exception\AiProviderException;
 use Sovic\Cms\Ai\Exception\AiResponseException;
 use Sovic\Cms\Ai\Exception\ApiKeyDecryptException;
@@ -25,9 +26,10 @@ class AiController extends AbstractBaseApiController
     private const MaxMessageLength = 20000;
 
     public function __construct(
-        EntityManagerInterface                          $entityManager,
-        private readonly AiPageAssistant                $assistant,
-        private readonly TranslatorInterface            $translator,
+        EntityManagerInterface                            $entityManager,
+        private readonly AiPageAssistant                  $assistant,
+        private readonly AiRequestLock                    $lock,
+        private readonly TranslatorInterface              $translator,
         #[Autowire('%ai_enabled%')] private readonly bool $enabled,
     ) {
         parent::__construct($entityManager);
@@ -60,8 +62,16 @@ class AiController extends AbstractBaseApiController
             ? $data['current_content']
             : null;
 
-        // non-streaming generation of a whole page can take tens of seconds
+        if ($this->lock->isLocked($page, $user)) {
+            return $this->fail('in_progress', 409);
+        }
+
+        // Generating a whole page can take tens of seconds. The answer is stored at the end of the call, so keep
+        // running even when the browser or a proxy gave up already - the client picks the answer up from history.
         set_time_limit(180);
+        ignore_user_abort(true);
+
+        $this->lock->acquire($page, $user);
 
         try {
             $response = $this->assistant->send($page, $user, $message, $currentContent);
@@ -79,8 +89,11 @@ class AiController extends AbstractBaseApiController
             return $this->fail($e->reason, 422);
         } catch (ComponentLibraryException) {
             return $this->fail('library_error', 500);
+        } finally {
+            $this->lock->release($page, $user);
         }
 
+        /** @noinspection PhpUndefinedVariableInspection */
         $this->data['reply'] = $response->reply;
         $this->data['html'] = $response->html;
         $this->data['message_id'] = $response->messageId;
@@ -99,7 +112,7 @@ class AiController extends AbstractBaseApiController
         requirements: ['id' => '\d+'],
         methods: ['GET'],
     )]
-    public function history(int $id): JsonResponse
+    public function history(int $id, Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -108,7 +121,16 @@ class AiController extends AbstractBaseApiController
             return $fail;
         }
 
-        $this->data['messages'] = array_map(
+        $messages = $this->assistant->getHistory($page, $user);
+
+        // used by the client to pick up an answer of a request that timed out in the browser or a proxy
+        $afterId = (int) $request->query->get('after_id', 0);
+        if ($afterId > 0) {
+            $messages = array_filter($messages, static fn(AiMessage $message) => $message->getId() > $afterId);
+        }
+
+        $this->data['in_progress'] = $this->lock->isLocked($page, $user);
+        $this->data['messages'] = array_values(array_map(
             static fn(AiMessage $message) => [
                 'id' => $message->getId(),
                 'role' => $message->getRole()->value,
@@ -116,8 +138,8 @@ class AiController extends AbstractBaseApiController
                 'html' => $message->getHtml(),
                 'created_at' => $message->getCreatedAt()->format(self::DateFormat),
             ],
-            $this->assistant->getHistory($page, $user),
-        );
+            $messages,
+        ));
 
         return $this->sendSuccess();
     }

@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Ai;
 
 use Anthropic\Core\Exceptions\APIConnectionException;
+use Anthropic\Core\Exceptions\APIException;
 use Anthropic\Core\Exceptions\APIStatusException;
 use Anthropic\ErrorType;
 use DateTimeImmutable;
@@ -26,19 +27,20 @@ use UserBundle\User\UserEntityInterface;
 /**
  * Chat assistant preparing page body HTML from the website component library.
  */
-class AiPageAssistant
+readonly class AiPageAssistant
 {
     public function __construct(
-        private readonly EntityManagerInterface                      $em,
-        private readonly ApiKeyEncryptor                             $encryptor,
-        private readonly ComponentLibraryLoader                      $libraryLoader,
-        private readonly PromptBuilder                               $promptBuilder,
-        private readonly AiResponseParser                            $parser,
-        private readonly HtmlSanitizer                               $sanitizer,
-        private readonly AnthropicClientFactory                      $clientFactory,
-        #[Autowire('%ai_model%')] private readonly string            $model,
-        #[Autowire('%ai_max_tokens%')] private readonly int          $maxTokens,
-        #[Autowire('%ai_history_limit%')] private readonly int       $historyLimit,
+        private EntityManagerInterface                $em,
+        private ApiKeyEncryptor                       $encryptor,
+        private ComponentLibraryLoader                $libraryLoader,
+        private PromptBuilder                         $promptBuilder,
+        private AiResponseParser                      $parser,
+        private HtmlSanitizer                         $sanitizer,
+        private AnthropicClientFactory                $clientFactory,
+        #[Autowire('%ai_model%')] private string      $model,
+        #[Autowire('%ai_effort%')] private string     $effort,
+        #[Autowire('%ai_max_tokens%')] private int    $maxTokens,
+        #[Autowire('%ai_history_limit%')] private int $historyLimit,
     ) {
     }
 
@@ -63,6 +65,7 @@ class AiPageAssistant
                 messages: $messages,
                 model: $this->getModel($setting),
                 outputConfig: [
+                    'effort' => $this->effort,
                     'format' => [
                         'type' => 'json_schema',
                         'schema' => $this->promptBuilder->outputSchema(),
@@ -91,6 +94,8 @@ class AiPageAssistant
             throw new AiProviderException($kind, $e->type?->value ?? 'status_' . $e->status, $e);
         } catch (APIConnectionException $e) {
             throw new AiProviderException(AiProviderException::Connection, 'connection_error', $e);
+        } catch (APIException $e) {
+            throw new AiProviderException(AiProviderException::Other, 'api_error', $e);
         } finally {
             sodium_memzero($apiKey);
         }

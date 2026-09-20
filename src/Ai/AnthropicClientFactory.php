@@ -12,8 +12,10 @@ class AnthropicClientFactory
     /**
      * Seconds, the SDK leaves timeouts to the transport and Symfony HttpClient defaults to 60 s idle timeout,
      * which is not enough for longer page generations.
+     *
+     * Each layer above this one must allow more time, see README (PHP, PHP-FPM, nginx).
      */
-    public const Timeout = 170;
+    public const Timeout = 150;
 
     public function create(string $apiKey): Client
     {
@@ -25,7 +27,8 @@ class AnthropicClientFactory
         return new Client(
             apiKey: $apiKey,
             requestOptions: RequestOptions::with(
-                maxRetries: 1,
+                // no retries, the SDK retries transport timeouts as well and that would double the wall time
+                maxRetries: 0,
                 transporter: $transporter,
             ),
         );

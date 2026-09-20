@@ -6,6 +6,7 @@ api:
   not_found: 'Stránka nebyla nalezena.'
   empty_message: 'Napište prosím zprávu.'
   message_too_long: 'Zpráva je příliš dlouhá.'
+  in_progress: 'Předchozí požadavek ještě zpracovávám, počkejte prosím na odpověď.'
   missing_api_key: 'Nemáte nastavený API klíč. Zadejte jej v nastavení AI asistenta.'
   authentication_error: 'API klíč byl odmítnut. Zkontrolujte jej v nastavení AI asistenta.'
   rate_limit: 'Překročen limit požadavků, zkuste to prosím za chvíli.'
