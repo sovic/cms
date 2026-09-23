@@ -5,7 +5,7 @@
 
 {% macro date_row(label, date, show_time = true) %}
     <div class="fw-bold mt-3">{{ label }}</div>
-    <div class="text-gray-600">
+    <div class="text-gray-600" title="{{ date|format_date_time('j. n. Y H:i:s') }}">
         {%- if date -%}
             {% if show_time %}
                 {{ date|format_date_time }}
