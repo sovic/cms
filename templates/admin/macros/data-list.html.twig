@@ -147,21 +147,21 @@
     </a>
 {% endmacro %}
 
-{% macro add_button(model, form, id = 0, title = '', icon_class = 'bi-pencil') %}
-    <a class="btn btn-sm btn-flex btn-light-primary shadow-sm edit-form-button"
-            {% if id > 0 %} title="Upravit" {% endif %}
-       data-model="{{ model }}"
-       data-form="{{ form }}"
-            {% if id %}
-                data-id="{{ id }}"
-            {% endif %}
-       href="#">
-        <i class="bi {{ icon_class }} m-0 p-0 {% if title %}me-3{% else %}fs-5{% endif %}"></i>
-        {% if title %}
-            {{ title }}
-        {% endif %}
-    </a>
-{% endmacro %}
+{# {% macro add_button(model, form, id = 0, title = '', icon_class = 'bi-pencil') %} #}
+{#    <a class="btn btn-sm btn-flex btn-light-primary shadow-sm edit-form-button" #}
+{#            {% if id > 0 %} title="Upravit" {% endif %} #}
+{#       data-model="{{ model }}" #}
+{#       data-form="{{ form }}" #}
+{#            {% if id %} #}
+{#                data-id="{{ id }}" #}
+{#            {% endif %} #}
+{#       href="#"> #}
+{#        <i class="bi {{ icon_class }} m-0 p-0 {% if title %}me-3{% else %}fs-5{% endif %}"></i> #}
+{#        {% if title %} #}
+{#            {{ title }} #}
+{#        {% endif %} #}
+{#    </a> #}
+{# {% endmacro %} #}
 
 {% macro action_button(title, model, id, method, parameters = {}, btn_class = 'btn-light-primary', icon_class = 'bi-pencil', confirm = '', show_title = false) %}
     <a href="#"
