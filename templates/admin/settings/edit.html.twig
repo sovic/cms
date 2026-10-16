@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="app-container container">
-        <div class="{{ theme.card_class }}">
+        <div class="{{ theme.card_class() }}">
             {{ form_macro.card_header('Editace nastavení') }}
 
             <div class="card-body">

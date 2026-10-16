@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class() }} dataTable">
         <colgroup>
             <col data-dt-column="0" style="">
             <col data-dt-column="1" style="width: 20%;">
@@ -26,7 +26,7 @@
             <col data-dt-column="3" style="width: 10%;">
         </colgroup>
         <thead>
-        <tr class="{{ theme.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class() }}" role="row">
             <th class="min-w-100px" data-dt-column="0">
                 <span class="dt-column-title">Název</span>
             </th>
@@ -41,7 +41,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.tbody_class }}">
+        <tbody class="{{ theme.tbody_class() }}">
         {% for tag in tags %}
             {% set detail_url = path('admin:tag:edit', {'id': tag.id}) %}
             <tr>
@@ -55,7 +55,7 @@
                     <span class="badge badge-light-primary">{{ tag.name }}</span>
                 </td>
                 <td class="align-middle">
-                    <div class="{{ theme.toggle_switch_class }}"
+                    <div class="{{ theme.toggle_switch_class() }}"
                          data-entity="tag"
                          data-entity-id="{{ tag.id }}">
                         {{ form_macro.switch('tag_is_public_' ~ tag.id, 'is_public', 'Publikováno', tag.isPublic, 'bi bi-check-circle-fill') }}

@@ -21,7 +21,7 @@
 {% macro empty_data_card(title) %}
     {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
-    <div class="{{ theme.card_class }}">
+    <div class="{{ theme.card_class() }}">
         <div class="card-body">
             <div class="text-gray-600">{{ title }}</div>
         </div>

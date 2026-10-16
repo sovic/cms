@@ -58,9 +58,9 @@
 {% endblock %}
 
 {% block groups_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class() }} dataTable">
         <thead>
-        <tr class="{{ theme.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class() }}" role="row">
             <th class="min-w-350px">
                 <span class="dt-column-title">Název skupiny</span>
             </th>
@@ -72,7 +72,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.tbody_class }}">
+        <tbody class="{{ theme.tbody_class() }}">
         {% for group in groups %}
             <tr>
                 <td>
@@ -121,9 +121,9 @@
 {% endblock %}
 
 {% block pages_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class() }} dataTable">
         <thead>
-        <tr class="{{ theme.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class() }}" role="row">
             {% if is_group_actions_enabled %}
                 {{ data_list.checkbox_all() }}
             {% endif %}
@@ -138,7 +138,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.tbody_class }}">
+        <tbody class="{{ theme.tbody_class() }}">
         {% for page in pages %}
             {% set detail_url = path('admin:page:edit', {'id': page.id}) %}
             {% set public_url = base_public_url ~ '/' ~ page.urlId %}
@@ -171,7 +171,7 @@
                             <span class="badge badge-light-info me-2">{{ page.lang }}</span>
                         {% endif %}
                     </div>
-                    <div class="{{ theme.toggle_switch_class }}"
+                    <div class="{{ theme.toggle_switch_class() }}"
                          data-entity="page"
                          data-entity-id="{{ page.id }}">
                         {{ form_macro.switch('page_is_public_' ~ page.id, 'is_public', 'Publikováno', page.isPublic, 'bi bi-check-circle-fill') }}

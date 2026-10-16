@@ -26,9 +26,9 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class() }} dataTable">
         <thead>
-        <tr class="{{ theme.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class() }}" role="row">
             {% if is_group_actions_enabled %}
                 {{ data_list.checkbox_all() }}
             {% endif %}
@@ -46,7 +46,7 @@
             <th class="text-end min-w-70px" data-dt-column="4" aria-label="Akce"></th>
         </tr>
         </thead>
-        <tbody class="{{ theme.tbody_class }}">
+        <tbody class="{{ theme.tbody_class() }}">
         {% for item in emails %}
             {% set detail_url = path('admin:email:edit', {'id': item.id}) %}
             <tr>

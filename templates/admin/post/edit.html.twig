@@ -8,7 +8,7 @@
 {% block content %}
     <div class="app-container container">
         {% if editing %}
-            <ul class="{{ theme.nav_tabs_class }}"
+            <ul class="{{ theme.nav_tabs_class() }}"
                 role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active"
@@ -37,7 +37,7 @@
 {% endblock %}
 
 {% block edit_card %}
-    <div class="{{ theme.card_class }}">
+    <div class="{{ theme.card_class() }}">
         {{ form_macro.card_header('Editace příspěvku') }}
 
         <div class="card-body">

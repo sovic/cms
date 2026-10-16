@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class() }} dataTable">
         <colgroup>
             {% if is_group_actions_enabled %}
                 <col data-dt-column="0" style="width: 2%;">
@@ -28,7 +28,7 @@
             <col data-dt-column="3" style="">
         </colgroup>
         <thead>
-        <tr class="{{ theme.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class() }}" role="row">
             {% if is_group_actions_enabled %}
                 {{ data_list.checkbox_all() }}
             {% endif %}
@@ -43,7 +43,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.tbody_class }}">
+        <tbody class="{{ theme.tbody_class() }}">
         {% for post in posts %}
             {% set detail_url = path('admin:post:edit', {'id': post.id}) %}
             <tr>
@@ -91,7 +91,7 @@
                         </div>
                     {% endif %}
 
-                    <div class="{{ theme.toggle_switch_class }}"
+                    <div class="{{ theme.toggle_switch_class() }}"
                          data-entity="post"
                          data-entity-id="{{ post.id }}">
                         {{ form_macro.switch('post_is_published_' ~ post.id, 'is_published', 'Publikováno', post.is_published, 'bi bi-check-circle-fill') }}

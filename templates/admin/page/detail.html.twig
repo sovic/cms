@@ -36,7 +36,7 @@
 
 {% block sidebar %}
     <div class="flex-column flex-lg-row-auto w-100 w-xl-300px mb-10">
-        <div class="{{ theme.card_class }}">
+        <div class="{{ theme.card_class() }}">
             <div class="{{ theme.card_body_class }}">
                 <div class="d-flex flex-column mb-2">
                     <span class="fw-bold fs-3 text-gray-800">
@@ -64,7 +64,7 @@
             {{ block('quick_settings') }}
         {% endif %}
 
-        <div class="{{ theme.card_class }}">
+        <div class="{{ theme.card_class() }}">
             <div class="card-body pt-8 d-flex flex-column gap-3">
                 <a class="btn btn-flex btn-sm btn-light-primary w-100"
                    href="{{ page_public_url }}" target="_blank">
@@ -86,7 +86,7 @@
 
 {% block tabs %}
     {% if editing %}
-        <ul class="{{ theme.nav_tabs_class }}" role="tablist">
+        <ul class="{{ theme.nav_tabs_class() }}" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active"
                         id="tab-form-btn"
@@ -108,7 +108,7 @@
 {% endblock %}
 
 {% block quick_settings %}
-    <div class="{{ theme.card_class }}">
+    <div class="{{ theme.card_class() }}">
         <div class="card-body py-8">
             {{ form_macro.section_header('Rychlé akce') }}
 
@@ -133,7 +133,7 @@
     {{ form_start(form) }}
     {{ form_errors(form) }}
 
-    <div class="{{ theme.card_class }}">
+    <div class="{{ theme.card_class() }}">
         <div class="card-body">
             {{ block('edit_form') }}
         </div>

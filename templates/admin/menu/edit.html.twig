@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="app-container container">
-        <div class="{{ theme.card_class }}">
+        <div class="{{ theme.card_class() }}">
             {% if root_position %}
                 {% set back_url = path('admin:menu:list:position', {'position': root_position}) %}
             {% elseif menu_item.position %}

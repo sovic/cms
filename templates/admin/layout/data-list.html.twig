@@ -25,8 +25,8 @@
 {% block content %}
     <div class="app-container container-fluid">
         <form method="get" id="search" class="border-0">
-            <div class="{{ theme.card_class }}">
-                <div class="{{ theme.card_header_class }}">
+            <div class="{{ theme.card_class() }}">
+                <div class="{{ theme.card_header_class() }}">
                     <div class="card-title">
                         {% if is_search_enabled %}
                             {{ data_list.list_header_search(search) }}

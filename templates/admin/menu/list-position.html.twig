@@ -43,7 +43,7 @@
                     </a>
                 </div>
                 <div style="padding-left: {{ depth * 24 }}px;">
-                    <div class="{{ theme.toggle_switch_class }}"
+                    <div class="{{ theme.toggle_switch_class() }}"
                          data-entity="menu-item"
                          data-entity-id="{{ item.id }}">
                         {{ form_macro.switch('menu_item_is_public_' ~ item.id, 'is_public', 'Publikováno', item.isPublic, 'bi bi-check-circle-fill') }}
@@ -159,9 +159,9 @@
 {% endblock %}
 
 {% block data_list_table %}
-    <table class="{{ theme.table_class }} dataTable">
+    <table class="{{ theme.table_class() }} dataTable">
         <thead>
-        <tr class="{{ theme.thead_tr_class }}" role="row">
+        <tr class="{{ theme.thead_tr_class() }}" role="row">
             <th class="min-w-300px" data-dt-column="1">
                 <span class="dt-column-title">Název</span>
             </th>
@@ -174,7 +174,7 @@
             </th>
         </tr>
         </thead>
-        <tbody class="{{ theme.tbody_class }}">
+        <tbody class="{{ theme.tbody_class() }}">
         {{ _self.render_tree(tree, 0) }}
         </tbody>
         <tfoot></tfoot>
