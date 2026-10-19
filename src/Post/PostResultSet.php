@@ -5,7 +5,10 @@ namespace Sovic\Cms\Post;
 use Cocur\Slugify\Slugify;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\GalleryItem;
+use Sovic\Cms\Entity\PostTag;
+use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Gallery\GalleryHelper;
 use Sovic\Cms\Repository\GalleryItemRepository;
 
@@ -106,10 +109,41 @@ class PostResultSet
         return $result;
     }
 
+    /**
+     * @return array<int, string[]> public tag names by post id
+     */
+    private function loadTags(): array
+    {
+        $postIds = $this->getPostsIdList();
+        if (empty($postIds)) {
+            return [];
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('pt.postId AS post_id', 't.name AS name');
+        $qb->from(PostTag::class, 'pt');
+        $qb->innerJoin(Tag::class, 't', Join::WITH, 't.id = pt.tagId');
+        $qb->where('pt.postId IN (:post_ids)');
+        $qb->andWhere('t.isPublic = :is_public');
+        $qb->setParameter('post_ids', $postIds);
+        $qb->setParameter('is_public', true);
+        $qb->addOrderBy('t.name', 'ASC');
+
+        $result = [];
+        foreach ($qb->getQuery()->getArrayResult() as $row) {
+            $result[(int) $row['post_id']][] = $row['name'];
+        }
+
+        return $result;
+    }
+
     public function toArray(): array
     {
         // covers
         $covers = $this->addCovers ? $this->loadCovers() : [];
+
+        // tags
+        $tags = $this->loadTags();
 
         // url slugify
         $slugify = new Slugify();
@@ -143,7 +177,7 @@ class PostResultSet
                 'private_slug' => $entity->getPrivateSlug(),
                 'publish_date' => $entity->getPublishDate(),
                 'subtitle' => $entity->getSubtitle(),
-                'tags' => [],
+                'tags' => $tags[$id] ?? [],
                 'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getHeading()),
                 'url_id' => $slug,
             ];

@@ -231,9 +231,15 @@ trait PostsControllerTrait
         $nextPosts = $repo->findByRequest($request, 3);
         $nextPostsResultSet = $this->postResultSetFactory->createFromEntities($nextPosts);
 
+        $postTags = array_values(array_filter(
+            $this->post->getTags(),
+            static fn(Tag $tag) => $tag->isIsPublic()
+        ));
+
         $this->assign('post', $post);
         $this->assign('post_authors', $this->post->getAuthors());
         $this->assign('post_gallery', $resultSet->toArray());
+        $this->assign('post_tags', $postTags);
         $this->assign('next_posts', $nextPostsResultSet->toArray());
 
         return null;
