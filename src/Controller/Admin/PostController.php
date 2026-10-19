@@ -10,6 +10,7 @@ use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\Pagination\Pagination;
+use Sovic\Common\Project\Project;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,6 +78,7 @@ class PostController extends AdminBaseController
         ?int                   $id,
         EntityManagerInterface $em,
         PostFactory            $postFactory,
+        Project                $project,
         Request                $request,
         TranslatorInterface    $t,
     ): Response {
@@ -99,7 +101,7 @@ class PostController extends AdminBaseController
                 }
                 if (!$em->contains($post)) {
                     $post->setHeading($post->getName());
-                    $post->setProject($this->project->getEntity());
+                    $post->setProject($project->getEntity());
                 }
 
                 /** @var \Sovic\Cms\Post\Post $model */
