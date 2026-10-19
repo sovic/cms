@@ -32,7 +32,7 @@ see GalleryControllerTrait::assignGalleries()
     {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
     <div class="{{ theme.card_class() }} mb-5">
         <div class="card-body py-8">
-            {{ form_macro.section_header('Rychlé akce') }}
+            {{ form_macro.section_header('Nastavení galerie') }}
 
             <div class="js-toggle-switch pt-2"
                  data-url="{{ path('admin:api:gallery:toggle-state', {model: model, modelId: model_id, galleryName: gallery_name}) }}">
