@@ -22,6 +22,8 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
     use GalleryModelTrait;
     use PrivateSlugTrait;
 
+    public const PrivateSlugLength = 32;
+
     public function getId(): int
     {
         return $this->entity->getId();
@@ -87,6 +89,11 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         if (!isset($entity->id)) {
             $entity->setCreated(new DateTimeImmutable());
             $entity->setCreateDate(new DateTimeImmutable());
+        }
+
+        // if private slug missing
+        if (empty($entity->getPrivateSlug())) {
+            $entity->setPrivateSlug($this->generateUniqueSlug(self::PrivateSlugLength));
         }
 
         // publish

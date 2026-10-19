@@ -4,6 +4,7 @@ namespace Sovic\Cms\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Command\Trait\PostCommandTrait;
+use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -38,7 +39,7 @@ class SetPostPrivateCommand extends Command
             return Command::FAILURE;
         }
 
-        $slug = $post->generateUniqueSlug(32);
+        $slug = $post->generateUniqueSlug(Post::PrivateSlugLength);
         $post->entity->setPrivateSlug($slug);
         $post->entity->setPublic(false);
         $post->save();
