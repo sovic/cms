@@ -23,7 +23,7 @@ class SovicCmsExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('base_gallery_url', $config['base_gallery_url']);
+        $container->setParameter('base_gallery_url', $config['gallery']['base_url']);
         $container->setParameter('base_public_url', $config['base_public_url']);
         $container->setParameter('tinymce_content_css', $config['tinymce_content_css']);
         $container->setParameter('gallery_upload_max_files', $config['gallery']['upload_max_files']);

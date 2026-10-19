@@ -1,7 +1,10 @@
 sovic_cms:
-    base_gallery_url: ''
     base_public_url: ''
     tinymce_content_css: ''
+
+    gallery:
+        base_url: ''
+        upload_max_files: 25
 
     ai:
         # AI page assistant is enabled when components_dir is set
