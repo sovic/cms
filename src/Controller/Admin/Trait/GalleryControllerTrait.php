@@ -3,12 +3,23 @@
 namespace Sovic\Cms\Controller\Admin\Trait;
 
 use Sovic\Cms\Gallery\GalleryManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait GalleryControllerTrait
 {
+    protected int $galleryUploadMaxFiles = 25;
+
+    #[Required]
+    public function setGalleryUploadMaxFiles(
+        #[Autowire('%gallery_upload_max_files%')] int $galleryUploadMaxFiles,
+    ): void {
+        $this->galleryUploadMaxFiles = $galleryUploadMaxFiles;
+    }
+
     /**
      * Assigns template variables:
-     *  - galleries: array<string, array{is_download_enabled: bool, items: array<int, array<string, mixed>>}>
+     *  - galleries: array<string, array{is_download_enabled: bool, items: array<int, array<string, mixed>>, upload_max_files: int}>
      *      keyed by gallery name, items are GalleryItemResultSet::toArray() rows enriched with 'is_cover'
      *  - gallery_item_count: int
      */
@@ -26,6 +37,7 @@ trait GalleryControllerTrait
                     // matches GalleryManager::createGallery() defaults
                     'is_download_enabled' => true,
                     'items' => [],
+                    'upload_max_files' => $this->galleryUploadMaxFiles,
                 ];
                 continue;
             }
@@ -44,6 +56,7 @@ trait GalleryControllerTrait
             $galleries[$galleryName] = [
                 'is_download_enabled' => $gallery->getEntity()->isDownloadEnabled(),
                 'items' => $items,
+                'upload_max_files' => $this->galleryUploadMaxFiles,
             ];
             $galleryItemCount += count($items);
         }

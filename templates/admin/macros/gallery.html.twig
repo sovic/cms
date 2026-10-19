@@ -6,7 +6,7 @@
 {% endmacro %}
 
 {#
-galleries: array<string, {is_download_enabled: bool, items: array}> keyed by gallery name,
+galleries: array<string, {is_download_enabled: bool, items: array, upload_max_files: int}> keyed by gallery name,
 see GalleryControllerTrait::assignGalleries()
 #}
 {% macro gallery_tabs_nav(galleries, entity_name) %}
@@ -50,7 +50,7 @@ see GalleryControllerTrait::assignGalleries()
             {% if quick_settings %}
                 {{ _self.gallery_quick_settings(model, model_id, gallery_name, gallery) }}
             {% endif %}
-            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: model, model_id: model_id, model_name: gallery_name, gallery_items: gallery.items}, with_context: false) }}
+            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: model, model_id: model_id, model_name: gallery_name, gallery_items: gallery.items, upload_max_files: gallery.upload_max_files}, with_context: false) }}
         </div>
     {% else %}
         <div class="tab-pane fade" id="tab-gallery-empty" role="tabpanel">

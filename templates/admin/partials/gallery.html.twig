@@ -4,9 +4,10 @@ Variables:
   model_id      int     entity id
   model_name    string  gallery name (default = same as model)
   gallery_items array   result from Gallery::getItems() enriched with is_cover
+  upload_max_files int  max files uploaded at once
 #}
 {% set model_name = model_name ?? model %}
-{{ include('@CmsBundle/admin/partials/upload.html.twig', {model: model, model_id: model_id, gallery_name: model_name}, with_context: false) }}
+{{ include('@CmsBundle/admin/partials/upload.html.twig', {model: model, model_id: model_id, gallery_name: model_name, upload_max_files: upload_max_files}, with_context: false) }}
 
 <div class="gallery-grid"
      data-model="{{ model }}" data-model-id="{{ model_id }}"

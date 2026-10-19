@@ -41,6 +41,7 @@
         const model = container.dataset.model;
         const modelId = container.dataset.modelId;
         const galleryName = container.dataset.galleryName;
+        const maxFiles = parseInt(container.dataset.maxFiles, 10) || 25;
         const form = container.querySelector('.dropzone');
 
         if (!form || !model || !modelId || !galleryName) {
@@ -52,7 +53,7 @@
         new Dropzone(form, {
             url: '/admin/api/upload',
             paramName: 'file',
-            maxFiles: 10,
+            maxFiles: maxFiles,
             maxFilesize: 32,
             parallelUploads: 2,
             addRemoveLinks: false,
