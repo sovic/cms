@@ -8,6 +8,7 @@ use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Repository\TagRepository;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
+use Sovic\Common\Project\Project;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -46,6 +47,7 @@ class TagController extends AbstractBaseApiController
     )]
     public function create(
         EntityManagerInterface $em,
+        Project                $project,
         Request                $request,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -66,6 +68,7 @@ class TagController extends AbstractBaseApiController
             $tag = new Tag();
             $tag->setName($name);
             $tag->setIsPublic(true);
+            $tag->setProject($project->getEntity());
 
             $em->persist($tag);
             $em->flush();
