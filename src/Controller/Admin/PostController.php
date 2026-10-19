@@ -6,9 +6,11 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Post;
+use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Repository\PostRepository;
+use Sovic\Cms\Tag\TagName;
 use Sovic\Common\Pagination\Pagination;
 use Sovic\Common\Project\Project;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -92,6 +94,10 @@ class PostController extends AdminBaseController
         }
 
         $form = $this->createForm(\Sovic\Cms\Form\Admin\Post::class, $post);
+        if ($form->has('tags') && $em->contains($post)) {
+            $postTags = array_map(static fn(Tag $tag) => $tag->getName(), $postFactory->loadByEntity($post)->getTags());
+            $form->get('tags')->setData(implode(',', $postTags));
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -107,6 +113,9 @@ class PostController extends AdminBaseController
                 /** @var \Sovic\Cms\Post\Post $model */
                 $model = $postFactory->loadByEntity($post);
                 $model->save();
+                if ($form->has('tags')) {
+                    $model->syncTagsByNames(TagName::parseList($form->get('tags')->getData()));
+                }
 
                 try {
                     $this->addFlash('success', $t->trans('flash.saved', domain: 'post'));

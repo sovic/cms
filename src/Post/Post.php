@@ -111,6 +111,58 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @return Tag[]
+     */
+    public function getTags(): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('t');
+        $qb->from(Tag::class, 't');
+        $qb->leftJoin(PostTag::class, 'pt', Join::WITH, 't.id = pt.tagId');
+        $qb->where('pt.postId = :post_id');
+        $qb->setParameter('post_id', $this->getId());
+        $qb->addOrderBy('t.name', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param string[] $tagNames
+     */
+    public function syncTagsByNames(array $tagNames): void
+    {
+        $em = $this->getEntityManager();
+
+        $existingPostTags = $em->getRepository(PostTag::class)->findBy(['postId' => $this->getId()]);
+        $existingTagIds = array_map(static fn(PostTag $pt) => $pt->getTagId(), $existingPostTags);
+
+        $newTagEntities = [];
+        if (!empty($tagNames)) {
+            $newTagEntities = $em->getRepository(Tag::class)->findBy(['name' => array_values($tagNames)]);
+        }
+        $newTagIds = array_map(static fn(Tag $t) => $t->getId(), $newTagEntities);
+
+        foreach ($existingPostTags as $postTag) {
+            if (!in_array($postTag->getTagId(), $newTagIds, true)) {
+                $em->remove($postTag);
+            }
+        }
+
+        foreach ($newTagEntities as $tag) {
+            if (!in_array($tag->getId(), $existingTagIds, true)) {
+                $postTag = new PostTag();
+                $postTag->setPostId($this->getId());
+                $postTag->setPost($this->entity);
+                $postTag->setTagId($tag->getId());
+                $postTag->setTag($tag);
+                $em->persist($postTag);
+            }
+        }
+
+        $em->flush();
+    }
+
     public function addTag(Tag $tag): void
     {
         $postTag = $this->getEntityManager()

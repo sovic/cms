@@ -150,6 +150,16 @@ class Page extends AbstractType
         ];
         if ($this->enableTags) {
             $contentTypeChoices['Stránka s příspěvky se štítky'] = 'tags';
+
+            $builder->add(
+                'tags',
+                TextType::class,
+                [
+                    'label' => false,
+                    'required' => false,
+                    'mapped' => false,
+                ]
+            );
         }
 
         $builder->add(

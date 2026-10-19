@@ -27,6 +27,7 @@ class SovicCmsExtension extends Extension
         $container->setParameter('base_public_url', $config['base_public_url']);
         $container->setParameter('tinymce_content_css', $config['tinymce_content_css']);
         $container->setParameter('page_enable_tags', $config['page']['enable_tags']);
+        $container->setParameter('post_enable_tags', $config['post']['enable_tags']);
 
         $ai = $config['ai'];
         $container->setParameter('ai_components_dir', $ai['components_dir']);

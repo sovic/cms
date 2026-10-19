@@ -174,11 +174,11 @@
         </div>
     </div>
 
-    {% if page_enable_tags %}
+    {% if form.tags is defined %}
         {{ form_macro.section_header('Štítky') }}
         <div class="row mb-4">
             <div class="mb-2">
-                {{ tags.tags('page_tags', page_tags, true) }}
+                {{ tags.tags(form.tags, true) }}
             </div>
         </div>
     {% endif %}

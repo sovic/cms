@@ -1,16 +1,16 @@
-{% macro tags(field_name, current_tags, allow_create = false) %}
-    {% set input_id = field_name ~ '_tagify' %}
-    {% set modal_id = field_name ~ '_create_modal' %}
-    {% set name_input_id = field_name ~ '_create_name' %}
+{#
+field         FormView  unmapped text field, value = comma separated tag names
+allow_create  bool      show button for creating a new tag
+#}
+{% macro tags(field, allow_create = false) %}
+    {% set input_id = field.vars.id %}
+    {% set modal_id = input_id ~ '_create_modal' %}
+    {% set name_input_id = input_id ~ '_create_name' %}
     <div class="col-12">
         <div class="d-flex align-items-start gap-2">
-            <label for="{{ input_id }}" class="w-100 mb-0">
-                <input class="form-control form-control-solid"
-                       type="text"
-                       name="{{ field_name }}"
-                       id="{{ input_id }}"
-                       value="{{ current_tags is defined and current_tags|length > 0 ? current_tags|join(',') : '' }}"/>
-            </label>
+            <div class="w-100">
+                {{ form_widget(field, {attr: {class: 'form-control form-control-solid'}}) }}
+            </div>
             {% if allow_create %}
                 <button type="button"
                         class="btn btn-light-primary btn-icon flex-shrink-0"
@@ -49,22 +49,31 @@
         </div>
     {% endif %}
 
-    <!--suppress JSUnresolvedReference, JSUnusedLocalSymbols -->
+    {# plugins.bundle.js contains only tagify polyfills, styles are in plugins.bundle.css #}
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.27.0/dist/tagify.min.js"></script>
+    <!--suppress JSUnresolvedReference -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // const input = document.querySelector('#{{ input_id }}');
+            const input = document.querySelector('#{{ input_id }}');
             let controller;
 
-            // const tagify = new Tagify(input, {
-            //     enforceWhitelist: true,
-            //     maxTags: 10,
-            //     dropdown: {
-            //         maxItems: 20,
-            //         classname: 'tagify__inline__suggestions',
-            //         enabled: 0,
-            //         closeOnSelect: false
-            //     }
-            // });
+            const tagify = new Tagify(input, {
+                enforceWhitelist: true,
+                whitelist: input.value ? input.value.split(',') : [],
+                maxTags: 10,
+                dropdown: {
+                    maxItems: 20,
+                    classname: 'tagify__inline__suggestions',
+                    enabled: 0,
+                    closeOnSelect: false
+                },
+                // submit plain comma separated names instead of JSON
+                originalInputValueFormat: function (values) {
+                    return values.map(function (item) {
+                        return item.value;
+                    }).join(',');
+                }
+            });
 
             function loadSuggestions(q) {
                 controller && controller.abort();
@@ -73,7 +82,7 @@
                 tagify.whitelist = null;
                 tagify.loading(true).dropdown.hide();
 
-                fetch('/admin/api/web/tag/suggestions?q=' + encodeURIComponent(q), {signal: controller.signal})
+                fetch('{{ path('admin:api:web:tag:suggestions') }}?q=' + encodeURIComponent(q), {signal: controller.signal})
                     .then(function (r) {
                         return r.json();
                     })
@@ -88,16 +97,15 @@
                     });
             }
 
-            // tagify.on('input', function (e) {
-            //     loadSuggestions(e.detail.value);
-            // });
-            // tagify.on('focus', function () {
-            //     loadSuggestions('');
-            // });
+            tagify.on('input', function (e) {
+                loadSuggestions(e.detail.value);
+            });
+            tagify.on('focus', function () {
+                loadSuggestions('');
+            });
 
             {% if allow_create %}
             (function () {
-                const inputEl = document.querySelector('#{{ input_id }}');
                 const modalEl = document.querySelector('#{{ modal_id }}');
                 const nameInput = document.querySelector('#{{ name_input_id }}');
                 const saveBtn = document.querySelector('#{{ name_input_id }}_save');
@@ -122,7 +130,7 @@
                     saveBtn.disabled = true;
                     errorEl.classList.add('d-none');
 
-                    fetch('/admin/api/web/tag/create', {
+                    fetch('{{ path('admin:api:web:tag:create') }}', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({name: name})
@@ -135,9 +143,8 @@
                                 throw new Error('fail');
                             }
                             const tagName = res.data.name;
-                            // tagify.whitelist = (tagify.whitelist || []).concat([tagName]);
-                            // tagify.addTags([tagName]);
-                            inputEl.value = tagName;
+                            tagify.whitelist = (tagify.whitelist || []).concat([tagName]);
+                            tagify.addTags([tagName]);
                             modal.hide();
                         })
                         .catch(function () {

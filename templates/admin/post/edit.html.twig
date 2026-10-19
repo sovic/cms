@@ -3,6 +3,7 @@
 {% import '@CmsBundle/admin/macros/content-editor.html.twig' as content_editor %}
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/gallery.html.twig' as gallery_macro %}
+{% import '@CmsBundle/admin/macros/tags.html.twig' as tags %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block content %}
@@ -80,6 +81,15 @@
             {{ form_row(form.perex) }}
         </div>
     </div>
+
+    {% if form.tags is defined %}
+        {{ form_macro.section_header('Štítky') }}
+        <div class="row mb-4">
+            <div class="mb-2">
+                {{ tags.tags(form.tags, true) }}
+            </div>
+        </div>
+    {% endif %}
 
     {{ form_macro.section_header('Metadata') }}
     <div class="row">

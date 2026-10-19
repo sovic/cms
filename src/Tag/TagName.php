@@ -33,4 +33,20 @@ final class TagName
     {
         return self::normalize($name) !== '';
     }
+
+    /**
+     * Parse comma separated tag names (tagify input value) into unique normalized names.
+     *
+     * @return string[]
+     */
+    public static function parseList(?string $value): array
+    {
+        if ($value === null || trim($value) === '') {
+            return [];
+        }
+
+        $names = array_map(self::normalize(...), explode(',', $value));
+
+        return array_values(array_unique(array_filter($names, static fn(string $name) => $name !== '')));
+    }
 }

@@ -12,13 +12,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class Post extends AbstractType
 {
     use MetaFormTrait;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface                 $entityManager,
+        #[Autowire('%post_enable_tags%')] private readonly bool $enableTags,
     ) {
     }
 
@@ -114,6 +116,20 @@ class Post extends AbstractType
                 ],
             ]
         );
+
+        // tags
+
+        if ($this->enableTags) {
+            $builder->add(
+                'tags',
+                TextType::class,
+                [
+                    'label' => false,
+                    'required' => false,
+                    'mapped' => false,
+                ]
+            );
+        }
 
         // meta data
 

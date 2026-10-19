@@ -4,7 +4,6 @@ namespace Sovic\Cms\Controller\Admin;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use JsonException;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\PageGroup;
@@ -12,6 +11,7 @@ use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Page\PageFactory;
 use Sovic\Cms\Repository\PageGroupRepository;
 use Sovic\Cms\Repository\PageRepository;
+use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,9 +100,6 @@ class PageController extends AdminBaseController
         return $this->render('@CmsBundle/admin/page/list.html.twig');
     }
 
-    /**
-     * @throws JsonException
-     */
     #[Route(
         '/admin/page/edit/{id}',
         name: 'admin:page:edit',
@@ -126,6 +123,10 @@ class PageController extends AdminBaseController
         }
 
         $form = $this->createForm(\Sovic\Cms\Form\Admin\Page::class, $page);
+        if ($form->has('tags') && $em->contains($page)) {
+            $pageTags = array_map(static fn(Tag $tag) => $tag->getName(), $pageFactory->loadByEntity($page)->getTags());
+            $form->get('tags')->setData(implode(',', $pageTags));
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -139,15 +140,10 @@ class PageController extends AdminBaseController
                 $em->persist($page);
                 $em->flush();
 
-                $pageTagsRaw = $request->request->get('page_tags', '');
-                $tagNames = [];
-                if ($pageTagsRaw !== '') {
-                    // TODO tagify js plugin not working
-                    $tagNames = explode(',', $pageTagsRaw);
-                    //$pageTagsData = json_decode($pageTagsRaw, true, 512, JSON_THROW_ON_ERROR) ?: [];
-                    //$tagNames = array_values(array_filter(array_column($pageTagsData, 'value')));
+                if ($form->has('tags')) {
+                    $tagNames = TagName::parseList($form->get('tags')->getData());
+                    $pageFactory->loadByEntity($page)->syncTagsByNames($tagNames);
                 }
-                $pageFactory->loadByEntity($page)->syncTagsByNames($tagNames);
 
                 try {
                     $this->addFlash('success', $t->trans('flash.saved', domain: 'page'));
@@ -165,12 +161,10 @@ class PageController extends AdminBaseController
 
         $editing = $id > 0;
 
-        $pageTags = [];
         $pagePublicUrl = $this->basePublicUrl;
         if ($editing && $page->getId() !== null) {
             $model = $pageFactory->loadByEntity($page);
             $this->assignGalleries($model, ['page'], $this->baseGalleryUrl);
-            $pageTags = array_map(static fn(Tag $tag) => $tag->getName(), $model->getTags());
             $pagePublicUrl = $model->getPublicUrl($this->basePublicUrl);
         }
 
@@ -184,7 +178,6 @@ class PageController extends AdminBaseController
         $this->assign('page', $page);
         $this->assign('page_enable_tags', $this->enableTags);
         $this->assign('page_public_url', $pagePublicUrl);
-        $this->assign('page_tags', $pageTags);
 
         return $this->render('@CmsBundle/admin/page/detail.html.twig');
     }
