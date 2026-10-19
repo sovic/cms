@@ -6,6 +6,12 @@ use Sovic\Cms\Gallery\GalleryManager;
 
 trait GalleryControllerTrait
 {
+    /**
+     * Assigns template variables:
+     *  - galleries: array<string, array{is_download_enabled: bool, items: array<int, array<string, mixed>>}>
+     *      keyed by gallery name, items are GalleryItemResultSet::toArray() rows enriched with 'is_cover'
+     *  - gallery_item_count: int
+     */
     protected function assignGalleries(object $model, array $names, ?string $baseUrl = null): void
     {
         $galleries = [];
@@ -16,7 +22,11 @@ trait GalleryControllerTrait
         foreach ($names as $galleryName) {
             $gallery = $galleryManager->getGallery($galleryName);
             if ($gallery === null) {
-                $galleries[$galleryName] = [];
+                $galleries[$galleryName] = [
+                    // matches GalleryManager::createGallery() defaults
+                    'is_download_enabled' => true,
+                    'items' => [],
+                ];
                 continue;
             }
             $resultSet = $gallery->getItemsResultSet();
@@ -31,7 +41,10 @@ trait GalleryControllerTrait
                 $item['is_cover'] = ($item['id'] === $coverId);
             }
             unset($item);
-            $galleries[$galleryName] = $items;
+            $galleries[$galleryName] = [
+                'is_download_enabled' => $gallery->getEntity()->isDownloadEnabled(),
+                'items' => $items,
+            ];
             $galleryItemCount += count($items);
         }
 

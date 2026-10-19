@@ -5,8 +5,12 @@
     </div>
 {% endmacro %}
 
+{#
+galleries: array<string, {is_download_enabled: bool, items: array}> keyed by gallery name,
+see GalleryControllerTrait::assignGalleries()
+#}
 {% macro gallery_tabs_nav(galleries, entity_name) %}
-    {% for gallery_name, items in galleries %}
+    {% for gallery_name, gallery in galleries %}
         <li class="nav-item" role="presentation">
             <button class="nav-link"
                     id="tab-gallery-{{ gallery_name }}-btn"
@@ -16,17 +20,37 @@
                     role="tab"
                     aria-selected="false">
                 {{ gallery_name == entity_name ? 'Galerie' : gallery_name|capitalize }}
-                <span class="badge badge-circle badge-sm badge-light-primary ms-2 {{ items|length > 0 ? '' : 'd-none' }}"
-                      id="gallery-count-badge-{{ gallery_name }}">{{ items|length }}</span>
+                <span class="badge badge-circle badge-sm badge-light-primary ms-2 {{ gallery.items|length > 0 ? '' : 'd-none' }}"
+                      id="gallery-count-badge-{{ gallery_name }}">{{ gallery.items|length }}</span>
             </button>
         </li>
     {% endfor %}
 {% endmacro %}
 
-{% macro gallery_tabs_panes(model, model_id, galleries) %}
-    {% for gallery_name, items in galleries %}
+{% macro gallery_quick_settings(model, model_id, gallery_name, gallery) %}
+    {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
+    {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
+    <div class="{{ theme.card_class() }} mb-5">
+        <div class="card-body py-8">
+            {{ form_macro.section_header('Rychlé akce') }}
+
+            <div class="js-toggle-switch pt-2"
+                 data-url="{{ path('admin:api:gallery:toggle-state', {model: model, modelId: model_id, galleryName: gallery_name}) }}">
+                <div>
+                    {{ form_macro.switch('gallery_' ~ gallery_name ~ '_is_download_enabled', 'is_download_enabled', 'Stažení galerie povoleno', gallery.is_download_enabled, null, 'Návštěvníci mohou stáhnout soubory galerie') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro gallery_tabs_panes(model, model_id, galleries, quick_settings = false) %}
+    {% for gallery_name, gallery in galleries %}
         <div class="tab-pane fade" id="tab-gallery-{{ gallery_name }}" role="tabpanel">
-            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: model, model_id: model_id, model_name: gallery_name, gallery_items: items}, with_context: false) }}
+            {% if quick_settings %}
+                {{ _self.gallery_quick_settings(model, model_id, gallery_name, gallery) }}
+            {% endif %}
+            {{ include('@CmsBundle/admin/partials/gallery.html.twig', {model: model, model_id: model_id, model_name: gallery_name, gallery_items: gallery.items}, with_context: false) }}
         </div>
     {% else %}
         <div class="tab-pane fade" id="tab-gallery-empty" role="tabpanel">

@@ -28,7 +28,7 @@
                 <div class="tab-pane fade show active" id="tab-form" role="tabpanel">
                     {{ block('edit_card') }}
                 </div>
-                {{ gallery_macro.gallery_tabs_panes('post', post.id, galleries) }}
+                {{ gallery_macro.gallery_tabs_panes('post', post.id, galleries, true) }}
             </div>
         {% else %}
             {{ block('edit_card') }}
@@ -118,5 +118,6 @@
     {{ parent() }}
 
     <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
 {% endblock %}

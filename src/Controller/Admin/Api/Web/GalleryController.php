@@ -2,21 +2,30 @@
 
 namespace Sovic\Cms\Controller\Admin\Api\Web;
 
+use InvalidArgumentException;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Controller\Admin\AdminBaseController;
+use Sovic\Common\Controller\Trait\JsonRequestTrait;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
 use Sovic\Cms\Entity\Gallery as GalleryEntity;
 use Sovic\Cms\Entity\GalleryItem;
 use Sovic\Cms\Gallery\GalleryFactory;
+use Sovic\Cms\Gallery\GalleryManager;
 use Sovic\Cms\Repository\GalleryItemRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GalleryController extends AdminBaseController
 {
+    use JsonRequestTrait;
     use JsonResponseTrait;
+
+    private const ToggleableFields = [
+        'is_download_enabled',
+    ];
 
     private function loadItem(string $model, int $modelId, int $itemId): ?GalleryItem
     {
@@ -28,6 +37,53 @@ class GalleryController extends AdminBaseController
             'model' => $model,
             'modelId' => $modelId,
         ]);
+    }
+
+    #[Route(
+        '/admin/api/{model}/{modelId}/gallery/{galleryName}/toggle-state',
+        name: 'admin:api:gallery:toggle-state',
+        requirements: ['model' => '[a-z]+', 'modelId' => '\d+', 'galleryName' => '[a-z]+'],
+        methods: ['POST'],
+    )]
+    public function toggleState(
+        string  $model,
+        int     $modelId,
+        string  $galleryName,
+        Request $request,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $data = $this->getRequestData($request);
+        $field = $data['field'] ?? null;
+        if (!in_array($field, self::ToggleableFields, true)) {
+            $this->addError('invalid_field');
+
+            return $this->sendFail();
+        }
+
+        $manager = new GalleryManager($model, $modelId);
+        $manager->setEntityManager($this->entityManager);
+        try {
+            $gallery = $manager->loadGallery($galleryName);
+        } catch (InvalidArgumentException $e) {
+            $this->data['message'] = $e->getMessage();
+
+            return $this->sendFail();
+        }
+
+        $state = (bool) ($data['state'] ?? false);
+        $entity = $gallery->getEntity();
+
+        if ($field === 'is_download_enabled') {
+            $entity->setIsDownloadEnabled($state);
+            $this->entityManager->flush();
+
+            $this->data['value'] = $entity->isDownloadEnabled();
+
+            return $this->sendSuccess();
+        }
+
+        return $this->sendFail();
     }
 
     /**
