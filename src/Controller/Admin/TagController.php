@@ -7,6 +7,7 @@ use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Repository\TagRepository;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
+use Sovic\Common\Project\Project;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,6 +23,7 @@ class TagController extends AdminBaseController
     public function list(
         EntityManagerInterface    $em,
         BasicSearchRequestFactory $factory,
+        Project                   $project,
         Request                   $request,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -29,12 +31,13 @@ class TagController extends AdminBaseController
         $searchRequest = $factory->createFromRequest($request);
         $searchRequest->setPaginationRoute('admin:tag:list');
 
+        $entity = $project->getEntity();
+
         /** @var TagRepository $repo */
         $repo = $em->getRepository(Tag::class);
 
-        $project = null; // $this->project->getEntity();
-        $tags = $repo->findBySearchRequest($searchRequest, $project);
-        $total = $repo->countBySearchRequest($searchRequest, $project);
+        $tags = $repo->findBySearchRequest($searchRequest, $entity);
+        $total = $repo->countBySearchRequest($searchRequest, $entity);
 
         $this->assign('pagination', $searchRequest->getPagination($total));
         $this->assign('query', $searchRequest->toArray());
@@ -52,6 +55,7 @@ class TagController extends AdminBaseController
     public function edit(
         ?int                   $id,
         EntityManagerInterface $em,
+        Project                $project,
         Request                $request,
         TranslatorInterface    $t,
     ): Response {
@@ -69,9 +73,9 @@ class TagController extends AdminBaseController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-//                if (!$em->contains($tag)) {
-//                    $tag->setProject($this->project->getEntity());
-//                }
+                if (!$em->contains($tag)) {
+                    $tag->setProject($project->getEntity());
+                }
 
                 $tag->setName(TagName::normalize((string) $tag->getName()));
 
