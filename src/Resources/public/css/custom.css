@@ -114,3 +114,21 @@ html[data-bs-theme='dark'] .text-black {
 }
 
 /* End Dashboard Styles */
+
+/* Tagify */
+/* keep tag pills (z-index: 1) in own stacking context, so they don't overlap sticky bars */
+.tagify {
+    isolation: isolate;
+}
+
+/* loading spinner, center vertically and place it next to the typed text */
+.tagify--loading .tagify__input {
+    display: inline-flex;
+    align-items: center;
+}
+
+.tagify--loading .tagify__input::after {
+    position: static;
+    flex-shrink: 0;
+    margin: 0 0 0 .5em;
+}
