@@ -12,6 +12,7 @@ use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Post\PostSearchRequest;
+use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\Project\Project;
 
 /**
@@ -153,23 +154,19 @@ class PostRepository extends EntityRepository
     /**
      * @return Post[]
      */
-    public function findByRequest(PostSearchRequest $request, int $limit = null, int $offset = null): array
+    public function findByRequest(PostSearchRequest $request): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('p')->from(Post::class, 'p');
+        $qb->select('p');
+        $qb->from(Post::class, 'p');
         $this->updateCriteria($qb, $request);
 
-        if (!$request->includePrivate) {
-            $qb->addOrderBy('p.publishDate', 'DESC');
+        foreach ($request->getPostSort()->getOrderBy() as $field => $direction) {
+            $qb->addOrderBy('p.' . $field, $direction);
         }
-        $qb->addOrderBy('p.id', 'DESC');
 
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-        if ($offset) {
-            $qb->setFirstResult($offset);
-        }
+        $qb->setMaxResults($request->getLimit());
+        $qb->setFirstResult($request->getOffset());
 
         return $qb->getQuery()->getResult();
     }
@@ -177,7 +174,8 @@ class PostRepository extends EntityRepository
     public function countByRequest(PostSearchRequest $request): int
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('count(p.id)')->from(Post::class, 'p');
+        $qb->select('count(p.id)');
+        $qb->from(Post::class, 'p');
         $this->updateCriteria($qb, $request);
 
         try {
@@ -189,21 +187,34 @@ class PostRepository extends EntityRepository
 
     private function updateCriteria(QueryBuilder $qb, PostSearchRequest $request): void
     {
-        if ($request->project) {
+        if ($request->getProject()) {
             $qb->andWhere('p.project = :project');
-            $qb->setParameter(':project', $request->project->entity);
+            $qb->setParameter(':project', $request->getProject()->entity);
         }
-        if (!$request->includePrivate) {
-            $qb->andWhere('p.public = 1');
+
+        switch ($request->getVisibilityId()) {
+            case VisibilityId::Public:
+                $qb->andWhere('p.public = 1');
+                break;
+            case VisibilityId::Private:
+                $qb->andWhere('p.public = 0');
+                break;
+            case VisibilityId::Deleted:
+                // posts have no soft delete
+                $qb->andWhere('1 = 0');
+                break;
+            case VisibilityId::All:
+                break;
         }
-        if ($request->tag) {
+
+        if ($request->getTag()) {
             $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
             $qb->andWhere('tp.tagId = :tag_id');
-            $qb->setParameter(':tag_id', $request->tag->getId());
+            $qb->setParameter(':tag_id', $request->getTag()->getId());
         }
-        if ($request->maxId) {
+        if ($request->getMaxId()) {
             $qb->andWhere('p.id < :max_id');
-            $qb->setParameter(':max_id', $request->maxId);
+            $qb->setParameter(':max_id', $request->getMaxId());
         }
     }
 }

@@ -9,7 +9,9 @@ use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Post\PostSearchRequest;
+use Sovic\Cms\Post\PostSort;
 use Sovic\Cms\Repository\PostRepository;
+use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\Helpers\Date;
 use Sovic\Common\Pagination\Pagination;
 use Sovic\Cms\Gallery\Gallery;
@@ -103,13 +105,16 @@ trait PostsControllerTrait
         $repo = $em->getRepository(PostEntity::class);
 
         $search = new PostSearchRequest();
-        $search->project = $this->project;
-        $search->tag = $tag;
+        $search->setProject($this->project);
+        $search->setTag($tag);
+        $search->setPostSort(PostSort::PublishDate);
         if ($privateTag) {
-            $search->includePrivate = true;
+            $search->setVisibilityId(VisibilityId::All);
         }
+        $search->setLimit($perPage);
+        $search->setPage($pageNr);
 
-        $posts = $repo->findByRequest($search, $perPage, ($pageNr - 1) * $perPage);
+        $posts = $repo->findByRequest($search);
         $total = $repo->countByRequest($search);
 
         $postsResultSet = $this->postResultSetFactory->createFromEntities($posts);
@@ -226,9 +231,10 @@ trait PostsControllerTrait
         /** @var PostRepository $repo */
         $repo = $this->entityManager->getRepository(PostEntity::class);
         $request = new PostSearchRequest();
-        $request->project = $this->project;
-        $request->maxId = $post['id'];
-        $nextPosts = $repo->findByRequest($request, 3);
+        $request->setProject($this->project);
+        $request->setMaxId($post['id']);
+        $request->setLimit(3);
+        $nextPosts = $repo->findByRequest($request);
         $nextPostsResultSet = $this->postResultSetFactory->createFromEntities($nextPosts);
 
         $postTags = array_values(array_filter(

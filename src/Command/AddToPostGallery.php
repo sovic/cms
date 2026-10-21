@@ -9,6 +9,8 @@ use Sovic\Cms\Command\Trait\PostCommandTrait;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostSearchRequest;
+use Sovic\Cms\Post\PostSort;
+use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Cms\Repository\PostRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -35,8 +37,10 @@ class AddToPostGallery extends Command
         /** @var PostRepository $repo */
         $repo = $em->getRepository(Post::class);
         $search = new PostSearchRequest();
-        $search->includePrivate = true;
-        $latestPosts = $repo->findByRequest($search, 10, 0);
+        $search->setVisibilityId(VisibilityId::All);
+        $search->setPostSort(PostSort::Latest);
+        $search->setLimit(10);
+        $latestPosts = $repo->findByRequest($search);
 
         $output->writeln('Latest published posts:');
         foreach ($latestPosts as $post) {
