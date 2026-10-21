@@ -7,6 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\SearchRequestInterface;
 use Sovic\Common\Entity\Project;
 
@@ -84,5 +85,27 @@ class TagRepository extends EntityRepository
         $qb->setMaxResults($limit);
 
         return array_column($qb->getQuery()->getResult(), 'name');
+    }
+
+    /**
+     * Unique ASCII url_id for tag name, adds numeric suffix on collision (e.g. 'caj-2').
+     */
+    public function createUniqueUrlId(string $name): string
+    {
+        $maxLength = 100;
+        $base = substr(TagName::toUrlId($name), 0, $maxLength);
+        if ($base === '') {
+            $base = 'tag';
+        }
+
+        $urlId = $base;
+        $i = 2;
+        while ($this->findOneBy(['urlId' => $urlId]) !== null) {
+            $suffix = '-' . $i;
+            $urlId = rtrim(substr($base, 0, $maxLength - strlen($suffix)), '-') . $suffix;
+            $i++;
+        }
+
+        return $urlId;
     }
 }

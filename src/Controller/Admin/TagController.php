@@ -61,6 +61,7 @@ class TagController extends AdminBaseController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        /** @var TagRepository $repo */
         $repo = $em->getRepository(Tag::class);
         $tag = $repo->find($id);
 
@@ -78,6 +79,9 @@ class TagController extends AdminBaseController
                 }
 
                 $tag->setName(TagName::normalize((string) $tag->getName()));
+                if (empty($tag->getUrlId())) {
+                    $tag->setUrlId($repo->createUniqueUrlId($tag->getName()));
+                }
 
                 $em->persist($tag);
                 $em->flush();

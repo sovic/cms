@@ -67,6 +67,7 @@ class TagController extends AbstractBaseApiController
         if ($tag === null) {
             $tag = new Tag();
             $tag->setName($name);
+            $tag->setUrlId($repo->createUniqueUrlId($name));
             $tag->setIsPublic(true);
             $tag->setProject($project->getEntity());
 
@@ -76,6 +77,7 @@ class TagController extends AbstractBaseApiController
 
         $this->data['id'] = $tag->getId();
         $this->data['name'] = $tag->getName();
+        $this->data['url_id'] = $tag->getUrlId();
 
         return $this->sendSuccess();
     }

@@ -2,6 +2,8 @@
 
 namespace Sovic\Cms\Tag;
 
+use Cocur\Slugify\Slugify;
+
 /**
  * Normalization and validation for tag names.
  *
@@ -48,5 +50,16 @@ final class TagName
         $names = array_map(self::normalize(...), explode(',', $value));
 
         return array_values(array_unique(array_filter($names, static fn(string $name) => $name !== '')));
+    }
+
+    /**
+     * ASCII url slug from tag name, e.g. 'Žlutý kůň' => 'zluty-kun'.
+     */
+    public static function toUrlId(string $name): string
+    {
+        $slugify = new Slugify();
+        $slugify->activateRuleSet('default');
+
+        return $slugify->slugify(self::normalize($name));
     }
 }
