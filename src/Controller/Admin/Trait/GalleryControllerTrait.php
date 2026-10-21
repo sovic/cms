@@ -35,7 +35,7 @@ trait GalleryControllerTrait
             if ($gallery === null) {
                 $galleries[$galleryName] = [
                     // matches GalleryManager::createGallery() defaults
-                    'is_download_enabled' => true,
+                    'is_download_enabled' => false,
                     'items' => [],
                     'upload_max_files' => $this->galleryUploadMaxFiles,
                 ];
