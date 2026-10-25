@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Symmetric encryption of per-user API keys, the key is derived from kernel.secret.
- * Rotating kernel.secret makes stored keys unreadable, users have to enter them again.
+ * Rotating `kernel`.`secret` makes stored keys unreadable, users have to enter them again.
  */
 final class ApiKeyEncryptor
 {

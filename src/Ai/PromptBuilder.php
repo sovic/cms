@@ -1,5 +1,9 @@
 <?php
 
+/** @noinspection CssMissingComma */
+
+/** @noinspection CssInvalidHtmlTagReference */
+
 namespace Sovic\Cms\Ai;
 
 use Sovic\Cms\Ai\Dto\ComponentLibrary;
@@ -80,13 +84,10 @@ PROMPT;
                 }
                 $messages[] = [
                     'role' => 'assistant',
-                    'content' => json_encode(
-                        [
-                            'reply' => $message->getContent(),
-                            'html' => $message->getHtml() ?? '',
-                        ],
-                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
-                    ),
+                    'content' => json_encode([
+                        'reply' => $message->getContent(),
+                        'html' => $message->getHtml() ?? '',
+                    ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 ];
                 continue;
             }

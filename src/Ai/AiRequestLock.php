@@ -67,7 +67,7 @@ class AiRequestLock
 
     private function key(Page $page, UserEntityInterface $user): string
     {
-        // the identifier is an e-mail or user name, hash it to keep the cache key valid
+        // the identifier is an e-mail or username, hash it to keep the cache key valid
         return 'sovic_cms_ai_running_' . $page->getId() . '_' . md5($user->getUserIdentifier());
     }
 }

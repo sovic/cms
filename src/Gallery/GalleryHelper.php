@@ -28,7 +28,7 @@ class GalleryHelper
         string      $baseUrl = '',
         array       $sizes = [self::SIZE_THUMB, self::SIZE_BIG]
     ): array {
-        $dir = sprintf('%04d', (int) ($item->getId() / 100));
+        $dir = sprintf('%04d', $item->getId() / 100);
         $dirUrl = $baseUrl . '/' . $item->getModel() . '/' . $dir;
         $result = [];
         foreach ($sizes as $size) {

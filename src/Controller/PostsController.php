@@ -9,7 +9,6 @@ use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Common\Controller\Trait\DownloadTrait;
 use Sovic\Common\Pagination\Pagination;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
@@ -90,8 +89,10 @@ class PostsController extends ProjectBaseController
     }
 
     #[Route('/posts/{urlId}', name: 'posts_detail', defaults: [])]
-    public function post(string $urlId, Request $request, RouterInterface $router): Response
-    {
+    public function post(
+        string          $urlId,
+        RouterInterface $router,
+    ): Response {
         $response = $this->loadPost($urlId);
         if ($response !== null) {
             return $response;

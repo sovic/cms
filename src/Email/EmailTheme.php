@@ -90,7 +90,7 @@ readonly class EmailTheme implements EmailThemeInterface
         // update paragraph style
         $paragraphStyle = $themeData['paragraph_style'] ?? '';
         /** @noinspection PhpUnnecessaryLocalVariableInspection */
-        $html = (string) str_replace('<p>', '<p style="' . $paragraphStyle . '">', $html);
+        $html = str_replace('<p>', '<p style="' . $paragraphStyle . '">', $html);
 
         return $html;
     }

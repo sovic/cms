@@ -20,7 +20,7 @@ final readonly class PageContext
     public static function fromPage(Page $page, ?string $currentContent = null): self
     {
         return new self(
-            (string) $page->getName(),
+            $page->getName(),
             (string) $page->getHeading(),
             $page->getLang() ?: 'cs',
             $currentContent ?? (string) $page->getContent(),
