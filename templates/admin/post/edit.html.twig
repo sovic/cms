@@ -130,8 +130,27 @@
         </div>
     {% endif %}
 
-    {{ form_macro.section_header('Metadata') }}
-    <div class="row">
+    {# keep metadata open when its fields have errors #}
+    {% set metadata_open = form.urlId.vars.errors|length > 0
+        or form.metaTitle.vars.errors|length > 0
+        or form.metaDescription.vars.errors|length > 0
+        or form.metaKeywords.vars.errors|length > 0 %}
+    <div class="row" id="post-metadata-header" style="scroll-margin-top: 100px;">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <a class="togglable-form-section text-gray-900 text-hover-primary {{ metadata_open ? '' : 'collapsed' }} d-inline-flex align-items-center gap-2"
+                   data-bs-toggle="collapse"
+                   href="#post-metadata"
+                   role="button"
+                   aria-expanded="{{ metadata_open ? 'true' : 'false' }}"
+                   aria-controls="post-metadata">
+                    Metadata
+                    <i class="bi bi-chevron-right fs-5"></i>
+                </a>
+            </h3>
+        </div>
+    </div>
+    <div class="row collapse {{ metadata_open ? 'show' : '' }}" id="post-metadata">
         <div class="col-6">
             {{ form_row(form.urlId) }}
         </div>
@@ -168,5 +187,10 @@
 
     <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
     <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
+    <script>
+        document.getElementById('post-metadata')?.addEventListener('shown.bs.collapse', () => {
+            document.getElementById('post-metadata-header').scrollIntoView({behavior: 'smooth', block: 'start'});
+        });
+    </script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
 {% endblock %}

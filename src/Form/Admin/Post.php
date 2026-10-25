@@ -133,10 +133,13 @@ class Post extends AbstractType
             'urlId',
             TextType::class,
             [
-                'label' => 'URL identifikátor (nepovinné, vytvoří se automaticky z názvu pokud není vyplněno)',
+                'label' => 'URL identifikátor (nepovinné)',
                 'required' => false,
                 'attr' => [
                     'length' => 255,
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'bottom',
+                    'title' => 'Vytvoří se automaticky z názvu pokud není vyplněno',
                 ],
             ]
         );
