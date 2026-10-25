@@ -51,12 +51,20 @@
                         <i class="bi bi-exclamation-triangle text-warning me-1"></i>
                         Není nastaveno datum publikování, příspěvek se na webu nezobrazí.
                     </div>
-                {% elseif post.publishDate > date() %}
-                    <div class="text-muted fs-7 mt-3">
-                        <i class="bi bi-clock me-1"></i>
-                        Naplánováno na {{ post.publishDate|format_date_time }}
+                {% endif %}
+
+                <div class="separator my-5"></div>
+                {% if post.publishDate is not null and post.publishDate > date() %}
+                    <div class="d-flex justify-content-between fs-7 mb-2">
+                        <span class="text-muted">Naplánováno na</span>
+                        <span class="text-gray-800">{{ post.publishDate|format_date_time }}</span>
                     </div>
                 {% endif %}
+
+                <div class="d-flex justify-content-between fs-7">
+                    <span class="text-muted">Datum vytvoření</span>
+                    <span class="text-gray-800">{{ post.createDate|format_date_time }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -95,19 +103,14 @@
 
     {{ form_macro.section_header('Základní informace') }}
     <div class="row mb-4">
-        <div class="col-6">
+        <div class="col-12">
             {{ form_row(form.name) }}
         </div>
         <div class="col-6">
             {{ form_row(form.subtitle) }}
         </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-6">
             {{ form_row(form.publishDate) }}
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-            {{ form_row(form.createDate) }}
         </div>
     </div>
 

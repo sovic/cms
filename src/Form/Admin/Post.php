@@ -74,18 +74,6 @@ class Post extends AbstractType
             ]
         );
 
-        $builder->add(
-            'createDate',
-            DateTimeType::class,
-            [
-                'label' => 'Datum vytvoření',
-                'required' => false,
-                'input' => 'datetime_immutable',
-                'disabled' => true,
-            ]
-        );
-
-
         // content
 
         $builder->add(
