@@ -90,15 +90,22 @@ class CreatePostCommand extends Command
             }
         }
 
-        $question = new ConfirmationQuestion('Publish post? (y/n)', true);
+        $question = new ConfirmationQuestion('Set post private? (y/n)', true);
         if ($helper->ask($input, $output, $question)) {
-            $post->save(true);
+            $post->setIsPrivate(true);
+            $post->flush();
         }
 
+        $question = new ConfirmationQuestion('Publish post now? (y/n)', true);
+        if ($helper->ask($input, $output, $question)) {
+            $post->setIsPublished(true);
+            $post->flush();
+        }
+
+        $post->refresh();
+
         $output->writeln('Post created with ID: ' . $post->getId());
-        $url = '/posts/' . $entity->getUrlId();
-        $output->writeln('Post URL: ' . $url);
-        $output->writeln('Post URL with download: ' . $url . '?secret=' . $entity->getSecret());
+        $output->writeln('Post URL: ' . $post->getUrlId());
 
         return Command::SUCCESS;
     }

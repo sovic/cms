@@ -4,7 +4,6 @@ namespace Sovic\Cms\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Command\Trait\PostCommandTrait;
-use Sovic\Cms\Post\Post;
 use Sovic\Cms\Post\PostFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -33,20 +32,12 @@ class SetPostPrivateCommand extends Command
             return Command::FAILURE;
         }
 
-        if ($post->entity->getPrivateSlug() !== null) {
-            $output->writeln('Post already has a private slug');
-
-            return Command::FAILURE;
-        }
-
-        $slug = $post->generateUniqueSlug(Post::PrivateSlugLength);
-        $post->entity->setPrivateSlug($slug);
-        $post->entity->setPublic(false);
+        $post->setIsPrivate(true);
         $post->save();
 
         $url = $this->router->generate(
             'posts_detail',
-            ['urlId' => $slug],
+            ['urlId' => $post->getUrlId()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         $output->writeln('Post private url: ' . $url);

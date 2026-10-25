@@ -44,7 +44,7 @@ class PostController extends AbstractBaseApiController
         $state = (bool) ($data['state'] ?? false);
 
         if ($field === 'is_public') {
-            $post->setIsPublic($state);
+            $post->setIsPublished($state);
             $post->flush();
 
             $this->data['value'] = $post->getEntity()->isPublic();

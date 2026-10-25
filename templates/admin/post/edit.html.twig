@@ -59,14 +59,33 @@
                         <span class="text-muted">Naplánováno na</span>
                         <span class="text-gray-800">{{ post.publishDate|format_date_time }}</span>
                     </div>
+                {% else %}
+                    <div class="d-flex justify-content-between fs-7">
+                        <span class="text-muted">Publikování</span>
+                        <span class="text-gray-800">{{ post.publishDate|format_date_time }}</span>
+                    </div>
                 {% endif %}
 
                 <div class="d-flex justify-content-between fs-7">
-                    <span class="text-muted">Datum vytvoření</span>
+                    <span class="text-muted">Vytvoření</span>
                     <span class="text-gray-800">{{ post.createDate|format_date_time }}</span>
                 </div>
             </div>
         </div>
+
+        {% if post_public_url %}
+            <div class="{{ theme.card_class() }}">
+                <div class="card-body pt-8 d-flex flex-column gap-3">
+                    {{ form_macro.section_header('Odkazy') }}
+
+                    <a class="btn btn-flex btn-sm btn-light-primary w-100"
+                       href="{{ post_public_url }}" target="_blank">
+                        <i class="bi bi-globe me-1"></i>
+                        Příspěvek na webu
+                    </a>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 

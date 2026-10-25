@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Post;
 
 use Sovic\Cms\Entity\Post as PostEntity;
+use Sovic\Common\Project\Project;
 use Sovic\Common\Project\ProjectEntityModelFactoryInterface;
 use Sovic\Common\Project\ProjectEntityModelFactoryTrait;
 use Sovic\Cms\Repository\PostRepository;
@@ -62,6 +63,14 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
         );
 
         return $model?->entity->isPublished() ? $model : null;
+    }
+
+    public function loadNew(Project $project): Post
+    {
+        $entity = new PostEntity();
+        $entity->setProject($project->getEntity());
+
+        return $this->loadByEntity($entity);
     }
 
     /**

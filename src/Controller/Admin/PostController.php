@@ -24,13 +24,16 @@ class PostController extends AdminBaseController
     use GalleryControllerTrait;
 
     protected string $galleryBaseUrl;
+    protected string $basePublicUrl;
 
     public function __construct(
         EntityManagerInterface                   $entityManager,
         #[Autowire('%base_gallery_url%')] string $galleryBaseUrl,
+        #[Autowire('%base_public_url%')] string  $basePublicUrl,
     ) {
         parent::__construct($entityManager);
         $this->galleryBaseUrl = $galleryBaseUrl;
+        $this->basePublicUrl = $basePublicUrl;
     }
 
     #[Route(
@@ -85,32 +88,30 @@ class PostController extends AdminBaseController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $repo = $em->getRepository(Post::class);
-        $post = $repo->find($id);
-
+        $post = $postFactory->loadById($id);
         if ($post === null) {
-            $post = new Post();
+            $post = $postFactory->loadNew($project);
         }
 
-        $form = $this->createForm(\Sovic\Cms\Form\Admin\Post::class, $post);
-        if ($form->has('tags') && $em->contains($post)) {
-            $postTags = array_map(static fn(Tag $tag) => $tag->getName(), $postFactory->loadByEntity($post)->getTags());
+        $entity = $post->getEntity();
+        $form = $this->createForm(\Sovic\Cms\Form\Admin\Post::class, $entity);
+        if ($form->has('tags') && $em->contains($entity)) {
+            $postTags = array_map(static fn(Tag $tag) => $tag->getName(), $post->getTags());
             $form->get('tags')->setData(implode(',', $postTags));
         }
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if (!$em->contains($post)) {
-                    $post->setHeading($post->getName());
-                    $post->setProject($project->getEntity());
+                if (!$em->contains($entity)) {
+                    $entity->setHeading($entity->getName());
+                    $entity->setProject($project->getEntity());
                 }
 
-                /** @var \Sovic\Cms\Post\Post $model */
-                $model = $postFactory->loadByEntity($post);
-                $model->save();
+                $post->save();
+
                 if ($form->has('tags')) {
-                    $model->syncTagsByNames(TagName::parseList($form->get('tags')->getData()));
+                    $post->syncTagsByNames(TagName::parseList($form->get('tags')->getData()));
                 }
 
                 try {
@@ -118,7 +119,7 @@ class PostController extends AdminBaseController
                 } catch (Throwable) {
                 }
 
-                return $this->redirectToRoute('admin:post:edit', ['id' => $post->getId()]);
+                return $this->redirectToRoute('admin:post:edit', ['id' => $entity->getId()]);
             }
 
             try {
@@ -129,15 +130,18 @@ class PostController extends AdminBaseController
 
         $editing = $id > 0;
 
-        if ($editing && $post->getId() !== null) {
-            $postModel = $postFactory->loadByEntity($post);
-            $this->assignGalleries($postModel, ['post', 'documents'], $this->galleryBaseUrl);
+        $postPublicUrl = null;
+        if ($editing && $entity->getId() !== null) {
+            $this->assignGalleries($post, ['post', 'documents'], $this->galleryBaseUrl);
+
+            $postPublicUrl = $post->getUrl();
         }
 
         $this->assign('auth_user', $this->getUser());
         $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
-        $this->assign('post', $post);
+        $this->assign('post', $entity);
+        $this->assign('post_public_url', $postPublicUrl);
 
         return $this->render('@CmsBundle/admin/post/edit.html.twig');
     }

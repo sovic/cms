@@ -107,12 +107,12 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         }
     }
 
-    public function setIsPublic(bool $isPublic): void
+    public function setIsPublished(bool $isPublished): void
     {
         $entity = $this->entity;
 
-        $entity->setPublic($isPublic);
-        if ($isPublic && $entity->getPublishDate() === null) {
+        $entity->setPublic($isPublished);
+        if ($isPublished && $entity->getPublishDate() === null) {
             $entity->setPublishDate(new DateTimeImmutable());
         }
     }
@@ -127,7 +127,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         }
     }
 
-    public function save(bool $publish = false): void
+    public function save(): void
     {
         $entity = $this->entity;
 
@@ -145,9 +145,6 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $entity->setCreated(new DateTimeImmutable());
             $entity->setCreateDate(new DateTimeImmutable());
         }
-
-        // publish
-        $this->setIsPublic($publish);
 
         $this->flush();
     }
