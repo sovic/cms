@@ -12,7 +12,7 @@ use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Cms\Post\PostSort;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Common\DataList\Enum\VisibilityId;
-use Sovic\Common\Helpers\Date;
+use Sovic\Common\Utils\Date;
 use Sovic\Common\Pagination\Pagination;
 use Sovic\Cms\Gallery\Gallery;
 use Symfony\Component\HttpFoundation\Response;
