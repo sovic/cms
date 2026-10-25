@@ -95,7 +95,8 @@
                     <div class="{{ theme.toggle_switch_class() }}"
                          data-entity="post"
                          data-entity-id="{{ post.id }}">
-                        {{ form_macro.switch('post_is_published_' ~ post.id, 'is_published', 'Publikováno', post.is_published, 'bi bi-check-circle-fill') }}
+                        {{ form_macro.switch('post_is_public_' ~ post.id, 'is_public', 'Publikováno', post.is_public, 'bi bi-globe', 'Publikováno – na webu se zobrazí od data publikování') }}
+                        {{ form_macro.switch('post_is_private_' ~ post.id, 'is_private', 'Soukromý', post.is_private, 'bi bi-key', 'Soukromý – zobrazí se jen přímým odkazem') }}
                     </div>
                 </td>
                 <td class="text-end">

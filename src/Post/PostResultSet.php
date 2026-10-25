@@ -158,6 +158,8 @@ class PostResultSet
                 'intro_text' => $post->getIntroText(),
                 'is_featured' => $entity->isFeatured(),
                 'is_gallery_enabled' => $entity->isGalleryEnabled(),
+                'is_private' => $entity->isPrivate(),
+                'is_public' => $entity->isPublic(),
                 'is_published' => $entity->isPublished(),
                 'meta_description' => $entity->getMetaDescription(),
                 'meta_keywords' => $entity->getMetaKeywords(),
