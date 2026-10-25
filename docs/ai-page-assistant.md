@@ -6,7 +6,7 @@ same visual style as the rest of the website.
 
 ## Configuration
 
-Add to `config/packages/sovic_cms.yaml` (the assistant is enabled when `components_dir` is set):
+The assistant is shown in page edit to users who have their API key set (AI settings). Optional config in `config/packages/sovic_cms.yaml`:
 
 ```yaml
 sovic_cms:

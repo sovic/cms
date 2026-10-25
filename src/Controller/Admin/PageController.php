@@ -8,9 +8,11 @@ use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\PageGroup;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Entity\UserAiSetting;
 use Sovic\Cms\Page\PageFactory;
 use Sovic\Cms\Repository\PageGroupRepository;
 use Sovic\Cms\Repository\PageRepository;
+use Sovic\Cms\Repository\UserAiSettingRepository;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
+use UserBundle\User\UserEntityInterface;
 
 class PageController extends AdminBaseController
 {
@@ -27,7 +30,6 @@ class PageController extends AdminBaseController
     protected string $basePublicUrl;
     protected string $baseGalleryUrl;
     protected bool $enableTags;
-    protected bool $aiEnabled;
     protected array $aiPreviewCss;
     protected string $aiPreviewBodyClass;
     protected string $aiPreviewWrapperClass;
@@ -37,7 +39,6 @@ class PageController extends AdminBaseController
         #[Autowire('%base_public_url%')] string  $basePublicUrl,
         #[Autowire('%base_gallery_url%')] string $baseGalleryUrl,
         #[Autowire('%page_enable_tags%')] bool   $enableTags,
-        #[Autowire('%ai_enabled%')] bool         $aiEnabled,
         #[Autowire('%ai_preview_css%')] array    $aiPreviewCss,
         #[Autowire('%ai_preview_body_class%')] string $aiPreviewBodyClass,
         #[Autowire('%ai_preview_wrapper_class%')] string $aiPreviewWrapperClass,
@@ -46,7 +47,6 @@ class PageController extends AdminBaseController
         $this->basePublicUrl = $basePublicUrl;
         $this->baseGalleryUrl = $baseGalleryUrl;
         $this->enableTags = $enableTags;
-        $this->aiEnabled = $aiEnabled;
         $this->aiPreviewCss = $aiPreviewCss;
         $this->aiPreviewBodyClass = $aiPreviewBodyClass;
         $this->aiPreviewWrapperClass = $aiPreviewWrapperClass;
@@ -177,7 +177,7 @@ class PageController extends AdminBaseController
             $pagePublicUrl = $model->getPublicUrl($this->basePublicUrl);
         }
 
-        $this->assign('ai_enabled', $this->aiEnabled);
+        $this->assign('ai_enabled', $this->isAiEnabled($em));
         $this->assign('ai_preview_body_class', $this->aiPreviewBodyClass);
         $this->assign('ai_preview_css', $this->aiPreviewCss);
         $this->assign('ai_preview_wrapper_class', $this->aiPreviewWrapperClass);
@@ -221,5 +221,21 @@ class PageController extends AdminBaseController
         $em->flush();
 
         return $this->redirectToRoute('admin:page:edit', ['id' => $clone->getId()]);
+    }
+
+    /**
+     * AI assistant is available when current user has API key set (Admin AI settings).
+     */
+    private function isAiEnabled(EntityManagerInterface $em): bool
+    {
+        $user = $this->getUser();
+        if (!$user instanceof UserEntityInterface) {
+            return false;
+        }
+
+        /** @var UserAiSettingRepository $repo */
+        $repo = $em->getRepository(UserAiSetting::class);
+
+        return $repo->hasApiKey($user);
     }
 }

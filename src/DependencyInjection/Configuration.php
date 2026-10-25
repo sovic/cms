@@ -58,7 +58,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('components_dir')
                             ->defaultNull()
-                            ->info('Directory with HTML component snippets, one *.html file per component (file name = component name). AI assistant is enabled when set.')
+                            ->info('Directory with HTML component snippets, one *.html file per component (file name = component name). Optional, without components assistant uses plain HTML.')
                         ->end()
                         ->scalarNode('styleguide_file')
                             ->defaultNull()

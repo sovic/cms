@@ -57,7 +57,11 @@ class ComponentLibraryLoader
     private function listComponentFiles(): array
     {
         $dir = $this->componentsDir;
-        if (empty($dir) || !is_dir($dir) || !is_readable($dir)) {
+        // components are optional, without them assistant uses plain HTML
+        if (empty($dir)) {
+            return [];
+        }
+        if (!is_dir($dir) || !is_readable($dir)) {
             throw new ComponentLibraryException(sprintf('AI components directory "%s" does not exist.', $dir));
         }
 

@@ -40,7 +40,6 @@ class SovicCmsExtension extends Extension
         $container->setParameter('ai_preview_wrapper_class', $ai['preview_wrapper_class']);
         $container->setParameter('ai_max_tokens', $ai['max_tokens']);
         $container->setParameter('ai_history_limit', $ai['history_limit']);
-        $container->setParameter('ai_enabled', !empty($ai['components_dir']));
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');

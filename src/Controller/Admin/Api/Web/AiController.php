@@ -13,7 +13,6 @@ use Sovic\Cms\Ai\Exception\MissingApiKeyException;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
 use Sovic\Cms\Entity\AiMessage;
 use Sovic\Cms\Entity\Page;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,7 +29,6 @@ class AiController extends AbstractBaseApiController
         private readonly AiPageAssistant                  $assistant,
         private readonly AiRequestLock                    $lock,
         private readonly TranslatorInterface              $translator,
-        #[Autowire('%ai_enabled%')] private readonly bool $enabled,
     ) {
         parent::__construct($entityManager);
     }
@@ -170,10 +168,6 @@ class AiController extends AbstractBaseApiController
      */
     private function resolvePageAndUser(int $id): array
     {
-        if (!$this->enabled) {
-            return [null, null, $this->fail('disabled', 404)];
-        }
-
         $user = $this->getUser();
         if (!$user instanceof UserEntityInterface) {
             throw $this->createAccessDeniedException();

@@ -50,6 +50,9 @@ How to answer:
 PROMPT;
 
         $prompt .= "\n\n<styleguide>\n" . ($library->styleguide !== '' ? $library->styleguide : '(no styleguide provided)') . "\n</styleguide>\n\n<components>\n";
+        if (empty($library->components)) {
+            $prompt .= "(no components provided, use plain semantic HTML: headings h2-h4, paragraphs, lists, links, strong/em, images, tables)\n";
+        }
         foreach ($library->components as $name => $html) {
             $prompt .= '<component name="' . htmlspecialchars($name, ENT_QUOTES) . "\">\n" . $html . "\n</component>\n";
         }

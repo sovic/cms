@@ -7,7 +7,7 @@ sovic_cms:
         upload_max_files: 25
 
     ai:
-        # AI page assistant is enabled when components_dir is set
+        # optional component snippets, AI page assistant is shown to users with API key set
         components_dir: '%kernel.project_dir%/templates/components'
         styleguide_file: '%kernel.project_dir%/templates/components/STYLEGUIDE.md'
         model: 'claude-opus-5'
