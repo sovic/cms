@@ -5,7 +5,6 @@ namespace Sovic\Cms\Form\Admin;
 use Sovic\Cms\Ai\Enum\AiModel;
 use Sovic\Cms\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -64,15 +63,6 @@ class AiSettingsForm extends AbstractType
                 'choices' => $choices,
                 'placeholder' => 'Výchozí (' . $options['default_model'] . ')',
                 'help' => 'Výchozí model je nastaven v konfiguraci aplikace.',
-            ]
-        );
-
-        $builder->add(
-            'remove_key',
-            CheckboxType::class,
-            [
-                'label' => 'Odstranit uložený klíč',
-                'required' => false,
             ]
         );
 

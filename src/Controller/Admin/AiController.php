@@ -55,10 +55,7 @@ class AiController extends AdminBaseController
                 $data = $form->getData();
 
                 $apiKey = trim((string) ($data['api_key'] ?? ''));
-                if (!empty($data['remove_key'])) {
-                    $setting->setApiKeyEncrypted(null);
-                    $setting->setApiKeyHint(null);
-                } elseif ($apiKey !== '') {
+                if ($apiKey !== '') {
                     $setting->setApiKeyEncrypted($encryptor->encrypt($apiKey));
                     $setting->setApiKeyHint(ApiKeyEncryptor::hint($apiKey));
                 }
@@ -87,6 +84,7 @@ class AiController extends AdminBaseController
         $this->assign('default_model', $defaultModel);
         $this->assign('form', $form->createView());
         $this->assign('has_api_key', $setting->hasApiKey());
+        $this->assign('is_enabled', $setting->isEnabled());
         $this->assign('key_hint', $setting->getApiKeyHint());
 
         return $this->render('@CmsBundle/admin/ai/settings.html.twig');

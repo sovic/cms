@@ -19,8 +19,8 @@ class UserAiSettingRepository extends EntityRepository
         return $this->findOneBy(['user' => $user]);
     }
 
-    public function hasApiKey(UserEntityInterface $user): bool
+    public function isAiAvailable(UserEntityInterface $user): bool
     {
-        return $this->findOneByUser($user)?->hasApiKey() ?? false;
+        return $this->findOneByUser($user)?->isAiAvailable() ?? false;
     }
 }

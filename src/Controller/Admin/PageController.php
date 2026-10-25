@@ -224,7 +224,7 @@ class PageController extends AdminBaseController
     }
 
     /**
-     * AI assistant is available when current user has API key set (Admin AI settings).
+     * AI assistant is available when current user has API key set and AI enabled (Admin AI settings).
      */
     private function isAiEnabled(EntityManagerInterface $em): bool
     {
@@ -236,6 +236,6 @@ class PageController extends AdminBaseController
         /** @var UserAiSettingRepository $repo */
         $repo = $em->getRepository(UserAiSetting::class);
 
-        return $repo->hasApiKey($user);
+        return $repo->isAiAvailable($user);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Controller\Admin\Api\Web;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Ai\AiPageAssistant;
 use Sovic\Cms\Ai\AiRequestLock;
@@ -13,6 +14,8 @@ use Sovic\Cms\Ai\Exception\MissingApiKeyException;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
 use Sovic\Cms\Entity\AiMessage;
 use Sovic\Cms\Entity\Page;
+use Sovic\Cms\Entity\UserAiSetting;
+use Sovic\Cms\Repository\UserAiSettingRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,6 +26,11 @@ use UserBundle\User\UserEntityInterface;
 class AiController extends AbstractBaseApiController
 {
     private const MaxMessageLength = 20000;
+
+    private const SettingToggleableFields = [
+        'has_api_key',
+        'is_enabled',
+    ];
 
     public function __construct(
         EntityManagerInterface                            $entityManager,
@@ -164,6 +172,61 @@ class AiController extends AbstractBaseApiController
     }
 
     /**
+     * Toggles of current user AI settings (settings page sidebar).
+     * has_api_key can be only switched off, it removes the stored key.
+     */
+    #[Route(
+        '/admin/api/web/ai/settings/toggle-state',
+        name: 'admin:api:web:ai:settings:toggle-state',
+        methods: ['POST'],
+    )]
+    public function toggleSettingState(Request $request): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user = $this->getUser();
+        if (!$user instanceof UserEntityInterface) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $data = $this->getRequestData($request);
+        $field = $data['field'] ?? null;
+        if (!in_array($field, self::SettingToggleableFields, true)) {
+            $this->addError('invalid_field');
+
+            return $this->sendFail();
+        }
+
+        $state = (bool) ($data['state'] ?? false);
+
+        /** @var UserAiSettingRepository $repo */
+        $repo = $this->entityManager->getRepository(UserAiSetting::class);
+        $setting = $repo->findOneByUser($user) ?? new UserAiSetting($user);
+
+        if ($field === 'has_api_key') {
+            if ($state) {
+                $this->addError('invalid_state');
+
+                return $this->sendFail();
+            }
+            $setting->setApiKeyEncrypted(null);
+            $setting->setApiKeyHint(null);
+            $value = $setting->hasApiKey();
+        } else {
+            $setting->setIsEnabled($state);
+            $value = $setting->isEnabled();
+        }
+
+        $setting->setUpdatedAt(new DateTimeImmutable());
+        $this->entityManager->persist($setting);
+        $this->entityManager->flush();
+
+        $this->data['value'] = $value;
+
+        return $this->sendSuccess();
+    }
+
+    /**
      * @return array{0: Page|null, 1: UserEntityInterface|null, 2: JsonResponse|null}
      */
     private function resolvePageAndUser(int $id): array
@@ -171,6 +234,13 @@ class AiController extends AbstractBaseApiController
         $user = $this->getUser();
         if (!$user instanceof UserEntityInterface) {
             throw $this->createAccessDeniedException();
+        }
+
+        /** @var UserAiSettingRepository $settingRepo */
+        $settingRepo = $this->entityManager->getRepository(UserAiSetting::class);
+        $setting = $settingRepo->findOneByUser($user);
+        if ($setting !== null && !$setting->isEnabled()) {
+            return [null, null, $this->fail('disabled', 403, true)];
         }
 
         $page = $this->entityManager->getRepository(Page::class)->find($id);

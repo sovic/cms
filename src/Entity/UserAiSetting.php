@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
+use Sovic\Cms\Entity\Trait\IsEnabledTrait;
 use Sovic\Cms\Repository\UserAiSettingRepository;
 use Sovic\Common\Entity\Trait\CreatedAtTrait;
 use Sovic\Common\Entity\Trait\IdentityColumnTrait;
@@ -25,6 +26,7 @@ class UserAiSetting
 {
     use CreatedAtTrait;
     use IdentityColumnTrait;
+    use IsEnabledTrait;
     use UpdatedAtTrait;
 
     #[OneToOne(targetEntity: User::class)]
@@ -85,5 +87,13 @@ class UserAiSetting
     public function setModel(?string $model): void
     {
         $this->model = $model;
+    }
+
+    /**
+     * AI assistant is usable when API key is set and user has not disabled it.
+     */
+    public function isAiAvailable(): bool
+    {
+        return $this->isEnabled() && $this->hasApiKey();
     }
 }

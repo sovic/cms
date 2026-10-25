@@ -48,8 +48,10 @@
     (data-entity / data-entity-id or data-url), state is saved via toggle-switch.js.
     Checked = success + checked box, unchecked = danger + empty box, disabled = gray.
     Tooltip: string, or [checked_tooltip, unchecked_tooltip] switched by state.
+    Attr: extra checkbox attributes, toggle-switch.js supports data-confirm (asked before request)
+    and data-reload (reloads page after successful change).
 #}
-{% macro check_button(id, field, title, checked, icon_class = null, disabled = false, tooltip = null, class_name = null) %}
+{% macro check_button(id, field, title, checked, icon_class = null, disabled = false, tooltip = null, class_name = null, attr = {}) %}
     {% if tooltip is iterable %}
         {% set tooltip_checked = tooltip[0] %}
         {% set tooltip_unchecked = tooltip[1] %}
@@ -72,6 +74,9 @@
                id="{{ id }}"
                autocomplete="off"
                data-field="{{ field }}"
+                {% for name, value in attr %}
+                    {{ name }}="{{ value }}"
+                {% endfor %}
                 {{ checked ? 'checked' : '' }}
                 {{ disabled ? 'disabled' : '' }}
         >

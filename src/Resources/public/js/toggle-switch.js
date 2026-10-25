@@ -42,6 +42,10 @@
         }
 
         const prevState = checkbox.checked;
+        if (checkbox.dataset.confirm && !window.confirm(checkbox.dataset.confirm)) {
+            checkbox.checked = !prevState;
+            return;
+        }
         checkbox.disabled = true;
 
         axios.post(url, {
@@ -52,6 +56,9 @@
             if (payload && payload.status === 'success') {
                 const newState = payload.data && payload.data.value !== undefined ? payload.data.value : !prevState;
                 checkbox.checked = newState;
+                if (checkbox.dataset.reload !== undefined) {
+                    window.location.reload();
+                }
                 const icon = checkbox.closest('label').querySelector('.form-check-label i');
                 if (icon) {
                     icon.classList.toggle('text-success', newState);

@@ -2,7 +2,7 @@ flash:
   saved: 'Nastavení AI asistenta uloženo.'
   form_error: 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.'
 api:
-  disabled: 'AI asistent není v této instalaci zapnutý.'
+  disabled: 'AI asistent máte vypnutý. Zapněte jej v nastavení AI asistenta.'
   not_found: 'Stránka nebyla nalezena.'
   empty_message: 'Napište prosím zprávu.'
   message_too_long: 'Zpráva je příliš dlouhá.'
