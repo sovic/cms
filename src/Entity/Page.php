@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -29,6 +30,7 @@ use Sovic\Common\Entity\Project;
 #[Index(name: 'menu_item_id', columns: ['menu_item_id'])]
 #[UniqueConstraint(name: 'project_id_url_id', columns: ['project_id', 'url_id'])]
 #[Entity(repositoryClass: PageRepository::class)]
+#[HasLifecycleCallbacks]
 class Page implements LoggableEntityInterface
 {
     use IsPublicTrait;
@@ -247,5 +249,31 @@ class Page implements LoggableEntityInterface
     public function getIdentifier(): int
     {
         return $this->getId();
+    }
+
+    public function getLoggableFields(): array
+    {
+        return [
+            'name',
+            'urlId',
+            'heading',
+            'perex',
+            'content',
+            'lang',
+            'pageGroup',
+            'hasToc',
+            'contentType',
+            'theme',
+            'isInSitemap',
+            'lastUpdateDate',
+            'isPublic',
+            'publishedAt',
+            // meta
+            'metaTitle',
+            'metaDescription',
+            'metaKeywords',
+            //
+            // 'menuItem' // TODO
+        ];
     }
 }
