@@ -254,7 +254,7 @@ class PostRepository extends EntityRepository
             $qb->setParameter(':tag_id', $request->getTag()->getId());
         }
         if ($request->isDraft()) {
-            $qb->andWhere('p.publishDate IS NULL');
+            $qb->andWhere('p.publishDate IS NULL OR p.public = 0');
         }
         if ($request->getSearch()) {
             $qb->andWhere('p.name LIKE :search OR p.heading LIKE :search');

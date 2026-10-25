@@ -53,7 +53,7 @@ class PostSearchRequest extends AbstractSearchRequest
     }
 
     /**
-     * Only drafts = posts without publish date.
+     * Only drafts = posts without publish date or not public.
      */
     public function isDraft(): bool
     {

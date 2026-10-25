@@ -68,7 +68,7 @@ class PostController extends AdminBaseController
     }
 
     /**
-     * @param bool $isDraft only drafts (posts without publish date)
+     * @param bool $isDraft only drafts (posts without publish date or not public)
      */
     private function renderList(
         EntityManagerInterface    $em,
