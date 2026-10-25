@@ -17,6 +17,7 @@ class PostSearchRequest extends AbstractSearchRequest
     private ?Project $project = null;
     private ?Tag $tag = null;
     private ?int $maxId = null;
+    private bool $isDraft = false;
 
     public function getProject(): ?Project
     {
@@ -51,6 +52,19 @@ class PostSearchRequest extends AbstractSearchRequest
         $this->maxId = $maxId;
     }
 
+    /**
+     * Only drafts = posts without publish date.
+     */
+    public function isDraft(): bool
+    {
+        return $this->isDraft;
+    }
+
+    public function setIsDraft(bool $isDraft): void
+    {
+        $this->isDraft = $isDraft;
+    }
+
     public function getSortOptions(): array
     {
         return array_column(PostSort::cases(), 'value');
@@ -64,5 +78,14 @@ class PostSearchRequest extends AbstractSearchRequest
     public function setPostSort(PostSort $sort): void
     {
         $this->setSort($sort->value);
+    }
+
+    public function toArray(): array
+    {
+        $data = parent::toArray();
+        $data['is_draft'] = $this->isDraft();
+        ksort($data);
+
+        return $data;
     }
 }

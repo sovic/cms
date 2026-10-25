@@ -4,7 +4,7 @@
 {% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
-{% block title %}Přehled příspěvků{% endblock %}
+{% block title %}{{ query.is_draft|default(false) ? 'Drafty' : 'Přehled příspěvků' }}{% endblock %}
 
 {% set allow_add = true %}
 {% set is_search_enabled = true %}

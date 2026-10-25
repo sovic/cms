@@ -9,6 +9,7 @@ use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
 use Sovic\Cms\Post\PostSearchRequest;
+use Sovic\Cms\Post\PostSort;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
@@ -49,14 +50,47 @@ class PostController extends AdminBaseController
         Project                   $project,
         Request                   $request,
     ): Response {
+        return $this->renderList($em, $factory, $postResultSetFactory, $project, $request, false);
+    }
+
+    #[Route(
+        '/admin/post/drafts',
+        name: 'admin:post:drafts',
+    )]
+    public function drafts(
+        EntityManagerInterface    $em,
+        BasicSearchRequestFactory $factory,
+        PostResultSetFactory      $postResultSetFactory,
+        Project                   $project,
+        Request                   $request,
+    ): Response {
+        return $this->renderList($em, $factory, $postResultSetFactory, $project, $request, true);
+    }
+
+    /**
+     * @param bool $isDraft only drafts (posts without publish date)
+     */
+    private function renderList(
+        EntityManagerInterface    $em,
+        BasicSearchRequestFactory $factory,
+        PostResultSetFactory      $postResultSetFactory,
+        Project                   $project,
+        Request                   $request,
+        bool                      $isDraft,
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $searchRequest = new PostSearchRequest();
         // admin list shows all posts (incl. not published), unless visibility is requested
         $searchRequest->setVisibilityId(VisibilityId::All);
         $factory->loadDefaultSearchRequest($request, $searchRequest);
-        $searchRequest->setPaginationRoute('admin:post:list');
+        $searchRequest->setPaginationRoute($isDraft ? 'admin:post:drafts' : 'admin:post:list');
         $searchRequest->setProject($project);
+        $searchRequest->setIsDraft($isDraft);
+        if ($isDraft) {
+            // no publish date to sort by
+            $searchRequest->setPostSort(PostSort::Latest);
+        }
 
         /** @var PostRepository $repo */
         $repo = $em->getRepository(Post::class);
