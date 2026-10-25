@@ -2,6 +2,7 @@
 
 namespace Sovic\Cms\Repository;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
@@ -9,6 +10,7 @@ use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\PageGroup;
 use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\DataList\SearchRequestInterface;
+use Sovic\Common\Entity\Project as ProjectEntity;
 use Sovic\Common\Project\Project;
 
 /**
@@ -161,5 +163,57 @@ class PageRepository extends EntityRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * Slug from page name, unique within project (-2, -3, … suffix on clash).
+     */
+    public function createUniqueUrlId(
+        string         $name,
+        ?ProjectEntity $project,
+        ?int           $excludeId = null,
+    ): string {
+        $maxLength = 200;
+
+        $slugify = new Slugify();
+        $slugify->activateRuleSet('default');
+        $base = substr($slugify->slugify($name), 0, $maxLength);
+        $base = rtrim($base, '-');
+        if ($base === '') {
+            $base = 'page';
+        }
+
+        $urlId = $base;
+        $i = 2;
+        while ($this->urlIdExists($urlId, $project, $excludeId)) {
+            $suffix = '-' . $i;
+            $urlId = rtrim(substr($base, 0, $maxLength - strlen($suffix)), '-') . $suffix;
+            $i++;
+        }
+
+        return $urlId;
+    }
+
+    private function urlIdExists(
+        string         $urlId,
+        ?ProjectEntity $project,
+        ?int           $excludeId,
+    ): bool {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('COUNT(p.id)');
+        $qb->where('p.urlId = :url_id');
+        $qb->setParameter('url_id', $urlId);
+        if ($project !== null) {
+            $qb->andWhere('p.project = :project');
+            $qb->setParameter('project', $project);
+        } else {
+            $qb->andWhere('p.project IS NULL');
+        }
+        if ($excludeId !== null) {
+            $qb->andWhere('p.id != :exclude_id');
+            $qb->setParameter('exclude_id', $excludeId);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
     }
 }

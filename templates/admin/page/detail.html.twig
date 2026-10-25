@@ -66,6 +66,8 @@
 
         <div class="{{ theme.card_class() }}">
             <div class="card-body pt-8 d-flex flex-column gap-3">
+                {{ form_macro.section_header('Odkazy') }}
+
                 <a class="btn btn-flex btn-sm btn-light-primary w-100"
                    href="{{ page_public_url }}" target="_blank">
                     <i class="bi bi-globe me-1"></i>
@@ -110,7 +112,7 @@
 {% block quick_settings %}
     <div class="{{ theme.card_class() }}">
         <div class="card-body py-8">
-            {{ form_macro.section_header('Rychlé akce') }}
+            {{ form_macro.section_header('Nastavení') }}
 
             <div class="js-toggle-switch pt-2"
                  data-entity="page"
@@ -193,8 +195,22 @@
         </div>
     </div>
 
-    {{ form_macro.section_header('Metadata') }}
-    <div class="row">
+    <div class="row" id="page-metadata-header" style="scroll-margin-top: 100px;">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <a class="togglable-form-section text-gray-900 text-hover-primary collapsed d-inline-flex align-items-center gap-2"
+                   data-bs-toggle="collapse"
+                   href="#page-metadata"
+                   role="button"
+                   aria-expanded="false"
+                   aria-controls="page-metadata">
+                    Metadata
+                    <i class="bi bi-chevron-right fs-5"></i>
+                </a>
+            </h3>
+        </div>
+    </div>
+    <div class="row collapse" id="page-metadata">
         <div class="col-6">
             {{ form_row(form.metaTitle) }}
         </div>
@@ -224,6 +240,11 @@
 
     <script src="{{ asset('bundles/cms/js/tabs.js') }}"></script>
     <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
+    <script>
+        document.getElementById('page-metadata')?.addEventListener('shown.bs.collapse', () => {
+            document.getElementById('page-metadata-header').scrollIntoView({behavior: 'smooth', block: 'start'});
+        });
+    </script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
     {% if editing and ai_enabled|default(false) %}
         <script src="{{ asset('bundles/cms/js/ai-assistant.js') }}"></script>

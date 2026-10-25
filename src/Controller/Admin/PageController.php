@@ -137,6 +137,15 @@ class PageController extends AdminBaseController
                     $page->setPublishedAt(null);
                 }
 
+                // urlId optional in form, generated from name if empty
+                $urlId = trim((string) $form->get('urlId')->getData());
+                if ($urlId === '') {
+                    $excludeId = $em->contains($page) ? $page->getId() : null;
+                    /** @var PageRepository $repo */
+                    $urlId = $repo->createUniqueUrlId($page->getName(), $page->getProject(), $excludeId);
+                }
+                $page->setUrlId($urlId);
+
                 $em->persist($page);
                 $em->flush();
 

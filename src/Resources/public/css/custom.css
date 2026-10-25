@@ -137,3 +137,12 @@ html[data-bs-theme='dark'] .text-black {
 .gallery-upload .dropzone {
     text-align: left;
 }
+
+/* collapse toggle (data-bs-toggle="collapse") with chevron icon, rotates when expanded */
+.togglable-form-section > .bi {
+    transition: transform .2s ease;
+}
+
+.togglable-form-section[aria-expanded="true"] > .bi {
+    transform: rotate(90deg);
+}
