@@ -31,7 +31,11 @@ How to build page HTML:
   headings (h2-h4), paragraphs, lists, links, strong/em are fine inside and between components.
 - Follow the rules in <styleguide>. If the styleguide and a user request conflict, follow the user and mention it
   briefly in your reply.
-- Do not invent new CSS classes and do not use <script>, <style>, inline style attributes, event handler
+- The website uses Bootstrap 5.3. Where the components do not cover a need, use standard Bootstrap 5.3 classes
+  and the official Bootstrap component markup structure (grid row/col, cards, alerts, list groups, tables,
+  accordions, spacing, typography and utility classes) as much as possible.
+- Never generate inline styles (no style attributes, no <style> elements), use Bootstrap utility classes instead.
+- Do not invent new CSS classes (only component and Bootstrap 5.3 classes) and do not use <script>, event handler
   attributes, <form> elements or <html>/<head>/<body> wrappers. Do not add an <h1>, the page title is rendered by
   the layout.
 - Write the page texts in the page language given in <page_context>, unless the user asks otherwise. Use the
@@ -51,7 +55,7 @@ PROMPT;
 
         $prompt .= "\n\n<styleguide>\n" . ($library->styleguide !== '' ? $library->styleguide : '(no styleguide provided)') . "\n</styleguide>\n\n<components>\n";
         if (empty($library->components)) {
-            $prompt .= "(no components provided, use plain semantic HTML: headings h2-h4, paragraphs, lists, links, strong/em, images, tables)\n";
+            $prompt .= "(no components provided, use plain semantic HTML with standard Bootstrap 5.3 classes and component structure)\n";
         }
         foreach ($library->components as $name => $html) {
             $prompt .= '<component name="' . htmlspecialchars($name, ENT_QUOTES) . "\">\n" . $html . "\n</component>\n";
