@@ -68,8 +68,6 @@ class CreatePostCommand extends Command
         $content = $helper->ask($input, $output, $question);
         $entity->setContent($content);
 
-        $entity->setSecret(substr(md5(random_bytes(10)), 0, 10));
-
         $post = $this->postFactory->loadByEntity($entity);
         if (!$post) {
             throw new RuntimeException('Unable to create post');

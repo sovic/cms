@@ -2,9 +2,8 @@
 
 namespace Sovic\Cms\Controller\Admin\Api\Web;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
-use Sovic\Cms\Entity\Post;
+use Sovic\Cms\Post\PostFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,6 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class PostController extends AbstractBaseApiController
 {
     private const ToggleableFields = [
+        'is_private',
         'is_public',
     ];
 
@@ -22,13 +22,13 @@ class PostController extends AbstractBaseApiController
         methods: ['POST'],
     )]
     public function toggleState(
-        int                    $id,
-        EntityManagerInterface $em,
-        Request                $request,
+        int         $id,
+        PostFactory $postFactory,
+        Request     $request,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $post = $em->getRepository(Post::class)->find($id);
+        $post = $postFactory->loadById($id);
         if ($post === null) {
             return $this->sendFail(404);
         }
@@ -44,12 +44,19 @@ class PostController extends AbstractBaseApiController
         $state = (bool) ($data['state'] ?? false);
 
         if ($field === 'is_public') {
-            // only public flag, publish date is not changed (published = public + publish date reached)
-            $post->setPublic($state);
+            $post->setIsPublic($state);
+            $post->flush();
 
-            $em->flush();
+            $this->data['value'] = $post->getEntity()->isPublic();
 
-            $this->data['value'] = $post->isPublic();
+            return $this->sendSuccess();
+        }
+
+        if ($field === 'is_private') {
+            $post->setIsPrivate($state);
+            $post->flush();
+
+            $this->data['value'] = $post->getEntity()->isPrivate();
 
             return $this->sendSuccess();
         }

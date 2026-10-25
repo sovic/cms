@@ -39,10 +39,11 @@
                     <span class="fw-bold fs-3 text-gray-800">Nastavení</span>
                 </div>
 
-                <div class="js-toggle-switch mt-4"
+                <div class="js-toggle-switch d-flex flex-column gap-3 mt-4"
                      data-entity="post"
                      data-entity-id="{{ post.id }}">
                     {{ form_macro.check_button('post_is_public_' ~ post.id, 'is_public', 'Publikováno', post.isPublic, 'bi bi-globe', false, ['Příspěvek je zveřejněn, na webu se zobrazí od data publikování', 'Příspěvek není zveřejněn, na webu se nezobrazí'], 'w-100') }}
+                    {{ form_macro.check_button('post_is_private_' ~ post.id, 'is_private', 'Soukromý', post.isPrivate, 'bi bi-key', false, ['Příspěvek je soukromý, po publikování se zobrazí jen přímým odkazem', 'Příspěvek není soukromý, po publikování se zobrazí všem'], 'w-100') }}
                 </div>
 
                 {% if post.publishDate is null %}

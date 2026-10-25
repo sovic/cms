@@ -16,6 +16,7 @@ use Sovic\Cms\Model\Trait\GalleryModelTrait;
 
 /**
  * @property \Sovic\Cms\Entity\Post $entity
+ * @method \Sovic\Cms\Entity\Post getEntity()
  */
 class Post extends AbstractEntityModel implements GalleryModelInterface
 {
@@ -23,6 +24,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
     use PrivateSlugTrait;
 
     public const PrivateSlugLength = 32;
+    public const SecretLength = 10;
 
     public function getId(): int
     {
@@ -72,6 +74,40 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         return $qb->getQuery()->getResult();
     }
 
+    public function setIsPrivate(bool $private): void
+    {
+        $entity = $this->entity;
+        if (!$private) {
+            $entity->setPrivateSlug(null);
+
+            return;
+        }
+
+        if (empty($entity->getPrivateSlug())) {
+            $entity->setPrivateSlug($this->generateUniqueSlug(self::PrivateSlugLength));
+        }
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $entity = $this->entity;
+
+        $entity->setPublic($isPublic);
+        if ($isPublic && $entity->getPublishDate() === null) {
+            $entity->setPublishDate(new DateTimeImmutable());
+        }
+    }
+
+    /**
+     * Secret is required for gallery download (?secret= query param), generated only if missing.
+     */
+    public function ensureSecret(): void
+    {
+        if (empty($this->entity->getSecret())) {
+            $this->entity->setSecret(bin2hex(random_bytes(self::SecretLength / 2)));
+        }
+    }
+
     public function save(bool $publish = false): void
     {
         $entity = $this->entity;
@@ -91,18 +127,8 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
             $entity->setCreateDate(new DateTimeImmutable());
         }
 
-        // if private slug missing
-        if (empty($entity->getPrivateSlug())) {
-            $entity->setPrivateSlug($this->generateUniqueSlug(self::PrivateSlugLength));
-        }
-
         // publish
-        if ($publish) {
-            $entity->setPublic(true);
-            if ($entity->getPublishDate() === null) {
-                $entity->setPublishDate(new DateTimeImmutable());
-            }
-        }
+        $this->setIsPublic($publish);
 
         $this->flush();
     }

@@ -25,4 +25,12 @@ trait PrivateSlugTrait
     {
         $this->privateSlug = $privateSlug;
     }
+
+    /**
+     * Private post is accessible only via private slug.
+     */
+    public function isPrivate(): bool
+    {
+        return !empty($this->getPrivateSlug());
+    }
 }
