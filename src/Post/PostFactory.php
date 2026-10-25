@@ -31,6 +31,9 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
         $criteria = $this->getProjectSelectCriteria();
         $urlId = trim($urlId, '/\\'); // trim leading / trailing slashes
         $criteria['urlId'] = $urlId;
+        if (!$includePrivate) {
+            $criteria['privateSlug'] = null; // only public posts
+        }
 
         /** @var Post $model */
         $model = $this->loadModelBy(PostEntity::class, Post::class, $criteria);

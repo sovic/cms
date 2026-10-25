@@ -80,9 +80,10 @@
                             </span>
                         {% else %}
                             <span class="badge badge-light-warning">Nepublikovaný</span>
-                            {% if post.private_slug is not empty %}
-                                <span class="badge badge-light-info">Soukromý</span>
-                            {% endif %}
+                        {% endif %}
+
+                        {% if post.private_slug is not empty %}
+                            <span class="badge badge-light-info">Soukromý</span>
                         {% endif %}
                     </div>
                     {% if post.intro_text %}
