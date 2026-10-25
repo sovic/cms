@@ -49,18 +49,17 @@
                 </div>
 
                 {% if editing %}
-                    {% if page.pageGroup %}
-                        <span class="fw-bold fs-6 text-gray-800">Sekce</span>
-                        <a class="btn btn-flex btn-sm btn-light-info w-100"
-                           href="{{ path('admin:page:list', {'group_id': page.pageGroup.id}) }}">
-                            <i class="bi bi-folder me-1"></i>
-                            {{ page.pageGroup.name }}
-                        </a>
-                    {% endif %}
+                    <div class="js-toggle-switch mt-4"
+                         data-entity="page"
+                         data-entity-id="{{ page.id }}">
+                        {{ form_macro.check_button('page_is_public_' ~ page.id, 'is_public', 'Publikováno', page.isPublic, 'bi bi-globe', false, ['Stránka je viditelná pro návštěvníky webu', 'Stránka není viditelná pro návštěvníky webu'], 'w-100') }}
+                    </div>
                 {% endif %}
             </div>
         </div>
+
         {% if editing %}
+            {{ block('groups') }}
             {{ block('quick_settings') }}
         {% endif %}
 
@@ -109,6 +108,20 @@
     {{ block('edit_card') }}
 {% endblock %}
 
+{% block groups %}
+    <div class="{{ theme.card_class() }}">
+        <div class="{{ theme.card_body_class() }}">
+            {{ form_macro.section_header('Sekce') }}
+
+            <a class="btn btn-flex btn-sm btn-light-info w-100"
+               href="{{ path('admin:page:list', {'group_id': page.pageGroup.id}) }}">
+                <i class="bi bi-folder me-1"></i>
+                {{ page.pageGroup.name }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
 {% block quick_settings %}
     <div class="{{ theme.card_class() }}">
         <div class="card-body py-8">
@@ -117,9 +130,6 @@
             <div class="js-toggle-switch pt-2"
                  data-entity="page"
                  data-entity-id="{{ page.id }}">
-                <div class="mb-4">
-                    {{ form_macro.switch('page_is_public_' ~ page.id, 'is_public', 'Publikováno', page.isPublic, null, 'Stránka je viditelná pro návštěvníky webu') }}
-                </div>
                 <div class="mb-4">
                     {{ form_macro.switch('page_is_in_sitemap_' ~ page.id, 'is_in_sitemap', 'Sitemap', page.isInSitemap, null, 'Stránka je zahrnuta v sitemap.xml') }}
                 </div>

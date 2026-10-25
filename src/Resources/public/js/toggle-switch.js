@@ -11,6 +11,26 @@
     }
 
     /**
+     * Switch state dependent tooltip of check button (form macro check_button).
+     * @param {HTMLInputElement} checkbox
+     */
+    function syncTooltip(checkbox) {
+        const label = checkbox.closest('label');
+        if (!label || label.dataset.tooltipChecked === undefined) {
+            return;
+        }
+        const text = checkbox.checked ? label.dataset.tooltipChecked : label.dataset.tooltipUnchecked;
+        const tooltip = window.bootstrap && bootstrap.Tooltip.getInstance(label);
+        if (tooltip) {
+            // initialized tooltip moves title to data-bs-original-title, keep native title empty
+            label.setAttribute('data-bs-original-title', text);
+            tooltip.setContent({'.tooltip-inner': text});
+        } else {
+            label.setAttribute('title', text);
+        }
+    }
+
+    /**
      * @param {HTMLInputElement} checkbox
      * @param {string} url
      */
@@ -46,6 +66,7 @@
             checkbox.checked = !prevState;
         }).finally(function () {
             checkbox.disabled = false;
+            syncTooltip(checkbox);
         });
     }
 
