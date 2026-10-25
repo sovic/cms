@@ -164,6 +164,18 @@ html[data-bs-theme='dark'] .text-black {
     background-color: var(--bs-danger-active);
 }
 
+/* modifier: unchecked state gray instead of danger (checked / disabled states unchanged) */
+.btn.check-button.check-button-muted {
+    color: var(--bs-gray-700);
+    background-color: var(--bs-gray-200);
+    border-color: var(--bs-gray-200);
+}
+
+.btn.check-button.check-button-muted:hover {
+    color: var(--bs-gray-800);
+    background-color: var(--bs-gray-300);
+}
+
 .btn.check-button:has(> .check-button-input:checked) {
     color: var(--bs-success-inverse);
     background-color: var(--bs-success);
