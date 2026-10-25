@@ -12,16 +12,18 @@
 
             <div class="card-body">
                 <div class="alert {{ has_api_key ? 'alert-success' : 'alert-warning' }} d-flex align-items-center mb-8">
-                    <i class="bi {{ has_api_key ? 'bi-key' : 'bi-exclamation-triangle' }} fs-2 me-4"></i>
+                    <i class="bi {{ has_api_key ? 'bi-key' : 'bi-exclamation-triangle' }} {{ has_api_key ? 'text-success' : 'text-warning' }} fs-2 me-4"></i>
                     <div>
                         {% if has_api_key %}
-                            API klíč je nastaven (končí na <strong>…{{ key_hint }}</strong>).
+                            <span class="fs-6">API klíč je nastaven (končí na <strong>…{{ key_hint }}</strong>).</span>
                         {% else %}
-                            API klíč není nastaven, AI asistent na stránkách nebude fungovat.
+                            <span class="fs-6">API klíč není nastaven, AI asistent na stránkách nebude fungovat.</span>
                         {% endif %}
-                        <div class="text-gray-700 fs-7 mt-1">
+                        <div class="mt-1">
                             Asistent používá váš vlastní klíč k Anthropic API, spotřeba se účtuje na váš účet.
-                            Klíč vytvoříte na <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+                            Klíč vytvoříte na
+                            <a href="https://console.anthropic.com/settings/keys" class="text-primary" target="_blank"
+                               rel="noopener">console.anthropic.com</a>.
                             Výchozí model: <code>{{ default_model }}</code>.
                         </div>
                     </div>

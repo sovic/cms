@@ -43,7 +43,10 @@ class AiController extends AdminBaseController
         $form = $this->createForm(
             AiSettingsForm::class,
             ['model' => $setting->getModel()],
-            ['default_model' => $defaultModel],
+            [
+                'current_model' => $setting->getModel(),
+                'default_model' => $defaultModel,
+            ],
         );
         $form->handleRequest($request);
 

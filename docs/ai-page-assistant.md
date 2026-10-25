@@ -13,7 +13,7 @@ sovic_cms:
     ai:
         components_dir: '%kernel.project_dir%/templates/components'
         styleguide_file: '%kernel.project_dir%/templates/components/STYLEGUIDE.md'
-        model: 'claude-opus-5'   # default, users can override it in their AI settings
+        model: 'claude-opus-5-5'   # default, users can override it in their AI settings
         effort: 'medium'         # low | medium | high | xhigh | max
         max_tokens: 16000        # max output tokens of one response
         history_limit: 20        # previous messages sent to the model

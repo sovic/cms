@@ -65,7 +65,7 @@ class Configuration implements ConfigurationInterface
                             ->info('Markdown or HTML file describing the website styleguide.')
                         ->end()
                         ->scalarNode('model')
-                            ->defaultValue('claude-opus-5')
+                            ->defaultValue('claude-opus-5-5')
                             ->info('Default Anthropic model, users can override it in their AI settings.')
                         ->end()
                         ->enumNode('effort')

@@ -2,12 +2,13 @@
 
 namespace Sovic\Cms\Form\Admin;
 
+use Sovic\Cms\Ai\Enum\AiModel;
 use Sovic\Cms\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -19,8 +20,10 @@ class AiSettingsForm extends AbstractType
         $resolver->setDefaults([
             'data_class' => null,
             'default_model' => '',
+            'current_model' => null,
         ]);
         $resolver->setAllowedTypes('default_model', 'string');
+        $resolver->setAllowedTypes('current_model', ['null', 'string']);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -45,19 +48,22 @@ class AiSettingsForm extends AbstractType
             ]
         );
 
+        $choices = AiModel::getChoices();
+        // keep previously saved model selectable, even if not offered anymore
+        $currentModel = $options['current_model'];
+        if (!empty($currentModel) && !in_array($currentModel, $choices, true)) {
+            $choices[$currentModel] = $currentModel;
+        }
+
         $builder->add(
             'model',
-            TextType::class,
+            ChoiceType::class,
             [
                 'label' => 'Model',
                 'required' => false,
-                'constraints' => [
-                    new Length(max: 64),
-                ],
-                'attr' => [
-                    'placeholder' => $options['default_model'],
-                ],
-                'help' => 'Ponechte prázdné pro výchozí model (' . $options['default_model'] . ').',
+                'choices' => $choices,
+                'placeholder' => 'Výchozí (' . $options['default_model'] . ')',
+                'help' => 'Výchozí model je nastaven v konfiguraci aplikace.',
             ]
         );
 
