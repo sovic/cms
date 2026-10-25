@@ -134,7 +134,9 @@ class PostController extends AdminBaseController
         if ($editing && $entity->getId() !== null) {
             $this->assignGalleries($post, ['post', 'documents'], $this->galleryBaseUrl);
 
-            $postPublicUrl = $post->getUrl();
+            if ($post->getEntity()->isPublic()) {
+                $postPublicUrl = $post->getUrl();
+            }
         }
 
         $this->assign('auth_user', $this->getUser());

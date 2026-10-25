@@ -90,7 +90,7 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
     {
         $slug = $this->getUrlId();
 
-        return '/post/' . $slug;
+        return '/posts/' . $slug;
     }
 
     public function setIsPrivate(bool $private): void

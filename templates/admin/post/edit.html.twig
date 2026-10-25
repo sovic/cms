@@ -46,13 +46,6 @@
                     {{ form_macro.check_button('post_is_private_' ~ post.id, 'is_private', 'Soukromý', post.isPrivate, 'bi bi-key', false, ['Příspěvek je soukromý, po publikování se zobrazí jen přímým odkazem', 'Příspěvek není soukromý, po publikování se zobrazí všem'], 'w-100 check-button-muted') }}
                 </div>
 
-                {% if post.publishDate is null %}
-                    <div class="text-muted fs-7 mt-3">
-                        <i class="bi bi-exclamation-triangle text-warning me-1"></i>
-                        Není nastaveno datum publikování, příspěvek se na webu nezobrazí.
-                    </div>
-                {% endif %}
-
                 <div class="separator my-5"></div>
                 {% if post.publishDate is not null and post.publishDate > date() %}
                     <div class="d-flex justify-content-between fs-7 mb-2">
@@ -62,7 +55,7 @@
                 {% else %}
                     <div class="d-flex justify-content-between fs-7">
                         <span class="text-muted">Publikování</span>
-                        <span class="text-gray-800">{{ post.publishDate|format_date_time }}</span>
+                        <span class="text-gray-800">{{ post.publishDate ? post.publishDate|format_date_time : '-' }}</span>
                     </div>
                 {% endif %}
 

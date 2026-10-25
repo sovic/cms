@@ -42,6 +42,8 @@ class PostRepository extends EntityRepository
         }
 
         $this->addPublishedCriteria($qb);
+        $qb->andWhere('p.privateSlug IS NULL');
+
         $qb->addOrderBy('p.publishDate', 'DESC');
         $qb->addOrderBy('p.id', 'DESC');
         if ($limit) {
@@ -67,6 +69,7 @@ class PostRepository extends EntityRepository
         }
 
         $this->addPublishedCriteria($qb);
+        $qb->andWhere('p.privateSlug IS NULL');
 
         try {
             return $qb->getQuery()->getSingleScalarResult();
@@ -85,7 +88,10 @@ class PostRepository extends EntityRepository
         $qb->from(Post::class, 'p');
         $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
         $qb->andWhere('p.project = :project');
+
         $this->addPublishedCriteria($qb);
+        $qb->andWhere('p.privateSlug IS NULL');
+
         $qb->andWhere('tp.tagId = :tag_id');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
@@ -108,7 +114,10 @@ class PostRepository extends EntityRepository
         $qb->from(Post::class, 'p');
         $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
         $qb->andWhere('p.project = :project');
+
         $this->addPublishedCriteria($qb);
+        $qb->andWhere('p.privateSlug IS NULL');
+
         $qb->andWhere('tp.tagId = :tag_id');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
@@ -137,7 +146,10 @@ class PostRepository extends EntityRepository
         $qb->select('p');
         $qb->from(Post::class, 'p');
         $qb->andWhere('p.project = :project');
+
         $this->addPublishedCriteria($qb);
+        $qb->andWhere('p.privateSlug IS NULL');
+
         $qb->andWhere('p.publishDate BETWEEN :start_date AND :end_date');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':start_date', $startDate->format('Y-m-d H:i:s'));
@@ -163,7 +175,10 @@ class PostRepository extends EntityRepository
         $qb->select('count(p.id)');
         $qb->from(Post::class, 'p');
         $qb->andWhere('p.project = :project');
+
         $this->addPublishedCriteria($qb);
+        $qb->andWhere('p.privateSlug IS NULL');
+
         $qb->andWhere('p.publishDate BETWEEN :start_date AND :end_date');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':start_date', $startDate->format('Y-m-d H:i:s'));
@@ -220,9 +235,10 @@ class PostRepository extends EntityRepository
         switch ($request->getVisibilityId()) {
             case VisibilityId::Public:
                 $this->addPublishedCriteria($qb);
+                $qb->andWhere('p.privateSlug IS NULL');
                 break;
             case VisibilityId::Private:
-                $qb->andWhere('p.public = 0');
+                $qb->andWhere('p.privateSlug IS NOT NULL');
                 break;
             case VisibilityId::Deleted:
                 // posts have no soft delete

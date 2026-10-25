@@ -47,7 +47,6 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
     public function loadByPrivateSlug(string $slug): ?Post
     {
         $criteria = $this->getProjectSelectCriteria();
-        $criteria['public'] = false;
         $criteria['privateSlug'] = $slug;
 
         return $this->loadModelBy(PostEntity::class, Post::class, $criteria);
