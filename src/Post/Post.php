@@ -74,6 +74,25 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         return $qb->getQuery()->getResult();
     }
 
+    public function getUrlId(): string
+    {
+        $entity = $this->getEntity();
+
+        $slug = $entity->getUrlId();
+        if ($entity->getPrivateSlug()) {
+            $slug = $entity->getPrivateSlug();
+        }
+
+        return $slug;
+    }
+
+    public function getUrl(): string
+    {
+        $slug = $this->getUrlId();
+
+        return '/post/' . $slug;
+    }
+
     public function setIsPrivate(bool $private): void
     {
         $entity = $this->entity;

@@ -2,7 +2,6 @@
 
 namespace Sovic\Cms\Post;
 
-use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Sovic\Cms\Entity\GalleryItem;
@@ -144,20 +143,11 @@ class PostResultSet
         // tags
         $tags = $this->loadTags();
 
-        // url slugify
-        $slugify = new Slugify();
-        $slugify->activateRuleSet('default');
-
         $results = [];
         $groupByAuthors = !empty($this->authorsIds);
         foreach ($this->getPosts() as $post) {
             $id = $post->getId();
             $entity = $post->entity;
-
-            $slug = $entity->getUrlId();
-            if (!$entity->isPublic() && $entity->getPrivateSlug()) {
-                $slug = $entity->getPrivateSlug();
-            }
 
             $item = [
                 'authors' => null,
@@ -177,8 +167,8 @@ class PostResultSet
                 'publish_date' => $entity->getPublishDate(),
                 'subtitle' => $entity->getSubtitle(),
                 'tags' => $tags[$id] ?? [],
-                'url' => '/post/' . $post->getId() . '-' . $slugify->slugify($entity->getHeading()),
-                'url_id' => $slug,
+                'url' => $post->getUrl(),
+                'url_id' => $post->getUrlId(),
             ];
 
             if ($this->addAuthors) {
