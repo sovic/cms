@@ -8,9 +8,11 @@ use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Post\PostFactory;
 use Sovic\Cms\Post\PostResultSetFactory;
+use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Cms\Repository\PostRepository;
 use Sovic\Cms\Tag\TagName;
-use Sovic\Common\Pagination\Pagination;
+use Sovic\Common\DataList\BasicSearchRequestFactory;
+use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\Project\Project;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,33 +43,35 @@ class PostController extends AdminBaseController
         name: 'admin:post:list',
     )]
     public function list(
-        EntityManagerInterface $em,
-        PostResultSetFactory   $postResultSetFactory,
-        Request                $request,
+        EntityManagerInterface    $em,
+        BasicSearchRequestFactory $factory,
+        PostResultSetFactory      $postResultSetFactory,
+        Project                   $project,
+        Request                   $request,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $perPage = 50;
+        $searchRequest = new PostSearchRequest();
+        // admin list shows all posts (incl. not published), unless visibility is requested
+        $searchRequest->setVisibilityId(VisibilityId::All);
+        $factory->loadDefaultSearchRequest($request, $searchRequest);
+        $searchRequest->setPaginationRoute('admin:post:list');
+        $searchRequest->setProject($project);
 
         /** @var PostRepository $repo */
         $repo = $em->getRepository(Post::class);
 
-        $queryPage = $request->query->get('page');
-        $pageNr = $queryPage ?? 1;
-        $pagination = new Pagination($repo->count(), $perPage);
-        if ($pageNr > $pagination->getPageCount()) {
-            return $this->renderProject404();
-        }
-        $pagination->setCurrentPage($pageNr);
-
-        $posts = $repo->findBy([], ['publishDate' => 'DESC'], $perPage, ($pageNr - 1) * $perPage);
+        $posts = $repo->findByRequest($searchRequest);
+        $total = $repo->countByRequest($searchRequest);
 
         $set = $postResultSetFactory->createFromEntities($posts);
         $set->setAddAuthors(true);
         $set->setAddCovers(true);
         $set->setGalleryBaseUrl($this->galleryBaseUrl);
 
+        $this->assign('pagination', $searchRequest->getPagination($total));
         $this->assign('posts', $set->toArray());
+        $this->assign('query', $searchRequest->toArray());
 
         return $this->render('@CmsBundle/admin/post/list.html.twig');
     }
