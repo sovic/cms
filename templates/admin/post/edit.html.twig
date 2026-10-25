@@ -7,34 +7,75 @@
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
 
 {% block content %}
-    <div class="app-container container">
-        {% if editing %}
-            <ul class="{{ theme.nav_tabs_class() }}"
-                role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active"
-                            id="tab-form-btn"
-                            data-bs-toggle="tab"
-                            data-bs-target="#tab-form"
-                            type="button"
-                            role="tab"
-                            aria-selected="true">
-                        Příspěvek
-                    </button>
-                </li>
-                {{ gallery_macro.gallery_tabs_nav(galleries, 'post') }}
-            </ul>
+    <div class="app-container container-xxl">
+        <div class="d-flex flex-column flex-xl-row">
+            {% if editing %}
+                {{ block('sidebar') }}
+            {% endif %}
 
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="tab-form" role="tabpanel">
+            <div class="flex-lg-row-fluid {{ editing ? 'ms-lg-10' : '' }}">
+                {% if editing %}
+                    {{ block('tabs') }}
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab-form" role="tabpanel">
+                            {{ block('edit_card') }}
+                        </div>
+                        {{ gallery_macro.gallery_tabs_panes('post', post.id, galleries, true) }}
+                    </div>
+                {% else %}
                     {{ block('edit_card') }}
-                </div>
-                {{ gallery_macro.gallery_tabs_panes('post', post.id, galleries, true) }}
+                {% endif %}
             </div>
-        {% else %}
-            {{ block('edit_card') }}
-        {% endif %}
+        </div>
     </div>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="flex-column flex-lg-row-auto w-100 w-xl-300px mb-10">
+        <div class="{{ theme.card_class() }}">
+            <div class="{{ theme.card_body_class() }}">
+                <div class="d-flex flex-column mb-2">
+                    <span class="fw-bold fs-3 text-gray-800">Nastavení</span>
+                </div>
+
+                <div class="js-toggle-switch mt-4"
+                     data-entity="post"
+                     data-entity-id="{{ post.id }}">
+                    {{ form_macro.check_button('post_is_public_' ~ post.id, 'is_public', 'Publikováno', post.isPublic, 'bi bi-globe', false, ['Příspěvek je zveřejněn, na webu se zobrazí od data publikování', 'Příspěvek není zveřejněn, na webu se nezobrazí'], 'w-100') }}
+                </div>
+
+                {% if post.publishDate is null %}
+                    <div class="text-muted fs-7 mt-3">
+                        <i class="bi bi-exclamation-triangle text-warning me-1"></i>
+                        Není nastaveno datum publikování, příspěvek se na webu nezobrazí.
+                    </div>
+                {% elseif post.publishDate > date() %}
+                    <div class="text-muted fs-7 mt-3">
+                        <i class="bi bi-clock me-1"></i>
+                        Naplánováno na {{ post.publishDate|format_date_time }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block tabs %}
+    <ul class="{{ theme.nav_tabs_class() }}" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active"
+                    id="tab-form-btn"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-form"
+                    type="button"
+                    role="tab"
+                    aria-selected="true">
+                Příspěvek
+            </button>
+        </li>
+        {{ gallery_macro.gallery_tabs_nav(galleries, 'post') }}
+    </ul>
 {% endblock %}
 
 {% block edit_card %}
@@ -58,9 +99,6 @@
         </div>
         <div class="col-6">
             {{ form_row(form.subtitle) }}
-        </div>
-        <div class="col-12">
-            {{ form_row(form.public) }}
         </div>
     </div>
     <div class="row mb-4">

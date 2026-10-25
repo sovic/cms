@@ -26,30 +26,53 @@ class PostRepository extends EntityRepository
     /**
      * @return Post[]
      */
-    public function findPublic(Project $project, int $limit = null, int $offset = null): array
-    {
-        return $this->findBy(
-            [
-                'project' => $project->entity,
-                'public' => true,
-            ],
-            [
-                'publishDate' => 'DESC',
-                'id' => 'DESC',
-            ],
-            $limit,
-            $offset,
-        );
+    public function findPublic(
+        ?Project $project = null,
+        int      $limit = null,
+        int      $offset = null,
+    ): array {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('p');
+        $qb->from(Post::class, 'p');
+        if ($project) {
+            $qb->andWhere('p.project = :project');
+            $qb->setParameter(':project', $project->entity);
+        } else {
+            $qb->andWhere('p.project IS NULL');
+        }
+
+        $this->addPublishedCriteria($qb);
+        $qb->addOrderBy('p.publishDate', 'DESC');
+        $qb->addOrderBy('p.id', 'DESC');
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
-    public function countPublic(Project $project): int
+    public function countPublic(?Project $project = null): int
     {
-        return $this->count(
-            [
-                'project' => $project->entity,
-                'public' => true,
-            ]
-        );
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('count(p.id)');
+        $qb->from(Post::class, 'p');
+        if ($project) {
+            $qb->andWhere('p.project = :project');
+            $qb->setParameter(':project', $project->entity);
+        } else {
+            $qb->andWhere('p.project IS NULL');
+        }
+
+        $this->addPublishedCriteria($qb);
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException) {
+            return 0;
+        }
     }
 
     /**
@@ -58,10 +81,11 @@ class PostRepository extends EntityRepository
     public function findPublicByTag(Project $project, Tag $tag, int $limit = null, int $offset = null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('p')->from(Post::class, 'p');
+        $qb->select('p');
+        $qb->from(Post::class, 'p');
         $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
         $qb->andWhere('p.project = :project');
-        $qb->andWhere('p.public = 1');
+        $this->addPublishedCriteria($qb);
         $qb->andWhere('tp.tagId = :tag_id');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
@@ -80,10 +104,11 @@ class PostRepository extends EntityRepository
     public function countPublicByTag(Project $project, Tag $tag): int
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('count(p.id)')->from(Post::class, 'p');
+        $qb->select('count(p.id)');
+        $qb->from(Post::class, 'p');
         $qb->leftJoin(PostTag::class, 'tp', Join::WITH, 'tp.postId = p.id');
         $qb->andWhere('p.project = :project');
-        $qb->andWhere('p.public = 1');
+        $this->addPublishedCriteria($qb);
         $qb->andWhere('tp.tagId = :tag_id');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
@@ -91,8 +116,6 @@ class PostRepository extends EntityRepository
         try {
             return $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException|NonUniqueResultException) {
-            // TODO log
-
             return 0;
         }
     }
@@ -111,9 +134,10 @@ class PostRepository extends EntityRepository
         $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('p')->from(Post::class, 'p');
+        $qb->select('p');
+        $qb->from(Post::class, 'p');
         $qb->andWhere('p.project = :project');
-        $qb->andWhere('p.public = 1');
+        $this->addPublishedCriteria($qb);
         $qb->andWhere('p.publishDate BETWEEN :start_date AND :end_date');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':start_date', $startDate->format('Y-m-d H:i:s'));
@@ -136,9 +160,10 @@ class PostRepository extends EntityRepository
         $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('count(p.id)')->from(Post::class, 'p');
+        $qb->select('count(p.id)');
+        $qb->from(Post::class, 'p');
         $qb->andWhere('p.project = :project');
-        $qb->andWhere('p.public = 1');
+        $this->addPublishedCriteria($qb);
         $qb->andWhere('p.publishDate BETWEEN :start_date AND :end_date');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':start_date', $startDate->format('Y-m-d H:i:s'));
@@ -194,7 +219,7 @@ class PostRepository extends EntityRepository
 
         switch ($request->getVisibilityId()) {
             case VisibilityId::Public:
-                $qb->andWhere('p.public = 1');
+                $this->addPublishedCriteria($qb);
                 break;
             case VisibilityId::Private:
                 $qb->andWhere('p.public = 0');
@@ -216,5 +241,16 @@ class PostRepository extends EntityRepository
             $qb->andWhere('p.id < :max_id');
             $qb->setParameter(':max_id', $request->getMaxId());
         }
+    }
+
+    /**
+     * Published = public flag set and publish date reached (future publish date = scheduled post).
+     */
+    private function addPublishedCriteria(QueryBuilder $qb): void
+    {
+        $qb->andWhere('p.public = 1');
+        $qb->andWhere('p.publishDate IS NOT NULL');
+        $qb->andWhere('p.publishDate <= :published_now');
+        $qb->setParameter(':published_now', new DateTimeImmutable());
     }
 }

@@ -57,6 +57,7 @@ readonly class PostResultSetFactory
         $posts = $this->entityManager
             ->getRepository(PostEntity::class)
             ->findBy(['id' => $postIds, 'public' => 1]);
+        $posts = array_values(array_filter($posts, static fn(PostEntity $post) => $post->isPublished()));
 
         $prs = $this->createFromEntities($posts);
         $prs->setAuthorsIds($postIdAuthorId);

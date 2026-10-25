@@ -36,7 +36,7 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
         if (null === $model) {
             return null;
         }
-        if (!$includePrivate && !$model->entity->isPublic()) {
+        if (!$includePrivate && !$model->entity->isPublished()) {
             return null;
         }
 
@@ -54,11 +54,14 @@ final class PostFactory extends EntityModelFactory implements ProjectEntityModel
 
     public function loadPublicPostById(int $id): ?Post
     {
-        return $this->loadModelBy(
+        /** @var Post|null $model */
+        $model = $this->loadModelBy(
             PostEntity::class,
             Post::class,
             ['id' => $id, 'public' => 1]
         );
+
+        return $model?->entity->isPublished() ? $model : null;
     }
 
     /**

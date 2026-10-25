@@ -222,6 +222,16 @@ class Post
         $this->public = $public;
     }
 
+    /**
+     * Visible on public site: public flag set and publish date reached (future date = scheduled).
+     */
+    public function isPublished(): bool
+    {
+        return $this->public
+            && $this->publishDate !== null
+            && $this->publishDate <= new DateTimeImmutable();
+    }
+
     public function getLang(): string
     {
         return $this->lang;

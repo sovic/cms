@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Form\Admin\Trait\MetaFormTrait;
 use Sovic\Cms\Form\FormTheme;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -61,20 +60,17 @@ class Post extends AbstractType
         );
 
         $builder->add(
-            'public',
-            CheckboxType::class,
-            [
-                'label' => 'Publikováno',
-                'required' => false,
-            ]
-        );
-        $builder->add(
             'publishDate',
             DateTimeType::class,
             [
                 'label' => 'Datum publikování',
                 'required' => false,
                 'input' => 'datetime_immutable',
+                'attr' => [
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'bottom',
+                    'title' => 'Příspěvek se na webu zobrazí, až bude zveřejněn a nastane datum publikování. Lze zadat i datum v budoucnu (naplánované publikování).',
+                ],
             ]
         );
 

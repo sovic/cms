@@ -2,7 +2,6 @@
 
 namespace Sovic\Cms\Controller\Admin;
 
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Post;
@@ -102,9 +101,6 @@ class PostController extends AdminBaseController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($post->isPublic() && $post->getPublishDate() === null) {
-                    $post->setPublishDate(new DateTimeImmutable());
-                }
                 if (!$em->contains($post)) {
                     $post->setHeading($post->getName());
                     $post->setProject($project->getEntity());
