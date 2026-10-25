@@ -16,7 +16,6 @@ use Sovic\Cms\Repository\GalleryItemRepository;
 #[Table(name: 'gallery_item')]
 #[Index(name: 'gallery_id', columns: ['gallery_id'])]
 #[Index(name: 'model_model_id', columns: ['model', 'model_id'])]
-#[Index(name: 'temp', columns: ['temp'])]
 #[Entity(repositoryClass: GalleryItemRepository::class)]
 class GalleryItem
 {
