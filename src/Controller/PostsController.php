@@ -102,7 +102,7 @@ class PostsController extends ProjectBaseController
         if ($gallery) {
             $downloads = $gallery->getItems();
             foreach ($downloads as &$download) {
-                $download['url'] = $router->generate('gallery_item_download', ['id' => $download['id']]);
+                $download['url'] = $router->generate('gallery:item-download', ['id' => $download['id']]);
             }
             unset($download);
         }
@@ -117,18 +117,11 @@ class PostsController extends ProjectBaseController
             $cover['full'] = $baseUrl . '/' . $cover['full'];
         }
 
-        $secret = $request->query->get('secret');
-        $isGalleryDownloadEnabled = $gallery->entity->isDownloadEnabled()
-            && $secret === $this->post->entity->getSecret();
-        $galleryDownloadUrl = $router->generate('gallery_download', ['id' => $gallery->getId()])
-            . '?secret=' . $this->post->entity->getSecret();
-
         $this->assign('active_item', '/posts');
         $this->assign('cover', $cover);
         $this->assign('downloads', $downloads);
+        $this->assign('gallery', $gallery);
         $this->assign('has_parallax', $cover !== null);
-        $this->assign('is_gallery_download_enabled', $isGalleryDownloadEnabled);
-        $this->assign('gallery_download_url', $galleryDownloadUrl);
 
         return $this->render($this->getProjectTemplatePath('post/detail'));
     }

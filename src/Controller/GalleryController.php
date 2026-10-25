@@ -13,7 +13,6 @@ use Sovic\Cms\Entity\Post;
 use Sovic\Common\Controller\Trait\DownloadTrait;
 use Sovic\Cms\Entity\GalleryItem;
 use Sovic\Cms\Gallery\GalleryFactory;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -23,35 +22,26 @@ class GalleryController extends BaseController implements ProjectControllerInter
     use PostsControllerTrait;
     use ProjectControllerTrait;
 
-    #[Route('/gallery/{id}/zip', name: 'gallery_download', defaults: [])]
-    public function galleryZip(
+    #[Route('/gallery/{id}/download', name: 'gallery:download', defaults: [])]
+    public function galleryDownload(
         string                 $id,
         EntityManagerInterface $em,
         FilesystemOperator     $galleryStorage,
         GalleryFactory         $galleryFactory,
-        Request                $request,
     ): Response {
         $gallery = $galleryFactory->loadById($id);
         if (!$gallery || !$gallery->entity->isDownloadEnabled()) {
             return $this->renderProject404();
         }
 
-        // only post now
-        if ($gallery->entity->getModel() !== 'post') {
-            return $this->renderProject404();
-        }
-
+        $model = $gallery->entity->getModel();
         /** @noinspection DegradedSwitchInspection */
-        switch ($gallery->entity->getModel()) {
+        switch ($model) {
             case 'post':
                 $post = $em
                     ->getRepository(Post::class)
                     ->find($gallery->entity->getModelId());
                 if (null === $post) {
-                    return $this->renderProject404();
-                }
-                $secret = $request->query->get('secret');
-                if ($secret !== $post->getSecret()) {
                     return $this->renderProject404();
                 }
                 $fileName = $post->getName();
@@ -77,7 +67,7 @@ class GalleryController extends BaseController implements ProjectControllerInter
         die();
     }
 
-    #[Route('/gallery/item/{id}/download', name: 'gallery_item_download', defaults: [])]
+    #[Route('/gallery/item/{id}/download', name: 'gallery:item-download', defaults: [])]
     public function galleryItemDownload(
         int                    $id,
         EntityManagerInterface $em,
