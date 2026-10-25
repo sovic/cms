@@ -60,7 +60,7 @@ class PostController extends AdminBaseController
         }
         $pagination->setCurrentPage($pageNr);
 
-        $posts = $repo->findBy([], ['id' => 'DESC'], $perPage, ($pageNr - 1) * $perPage);
+        $posts = $repo->findBy([], ['publishDate' => 'DESC'], $perPage, ($pageNr - 1) * $perPage);
 
         $set = $postResultSetFactory->createFromEntities($posts);
         $set->setAddAuthors(true);
