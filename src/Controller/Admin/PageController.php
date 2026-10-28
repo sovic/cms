@@ -4,15 +4,14 @@ namespace Sovic\Cms\Controller\Admin;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Admin\Trait\AiControllerTrait;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\PageGroup;
 use Sovic\Cms\Entity\Tag;
-use Sovic\Cms\Entity\UserAiSetting;
 use Sovic\Cms\Page\PageFactory;
 use Sovic\Cms\Repository\PageGroupRepository;
 use Sovic\Cms\Repository\PageRepository;
-use Sovic\Cms\Repository\UserAiSettingRepository;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -21,10 +20,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
-use UserBundle\User\UserEntityInterface;
 
 class PageController extends AdminBaseController
 {
+    use AiControllerTrait;
     use GalleryControllerTrait;
 
     protected string $basePublicUrl;
@@ -221,21 +220,5 @@ class PageController extends AdminBaseController
         $em->flush();
 
         return $this->redirectToRoute('admin:page:edit', ['id' => $clone->getId()]);
-    }
-
-    /**
-     * AI assistant is available when current user has API key set and AI enabled (Admin AI settings).
-     */
-    private function isAiEnabled(EntityManagerInterface $em): bool
-    {
-        $user = $this->getUser();
-        if (!$user instanceof UserEntityInterface) {
-            return false;
-        }
-
-        /** @var UserAiSettingRepository $repo */
-        $repo = $em->getRepository(UserAiSetting::class);
-
-        return $repo->isAiAvailable($user);
     }
 }

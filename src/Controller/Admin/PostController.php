@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Controller\Admin\Trait\AiControllerTrait;
 use Sovic\Cms\Controller\Admin\Trait\GalleryControllerTrait;
 use Sovic\Cms\Entity\Post;
 use Sovic\Cms\Entity\Tag;
@@ -24,6 +25,7 @@ use Throwable;
 
 class PostController extends AdminBaseController
 {
+    use AiControllerTrait;
     use GalleryControllerTrait;
 
     protected string $galleryBaseUrl;
@@ -177,6 +179,7 @@ class PostController extends AdminBaseController
             }
         }
 
+        $this->assign('ai_enabled', $this->isAiEnabled($em));
         $this->assign('auth_user', $this->getUser());
         $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
