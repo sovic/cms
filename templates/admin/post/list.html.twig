@@ -38,7 +38,7 @@
             <th class="min-w-100px" data-dt-column="2">
                 <span class="dt-column-title">Název</span>
             </th>
-            <th class="text-end min-w-70px" data-dt-column="3" aria-label="Akce">
+            <th class="text-end min-w-150px" data-dt-column="3" aria-label="Akce">
                 <span class="dt-column-title">Akce</span>
             </th>
         </tr>
@@ -73,6 +73,10 @@
                        class="text-gray-800 text-hover-primary fs-5 fw-bold">
                         {{ post.heading }}
                     </a>
+                    <a href="{{ detail_url ~ '#tab-gallery-post' }}"
+                       class="text-muted text-hover-primary fs-7 ms-2">
+                        <i class="bi bi-images"></i> Galerie
+                    </a>
                     <div class="mt-1">
                         {% if post.is_published %}
                             <span class="badge badge-light-success">
@@ -99,7 +103,7 @@
                         {{ form_macro.switch('post_is_private_' ~ post.id, 'is_private', 'Soukromý', post.is_private, 'bi bi-key', 'Soukromý – zobrazí se jen přímým odkazem') }}
                     </div>
                 </td>
-                <td class="text-end">
+                <td class="text-end text-nowrap">
                     {% set actions = [] %}
                     {% set actions = actions|merge([
                         {
