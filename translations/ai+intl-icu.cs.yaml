@@ -16,4 +16,6 @@ api:
   refusal: 'Asistent tento požadavek odmítl zpracovat.'
   truncated: 'Odpověď byla příliš dlouhá, zkuste požadavek rozdělit na menší části.'
   invalid_response: 'Asistent vrátil neplatnou odpověď, zkuste to prosím znovu.'
+  metadata_filled: 'Metadata jsou již vyplněná, smažte pole, která chcete vygenerovat.'
+  metadata_no_content: 'Vyplňte nejprve titulek nebo obsah příspěvku.'
   library_error: 'Knihovnu komponent se nepodařilo načíst, kontaktujte správce webu.'

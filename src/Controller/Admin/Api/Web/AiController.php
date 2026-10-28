@@ -4,6 +4,7 @@ namespace Sovic\Cms\Controller\Admin\Api\Web;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Sovic\Cms\Ai\AiMetadataAssistant;
 use Sovic\Cms\Ai\AiPageAssistant;
 use Sovic\Cms\Ai\AiRequestLock;
 use Sovic\Cms\Ai\Exception\AiProviderException;
@@ -27,6 +28,11 @@ class AiController extends AbstractBaseApiController
 {
     private const MaxMessageLength = 20000;
 
+    /**
+     * Raw HTML of the metadata request content, only its beginning is sent to the model.
+     */
+    private const MaxContentLength = 500000;
+
     private const SettingToggleableFields = [
         'has_api_key',
         'is_enabled',
@@ -35,6 +41,7 @@ class AiController extends AbstractBaseApiController
     public function __construct(
         EntityManagerInterface                            $entityManager,
         private readonly AiPageAssistant                  $assistant,
+        private readonly AiMetadataAssistant              $metadataAssistant,
         private readonly AiRequestLock                    $lock,
         private readonly TranslatorInterface              $translator,
     ) {
@@ -167,6 +174,68 @@ class AiController extends AbstractBaseApiController
 
         $conversation = $this->assistant->reset($page, $user);
         $this->data['conversation_id'] = $conversation->getId();
+
+        return $this->sendSuccess();
+    }
+
+    /**
+     * Suggests meta title, description and keywords from unsaved form values (post edit form).
+     * Only requested (empty) fields are generated.
+     */
+    #[Route(
+        '/admin/api/web/ai/metadata',
+        name: 'admin:api:web:ai:metadata',
+        methods: ['POST'],
+    )]
+    public function metadata(Request $request): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user = $this->getUser();
+        if (!$user instanceof UserEntityInterface) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var UserAiSettingRepository $settingRepo */
+        $settingRepo = $this->entityManager->getRepository(UserAiSetting::class);
+        $setting = $settingRepo->findOneByUser($user);
+        if ($setting !== null && !$setting->isEnabled()) {
+            return $this->fail('disabled', 403, true);
+        }
+
+        $data = $this->getRequestData($request);
+        $fields = is_array($data['fields'] ?? null) ? $data['fields'] : [];
+        $heading = is_string($data['heading'] ?? null) ? $data['heading'] : '';
+        $content = is_string($data['content'] ?? null) ? $data['content'] : '';
+        $tags = is_string($data['tags'] ?? null) ? $data['tags'] : '';
+
+        if (empty(array_intersect(AiMetadataAssistant::Fields, $fields))) {
+            return $this->fail('metadata_filled');
+        }
+        if (trim($heading) === '' && trim(strip_tags($content)) === '') {
+            return $this->fail('metadata_no_content');
+        }
+        if (mb_strlen($content) > self::MaxContentLength) {
+            return $this->fail('message_too_long');
+        }
+
+        try {
+            $values = $this->metadataAssistant->generate($user, $fields, $heading, $content, $tags);
+        } catch (MissingApiKeyException|ApiKeyDecryptException) {
+            return $this->fail('missing_api_key', 400, true);
+        } catch (AiProviderException $e) {
+            return match ($e->kind) {
+                AiProviderException::Authentication => $this->fail('authentication_error', 400, true),
+                AiProviderException::RateLimit => $this->fail('rate_limit', 429),
+                AiProviderException::Overloaded => $this->fail('overloaded', 503),
+                AiProviderException::Connection => $this->fail('connection_error', 503),
+                default => $this->fail('provider_error', 502),
+            };
+        } catch (AiResponseException $e) {
+            return $this->fail($e->reason, 422);
+        }
+
+        $this->data['values'] = $values;
 
         return $this->sendSuccess();
     }

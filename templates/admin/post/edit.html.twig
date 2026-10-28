@@ -66,19 +66,41 @@
             </div>
         </div>
 
-        {% if post_public_url %}
-            <div class="{{ theme.card_class() }}">
-                <div class="card-body pt-8 d-flex flex-column gap-3">
-                    {{ form_macro.section_header('Odkazy') }}
+        <div class="{{ theme.card_class() }}">
+            <div class="card-body pt-8 d-flex flex-column gap-3">
+                {{ form_macro.section_header('Odkazy') }}
 
+                {% if post_public_url %}
                     <a class="btn btn-flex btn-sm btn-light-primary w-100"
                        href="{{ post_public_url }}" target="_blank">
                         <i class="bi bi-globe me-1"></i>
                         Příspěvek na webu
                     </a>
-                </div>
+                {% endif %}
+                {# AI settings in new tab to keep unsaved edits #}
+                {% if ai_enabled|default(false) %}
+                    <a class="btn btn-flex btn-sm btn-light-success w-100"
+                       href="{{ path('admin:ai:settings') }}"
+                       target="_blank">
+                        <i class="bi bi-stars me-1"></i>
+                        AI asistent
+                        <i class="bi bi-gear ms-auto"></i>
+                    </a>
+                {% else %}
+                    {# not available (missing API key or disabled) #}
+                    <a class="btn btn-flex btn-sm btn-light text-muted w-100"
+                       href="{{ path('admin:ai:settings') }}"
+                       target="_blank"
+                       data-bs-toggle="tooltip"
+                       data-bs-placement="top"
+                       title="AI asistent není aktivní, zapněte jej a zadejte API klíč v nastavení">
+                        <i class="bi bi-stars me-1 text-muted"></i>
+                        AI asistent
+                        <i class="bi bi-gear ms-auto text-muted"></i>
+                    </a>
+                {% endif %}
             </div>
-        {% endif %}
+        </div>
     </div>
 {% endblock %}
 
@@ -152,7 +174,7 @@
         or form.metaKeywords.vars.errors|length > 0 %}
     <div class="row" id="post-metadata-header" style="scroll-margin-top: 100px;">
         <div class="col-12">
-            <h3 class="mb-4">
+            <h3 class="mb-4 d-flex align-items-center gap-3">
                 <a class="togglable-form-section text-gray-900 text-hover-primary {{ metadata_open ? '' : 'collapsed' }} d-inline-flex align-items-center gap-2"
                    data-bs-toggle="collapse"
                    href="#post-metadata"
@@ -162,6 +184,26 @@
                     Metadata
                     <i class="bi bi-chevron-right fs-5"></i>
                 </a>
+                {% if ai_enabled|default(false) %}
+                    {# fills only empty fields, from unsaved heading, content and tags #}
+                    <button type="button"
+                            class="btn btn-sm btn-light-success py-1 px-3"
+                            data-ai-metadata
+                            data-url="{{ path('admin:api:web:ai:metadata') }}"
+                            data-collapse="#post-metadata"
+                            data-source-heading="#{{ form.name.vars.id }}"
+                            data-source-content="#{{ form.content.vars.id }}"
+                            data-source-tags="{{ form.tags is defined ? '#' ~ form.tags.vars.id : '' }}"
+                            data-target-title="#{{ form.metaTitle.vars.id }}"
+                            data-target-description="#{{ form.metaDescription.vars.id }}"
+                            data-target-keywords="#{{ form.metaKeywords.vars.id }}"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Vygenerovat prázdná pole metadat pomocí AI">
+                        <i class="bi bi-stars fs-7"></i>
+                        Vygenerovat
+                    </button>
+                {% endif %}
             </h3>
         </div>
     </div>
@@ -208,4 +250,7 @@
         });
     </script>
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
+    {% if ai_enabled|default(false) %}
+        <script src="{{ asset('bundles/cms/js/ai-metadata.js') }}"></script>
+    {% endif %}
 {% endblock %}

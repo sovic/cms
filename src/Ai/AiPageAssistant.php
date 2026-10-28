@@ -2,16 +2,11 @@
 
 namespace Sovic\Cms\Ai;
 
-use Anthropic\Core\Exceptions\APIConnectionException;
-use Anthropic\Core\Exceptions\APIException;
-use Anthropic\Core\Exceptions\APIStatusException;
-use Anthropic\ErrorType;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Ai\Dto\AiResponse;
 use Sovic\Cms\Ai\Dto\PageContext;
 use Sovic\Cms\Ai\Enum\AiMessageRole;
-use Sovic\Cms\Ai\Exception\AiProviderException;
 use Sovic\Cms\Ai\Exception\AiResponseException;
 use Sovic\Cms\Ai\Exception\MissingApiKeyException;
 use Sovic\Cms\Entity\AiConversation;
@@ -59,46 +54,25 @@ readonly class AiPageAssistant
         $system = $this->promptBuilder->buildSystemPrompt($library);
         $messages = $this->promptBuilder->buildMessages($history, $message, PageContext::fromPage($page, $currentContent));
 
-        try {
-            $result = $this->clientFactory->create($apiKey)->messages->create(
-                maxTokens: $this->maxTokens,
-                messages: $messages,
-                model: $this->getModel($setting),
-                outputConfig: [
-                    'effort' => $this->effort,
-                    'format' => [
-                        'type' => 'json_schema',
-                        'schema' => $this->promptBuilder->outputSchema(),
-                    ],
+        $result = $this->clientFactory->createMessage($apiKey, [
+            'maxTokens' => $this->maxTokens,
+            'messages' => $messages,
+            'model' => $this->getModel($setting),
+            'outputConfig' => [
+                'effort' => $this->effort,
+                'format' => [
+                    'type' => 'json_schema',
+                    'schema' => $this->promptBuilder->outputSchema(),
                 ],
-                system: [
-                    [
-                        'type' => 'text',
-                        'text' => $system,
-                        'cacheControl' => ['type' => 'ephemeral'],
-                    ],
+            ],
+            'system' => [
+                [
+                    'type' => 'text',
+                    'text' => $system,
+                    'cacheControl' => ['type' => 'ephemeral'],
                 ],
-            );
-        } catch (APIStatusException $e) {
-            $kind = match ($e->type) {
-                ErrorType::AUTHENTICATION_ERROR, ErrorType::PERMISSION_ERROR => AiProviderException::Authentication,
-                ErrorType::RATE_LIMIT_ERROR => AiProviderException::RateLimit,
-                ErrorType::OVERLOADED_ERROR => AiProviderException::Overloaded,
-                default => match ($e->status) {
-                    401, 403 => AiProviderException::Authentication,
-                    429 => AiProviderException::RateLimit,
-                    529 => AiProviderException::Overloaded,
-                    default => AiProviderException::Other,
-                },
-            };
-            throw new AiProviderException($kind, $e->type?->value ?? 'status_' . $e->status, $e);
-        } catch (APIConnectionException $e) {
-            throw new AiProviderException(AiProviderException::Connection, 'connection_error', $e);
-        } catch (APIException $e) {
-            throw new AiProviderException(AiProviderException::Other, 'api_error', $e);
-        } finally {
-            sodium_memzero($apiKey);
-        }
+            ],
+        ]);
 
         if ($result->stopReason === 'refusal') {
             throw new AiResponseException(AiResponseException::Refusal);

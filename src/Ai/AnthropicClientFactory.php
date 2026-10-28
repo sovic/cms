@@ -3,7 +3,10 @@
 namespace Sovic\Cms\Ai;
 
 use Anthropic\Client;
+use Anthropic\Core\Exceptions\APIException;
+use Anthropic\Messages\Message;
 use Anthropic\RequestOptions;
+use Sovic\Cms\Ai\Exception\AiProviderException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Psr18Client;
 
@@ -32,5 +35,22 @@ class AnthropicClientFactory
                 transporter: $transporter,
             ),
         );
+    }
+
+    /**
+     * Sends one Messages API request, provider errors are converted to AiProviderException.
+     * The API key is wiped from memory afterward.
+     *
+     * @param array<string, mixed> $params named arguments of MessagesService::create()
+     */
+    public function createMessage(string &$apiKey, array $params): Message
+    {
+        try {
+            return $this->create($apiKey)->messages->create(...$params);
+        } catch (APIException $e) {
+            throw AiProviderException::fromApiException($e);
+        } finally {
+            sodium_memzero($apiKey);
+        }
     }
 }
