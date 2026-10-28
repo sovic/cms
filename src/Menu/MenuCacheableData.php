@@ -22,7 +22,7 @@ class MenuCacheableData extends AbstractCacheableData
         return 'cms_menu_tree';
     }
 
-    protected function getExpiresAfer(): ?int
+    protected function getExpiresAfter(): ?int
     {
         return 3600;
     }
