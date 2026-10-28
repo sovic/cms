@@ -79,7 +79,7 @@ readonly class AiMetadataAssistant
                     'schema' => $this->outputSchema($fields),
                 ],
             ],
-            'system' => 'Write SEO metadata for a web article, in the language of the article. '
+            'system' => 'Write SEO metadata for a web page, in the language of the page. '
                 . 'Title max ' . self::TitleMaxLength . ' characters, description max ' . self::DescriptionMaxLength
                 . ' characters, max ' . self::KeywordsMax . ' keywords.',
         ]);

@@ -1,0 +1,24 @@
+{#
+AI metadata generation button, see bundles/cms/js/ai-metadata.js
+Fills only empty meta fields, from unsaved name, content and tags.
+
+form      FormView  form with name, content, metaTitle, metaDescription, metaKeywords (and optional tags) fields
+collapse  string    collapsible metadata section selector
+#}
+<button type="button"
+        class="btn btn-sm btn-light-success py-1 px-3"
+        data-ai-metadata
+        data-url="{{ path('admin:api:web:ai:metadata') }}"
+        data-collapse="{{ collapse }}"
+        data-source-heading="#{{ form.name.vars.id }}"
+        data-source-content="#{{ form.content.vars.id }}"
+        data-source-tags="{{ form.tags is defined ? '#' ~ form.tags.vars.id : '' }}"
+        data-target-title="#{{ form.metaTitle.vars.id }}"
+        data-target-description="#{{ form.metaDescription.vars.id }}"
+        data-target-keywords="#{{ form.metaKeywords.vars.id }}"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Vygenerovat prázdná pole metadat pomocí AI">
+    <i class="bi bi-stars fs-7"></i>
+    Vygenerovat
+</button>

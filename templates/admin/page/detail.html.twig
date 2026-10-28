@@ -232,7 +232,7 @@
         or form.metaKeywords.vars.errors|length > 0 %}
     <div class="row" id="page-metadata-header" style="scroll-margin-top: 100px;">
         <div class="col-12">
-            <h3 class="mb-4">
+            <h3 class="mb-4 d-flex align-items-center gap-3">
                 <a class="togglable-form-section text-gray-900 text-hover-primary {{ metadata_open ? '' : 'collapsed' }} d-inline-flex align-items-center gap-2"
                    data-bs-toggle="collapse"
                    href="#page-metadata"
@@ -242,6 +242,9 @@
                     Metadata
                     <i class="bi bi-chevron-right fs-5"></i>
                 </a>
+                {% if ai_enabled|default(false) %}
+                    {% include '@CmsBundle/admin/partials/ai-metadata-button.html.twig' with {collapse: '#page-metadata'} %}
+                {% endif %}
             </h3>
         </div>
     </div>
@@ -283,5 +286,8 @@
     {% include '@CmsBundle/admin/partials/gallery-scripts.html.twig' %}
     {% if editing and ai_enabled|default(false) %}
         <script src="{{ asset('bundles/cms/js/ai-assistant.js') }}"></script>
+    {% endif %}
+    {% if ai_enabled|default(false) %}
+        <script src="{{ asset('bundles/cms/js/ai-metadata.js') }}"></script>
     {% endif %}
 {% endblock %}
