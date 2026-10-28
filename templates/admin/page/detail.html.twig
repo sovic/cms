@@ -125,11 +125,20 @@
         <div class="{{ theme.card_body_class() }}">
             {{ form_macro.section_header('Sekce') }}
 
-            <a class="btn btn-flex btn-sm btn-light-info w-100"
-               href="{{ path('admin:page:list', {'group_id': page.pageGroup.id}) }}">
-                <i class="bi bi-folder me-1"></i>
-                {{ page.pageGroup.name }}
-            </a>
+            {% if page.pageGroup %}
+                <a class="btn btn-flex btn-sm btn-light-info w-100"
+                   href="{{ path('admin:page:list', {'group_id': page.pageGroup.id}) }}">
+                    <i class="bi bi-folder me-1"></i>
+                    {{ page.pageGroup.name }}
+                </a>
+            {% else %}
+                {# group_id 0 lists pages without group #}
+                <a class="btn btn-flex btn-sm btn-light text-muted w-100"
+                   href="{{ path('admin:page:list', {'group_id': 0}) }}">
+                    <i class="bi bi-folder me-1 text-muted"></i>
+                    Nezařazené
+                </a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
