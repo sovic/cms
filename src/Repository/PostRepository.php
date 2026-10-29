@@ -14,12 +14,13 @@ use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Post\PostSearchRequest;
 use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\Project\Project;
+use SortDirection;
 
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)
- * @method Post|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Post|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method Post[]    findAll()
- * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Post[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class PostRepository extends EntityRepository
 {
@@ -28,8 +29,8 @@ class PostRepository extends EntityRepository
      */
     public function findPublic(
         ?Project $project = null,
-        int      $limit = null,
-        int      $offset = null,
+        ?int     $limit = null,
+        ?int     $offset = null,
     ): array {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p');
@@ -44,8 +45,8 @@ class PostRepository extends EntityRepository
         $this->addPublishedCriteria($qb);
         $qb->andWhere('p.privateSlug IS NULL');
 
-        $qb->addOrderBy('p.publishDate', 'DESC');
-        $qb->addOrderBy('p.id', 'DESC');
+        $qb->addOrderBy('p.publishDate', SortDirection::Descending);
+        $qb->addOrderBy('p.id', SortDirection::Descending);
         if ($limit) {
             $qb->setMaxResults($limit);
         }
@@ -81,8 +82,12 @@ class PostRepository extends EntityRepository
     /**
      * @return Post[]
      */
-    public function findPublicByTag(Project $project, Tag $tag, int $limit = null, int $offset = null): array
-    {
+    public function findPublicByTag(
+        Project $project,
+        Tag     $tag,
+        ?int    $limit = null,
+        ?int    $offset = null,
+    ): array {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p');
         $qb->from(Post::class, 'p');
@@ -95,8 +100,8 @@ class PostRepository extends EntityRepository
         $qb->andWhere('tp.tagId = :tag_id');
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':tag_id', $tag->getId());
-        $qb->addOrderBy('p.publishDate', 'DESC');
-        $qb->addOrderBy('p.id', 'DESC');
+        $qb->addOrderBy('p.publishDate', SortDirection::Descending);
+        $qb->addOrderBy('p.id', SortDirection::Descending);
         if ($limit) {
             $qb->setMaxResults($limit);
         }
@@ -136,8 +141,8 @@ class PostRepository extends EntityRepository
         Project $project,
         int     $year,
         int     $month,
-        int     $limit = null,
-        int     $offset = null
+        ?int    $limit = null,
+        ?int    $offset = null,
     ): array {
         $startDate = new DateTimeImmutable("$year-$month-01T00:00:00");
         $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
@@ -154,8 +159,8 @@ class PostRepository extends EntityRepository
         $qb->setParameter(':project', $project->entity);
         $qb->setParameter(':start_date', $startDate->format('Y-m-d H:i:s'));
         $qb->setParameter(':end_date', $endDate->format('Y-m-d H:i:s'));
-        $qb->addOrderBy('p.publishDate', 'DESC');
-        $qb->addOrderBy('p.id', 'DESC');
+        $qb->addOrderBy('p.publishDate', SortDirection::Descending);
+        $qb->addOrderBy('p.id', SortDirection::Descending);
         if ($limit) {
             $qb->setMaxResults($limit);
         }

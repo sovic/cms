@@ -12,19 +12,20 @@ use Sovic\Common\DataList\Enum\VisibilityId;
 use Sovic\Common\DataList\SearchRequestInterface;
 use Sovic\Common\Entity\Project as ProjectEntity;
 use Sovic\Common\Project\Project;
+use SortDirection;
 
 /**
  * @method Page|null find($id, $lockMode = null, $lockVersion = null)
- * @method Page|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Page|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method Page[]    findAll()
- * @method Page[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Page[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class PageRepository extends EntityRepository
 {
     /**
      * @return Page[]
      */
-    public function findPublic(Project $project, int $limit = null, int $offset = null): array
+    public function findPublic(Project $project, ?int $limit = null, ?int $offset = null): array
     {
         return $this->findBy(
             [
@@ -40,7 +41,7 @@ class PageRepository extends EntityRepository
     public function findBySearchRequest(SearchRequestInterface $searchRequest)
     {
         $qb = $this->prepareQueryBuilder($searchRequest);
-        $qb->addOrderBy('p.id', 'DESC');
+        $qb->addOrderBy('p.id', SortDirection::Descending);
 
         $qb->setFirstResult($searchRequest->getOffset());
         $qb->setMaxResults($searchRequest->getLimit());
@@ -62,7 +63,7 @@ class PageRepository extends EntityRepository
     public function findByGroupId(int $groupId, SearchRequestInterface $searchRequest): array
     {
         $qb = $this->buildGroupQuery($groupId, $searchRequest);
-        $qb->addOrderBy('p.name', 'ASC');
+        $qb->addOrderBy('p.name', SortDirection::Ascending);
         $qb->setFirstResult($searchRequest->getOffset());
         $qb->setMaxResults($searchRequest->getLimit());
 
@@ -138,11 +139,12 @@ class PageRepository extends EntityRepository
     private function prepareQueryBuilder(SearchRequestInterface $searchRequest): QueryBuilder
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('p')->from(Page::class, 'p');
+        $qb->select('p');
+        $qb->from(Page::class, 'p');
 
         if ($searchRequest->getSearch()) {
-            $qb->andWhere('p.name LIKE :search OR p.heading LIKE :search')
-                ->setParameter('search', '%' . $searchRequest->getSearch() . '%');
+            $qb->andWhere('p.name LIKE :search OR p.heading LIKE :search');
+            $qb->setParameter('search', '%' . $searchRequest->getSearch() . '%');
         }
 
         switch ($searchRequest->getVisibilityId()) {

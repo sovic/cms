@@ -39,7 +39,7 @@
         "ext-zip": "*",
         "cocur/slugify": "^4.0",
         "doctrine/doctrine-bundle": "^2.18",
-        "doctrine/orm": "^3.5",
+        "doctrine/orm": "^3.7",
         "sovic/common": "dev-master",
         "sovic/user-bundle": "dev-master",
         "symfony/form": "^7.3",

@@ -3,6 +3,7 @@
 namespace Sovic\Cms\Post;
 
 use Sovic\Cms\Enum\SortInterface;
+use SortDirection;
 
 enum PostSort: string implements SortInterface
 {
@@ -15,11 +16,11 @@ enum PostSort: string implements SortInterface
     {
         return match ($this) {
             self::PublishDate => [
-                'publishDate' => 'DESC',
-                'id' => 'DESC',
+                'publishDate' => SortDirection::Descending,
+                'id' => SortDirection::Descending,
             ],
             self::Latest => [
-                'id' => 'DESC',
+                'id' => SortDirection::Descending,
             ],
         };
     }
