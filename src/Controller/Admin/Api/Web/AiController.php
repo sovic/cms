@@ -7,12 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Ai\AiMetadataAssistant;
 use Sovic\Cms\Ai\AiPageAssistant;
 use Sovic\Cms\Ai\AiRequestLock;
-use Sovic\Cms\Ai\Exception\AiProviderException;
-use Sovic\Cms\Ai\Exception\AiResponseException;
-use Sovic\Cms\Ai\Exception\ApiKeyDecryptException;
-use Sovic\Cms\Ai\Exception\ComponentLibraryException;
-use Sovic\Cms\Ai\Exception\MissingApiKeyException;
+use Sovic\Cms\Ai\Exception\AiException;
 use Sovic\Cms\Controller\Admin\Api\AbstractBaseApiController;
+use Sovic\Cms\Controller\Admin\Api\Trait\AiApiTrait;
 use Sovic\Cms\Entity\AiMessage;
 use Sovic\Cms\Entity\Page;
 use Sovic\Cms\Entity\UserAiSetting;
@@ -20,12 +17,12 @@ use Sovic\Cms\Repository\UserAiSettingRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 use UserBundle\User\UserEntityInterface;
 
 class AiController extends AbstractBaseApiController
 {
+    use AiApiTrait;
+
     private const MaxMessageLength = 20000;
 
     /**
@@ -43,7 +40,6 @@ class AiController extends AbstractBaseApiController
         private readonly AiPageAssistant                  $assistant,
         private readonly AiMetadataAssistant              $metadataAssistant,
         private readonly AiRequestLock                    $lock,
-        private readonly TranslatorInterface              $translator,
     ) {
         parent::__construct($entityManager);
     }
@@ -66,17 +62,17 @@ class AiController extends AbstractBaseApiController
         $data = $this->getRequestData($request);
         $message = trim((string) ($data['message'] ?? ''));
         if ($message === '') {
-            return $this->fail('empty_message');
+            return $this->aiFail('empty_message');
         }
         if (mb_strlen($message) > self::MaxMessageLength) {
-            return $this->fail('message_too_long');
+            return $this->aiFail('message_too_long');
         }
         $currentContent = isset($data['current_content']) && is_string($data['current_content'])
             ? $data['current_content']
             : null;
 
         if ($this->lock->isLocked($page, $user)) {
-            return $this->fail('in_progress', 409);
+            return $this->aiFail('in_progress', 409);
         }
 
         // Generating a whole page can take tens of seconds. The answer is stored at the end of the call, so keep
@@ -88,20 +84,8 @@ class AiController extends AbstractBaseApiController
 
         try {
             $response = $this->assistant->send($page, $user, $message, $currentContent);
-        } catch (MissingApiKeyException|ApiKeyDecryptException) {
-            return $this->fail('missing_api_key', 400, true);
-        } catch (AiProviderException $e) {
-            return match ($e->kind) {
-                AiProviderException::Authentication => $this->fail('authentication_error', 400, true),
-                AiProviderException::RateLimit => $this->fail('rate_limit', 429),
-                AiProviderException::Overloaded => $this->fail('overloaded', 503),
-                AiProviderException::Connection => $this->fail('connection_error', 503),
-                default => $this->fail('provider_error', 502),
-            };
-        } catch (AiResponseException $e) {
-            return $this->fail($e->reason, 422);
-        } catch (ComponentLibraryException) {
-            return $this->fail('library_error', 500);
+        } catch (AiException $e) {
+            return $this->aiFailFromException($e);
         } finally {
             $this->lock->release($page, $user);
         }
@@ -196,11 +180,9 @@ class AiController extends AbstractBaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        /** @var UserAiSettingRepository $settingRepo */
-        $settingRepo = $this->entityManager->getRepository(UserAiSetting::class);
-        $setting = $settingRepo->findOneByUser($user);
-        if ($setting !== null && !$setting->isEnabled()) {
-            return $this->fail('disabled', 403, true);
+        $fail = $this->failIfAiDisabled($user);
+        if ($fail !== null) {
+            return $fail;
         }
 
         $data = $this->getRequestData($request);
@@ -210,29 +192,19 @@ class AiController extends AbstractBaseApiController
         $tags = is_string($data['tags'] ?? null) ? $data['tags'] : '';
 
         if (empty(array_intersect(AiMetadataAssistant::Fields, $fields))) {
-            return $this->fail('metadata_filled');
+            return $this->aiFail('metadata_filled');
         }
         if (trim($heading) === '' && trim(strip_tags($content)) === '') {
-            return $this->fail('metadata_no_content');
+            return $this->aiFail('metadata_no_content');
         }
         if (mb_strlen($content) > self::MaxContentLength) {
-            return $this->fail('message_too_long');
+            return $this->aiFail('message_too_long');
         }
 
         try {
             $values = $this->metadataAssistant->generate($user, $fields, $heading, $content, $tags);
-        } catch (MissingApiKeyException|ApiKeyDecryptException) {
-            return $this->fail('missing_api_key', 400, true);
-        } catch (AiProviderException $e) {
-            return match ($e->kind) {
-                AiProviderException::Authentication => $this->fail('authentication_error', 400, true),
-                AiProviderException::RateLimit => $this->fail('rate_limit', 429),
-                AiProviderException::Overloaded => $this->fail('overloaded', 503),
-                AiProviderException::Connection => $this->fail('connection_error', 503),
-                default => $this->fail('provider_error', 502),
-            };
-        } catch (AiResponseException $e) {
-            return $this->fail($e->reason, 422);
+        } catch (AiException $e) {
+            return $this->aiFailFromException($e);
         }
 
         $this->data['values'] = $values;
@@ -305,33 +277,16 @@ class AiController extends AbstractBaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        /** @var UserAiSettingRepository $settingRepo */
-        $settingRepo = $this->entityManager->getRepository(UserAiSetting::class);
-        $setting = $settingRepo->findOneByUser($user);
-        if ($setting !== null && !$setting->isEnabled()) {
-            return [null, null, $this->fail('disabled', 403, true)];
+        $fail = $this->failIfAiDisabled($user);
+        if ($fail !== null) {
+            return [null, null, $fail];
         }
 
         $page = $this->entityManager->getRepository(Page::class)->find($id);
         if ($page === null) {
-            return [null, null, $this->fail('not_found', 404)];
+            return [null, null, $this->aiFail('not_found', 404)];
         }
 
         return [$page, $user, null];
-    }
-
-    private function fail(string $error, int $code = 400, bool $withSettingsUrl = false): JsonResponse
-    {
-        $this->addError($error);
-        try {
-            $this->data['message'] = $this->translator->trans('api.' . $error, domain: 'ai');
-        } catch (Throwable) {
-            $this->data['message'] = $error;
-        }
-        if ($withSettingsUrl) {
-            $this->data['settings_url'] = $this->generateUrl('admin:ai:settings');
-        }
-
-        return $this->sendFail($code);
     }
 }

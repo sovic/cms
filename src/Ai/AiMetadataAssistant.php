@@ -2,13 +2,6 @@
 
 namespace Sovic\Cms\Ai;
 
-use Doctrine\ORM\EntityManagerInterface;
-use JsonException;
-use Sovic\Cms\Ai\Exception\AiResponseException;
-use Sovic\Cms\Ai\Exception\MissingApiKeyException;
-use Sovic\Cms\Entity\UserAiSetting;
-use Sovic\Cms\Repository\UserAiSettingRepository;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use UserBundle\User\UserEntityInterface;
 
 /**
@@ -32,13 +25,8 @@ readonly class AiMetadataAssistant
      */
     private const ColumnLength = 255;
 
-    private const MaxTokens = 2048;
-
     public function __construct(
-        private EntityManagerInterface           $em,
-        private ApiKeyEncryptor                  $encryptor,
-        private AnthropicClientFactory           $clientFactory,
-        #[Autowire('%ai_model%')] private string $model,
+        private AiJsonCompletion $completion,
     ) {
     }
 
@@ -53,63 +41,14 @@ readonly class AiMetadataAssistant
             return [];
         }
 
-        /** @var UserAiSettingRepository $repo */
-        $repo = $this->em->getRepository(UserAiSetting::class);
-        $setting = $repo->findOneByUser($user);
-        if ($setting === null || !$setting->hasApiKey()) {
-            throw new MissingApiKeyException('API key is not set.');
-        }
-        $apiKey = $this->encryptor->decrypt((string) $setting->getApiKeyEncrypted());
-
-        $model = trim((string) $setting->getModel());
-
-        $result = $this->clientFactory->createMessage($apiKey, [
-            'maxTokens' => self::MaxTokens,
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $this->buildPrompt($heading, $content, $tags),
-                ],
-            ],
-            'model' => $model !== '' ? $model : $this->model,
-            'outputConfig' => [
-                'effort' => 'low',
-                'format' => [
-                    'type' => 'json_schema',
-                    'schema' => $this->outputSchema($fields),
-                ],
-            ],
-            'system' => 'Write SEO metadata for a web page, in the language of the page. '
-                . 'Title max ' . self::TitleMaxLength . ' characters, description max ' . self::DescriptionMaxLength
-                . ' characters, max ' . self::KeywordsMax . ' keywords.',
-        ]);
-
-        if ($result->stopReason === 'refusal') {
-            throw new AiResponseException(AiResponseException::Refusal);
-        }
-        if ($result->stopReason === 'max_tokens') {
-            throw new AiResponseException(AiResponseException::Truncated);
-        }
-
-        $text = null;
-        foreach ($result->content as $block) {
-            if ($block->type === 'text') {
-                $text = $block->text;
-                break;
-            }
-        }
-        if ($text === null) {
-            throw new AiResponseException(AiResponseException::InvalidResponse, 'Response has no text block.');
-        }
-
-        try {
-            $data = json_decode($text, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new AiResponseException(AiResponseException::InvalidResponse, 'Response is not valid JSON.', $e);
-        }
-        if (!is_array($data)) {
-            throw new AiResponseException(AiResponseException::InvalidResponse, 'Response is not an object.');
-        }
+        $data = $this->completion->complete(
+            $user,
+            'Write SEO metadata for a web page, in the language of the page. '
+            . 'Title max ' . self::TitleMaxLength . ' characters, description max ' . self::DescriptionMaxLength
+            . ' characters, max ' . self::KeywordsMax . ' keywords.',
+            $this->buildPrompt($heading, $content, $tags),
+            $this->outputSchema($fields),
+        );
 
         $values = [];
         foreach ($fields as $field) {
