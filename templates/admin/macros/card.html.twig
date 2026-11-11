@@ -1,7 +1,9 @@
-{% macro header(title, extra_class = '') %}
-    <div class="card-header border-0 {{ extra_class ? ' ' ~ extra_class : '' }}">
+{% macro header(title, extra_class = '', title_extra_class = '') %}
+    <div class="card-header border-0 {{ extra_class ? ' ' ~ extra_class : '' }} mt-1">
         <div class="card-title">
-            <h2>{{ title|raw }}</h2>
+            <h2 class="{{ title_extra_class ? ' ' ~ title_extra_class : '' }}">
+                {{ title|raw }}
+            </h2>
         </div>
     </div>
 {% endmacro %}
