@@ -58,7 +58,7 @@
 {% endblock %}
 
 {% block groups_table %}
-    <table class="{{ theme.table_class() }} dataTable">
+    <table class="{{ theme.table_class() }}">
         <thead>
         <tr class="{{ theme.thead_tr_class() }}" role="row">
             <th class="min-w-350px">
@@ -121,7 +121,7 @@
 {% endblock %}
 
 {% block pages_table %}
-    <table class="{{ theme.table_class() }} dataTable">
+    <table class="{{ theme.table_class() }}">
         <thead>
         <tr class="{{ theme.thead_tr_class() }}" role="row">
             {% if is_group_actions_enabled %}
