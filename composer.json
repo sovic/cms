@@ -63,7 +63,6 @@
     },
     "config": {
         "allow-plugins": {
-            "composer/package-versions-deprecated": true,
             "php-http/discovery": false
         }
     }
