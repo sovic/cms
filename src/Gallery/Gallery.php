@@ -14,8 +14,11 @@ use Sovic\Cms\Entity\Gallery as GalleryEntity;
 use Sovic\Cms\Entity\GalleryItem;
 use Sovic\Cms\Repository\GalleryItemRepository;
 use Sovic\Common\Model\AbstractEntityModel;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use ZipArchive;
+use ZipStream\CompressionMethod;
+use ZipStream\Exception\OverflowException;
+use ZipStream\ZipStream;
 
 /**
  * @property GalleryEntity $entity
@@ -311,7 +314,14 @@ class Gallery extends AbstractEntityModel
         $filesystem->createDirectory($storagePath, [
             Config::OPTION_DIRECTORY_VISIBILITY => Visibility::PUBLIC,
         ]);
-        $filesystem->write($fileSystemPath, file_get_contents($path));
+        $source = fopen($path, 'rb');
+        try {
+            $filesystem->writeStream($fileSystemPath, $source);
+        } finally {
+            if (is_resource($source)) {
+                fclose($source);
+            }
+        }
 
         $item->setPath($fileSystemPath);
         $item->setIsTemp(false);
@@ -322,9 +332,14 @@ class Gallery extends AbstractEntityModel
     }
 
     /**
-     * @throws FilesystemException
+     * Writes the gallery ZIP archive into the given stream (e.g. php://output).
+     * Items are streamed one by one from the filesystem, so memory usage stays constant
+     * regardless of gallery size.
+     *
+     * @param resource $outputStream
+     * @throws FilesystemException|OverflowException
      */
-    public function createZipArchive(?string $zipPath = null): string
+    public function writeZipArchive($outputStream): void
     {
         if (!$this->getEntity()->isDownloadEnabled()) {
             throw new InvalidArgumentException('Download is not enabled');
@@ -334,28 +349,69 @@ class Gallery extends AbstractEntityModel
         $repo = $this->getEntityManager()->getRepository(GalleryItem::class);
         $items = $repo->findByGallery($this->getEntity());
 
-        $storagePath = $this->getGalleryStoragePath();
+        $zip = new ZipStream(
+            outputStream: $outputStream,
+            // images/videos are already compressed, deflate only burns CPU
+            defaultCompressionMethod: CompressionMethod::STORE,
+            sendHttpHeaders: false,
+        );
 
-        $zip = new ZipArchive();
-        if (!$zipPath) {
-            $zipPath = tempnam(sys_get_temp_dir(), 'gallery');
-        }
-
-        $zip->open($zipPath, ZipArchive::CREATE);
-
+        $usedNames = [];
         foreach ($items as $item) {
-            $extension = $item->getExtension();
-            $fileSystemFilename = $item->getId() . ($extension ? '.' . $extension : '');
-            $fileSystemPath = $storagePath . DIRECTORY_SEPARATOR . $fileSystemFilename;
-            $zip->addFromString(
-                $item->getName() . ($extension ? '.' . $extension : ''),
-                $this->filesystemOperator->read($fileSystemPath)
-            );
+            $stream = $this->filesystemOperator->readStream($item->getPath());
+            try {
+                $zip->addFileFromStream(
+                    fileName: $this->getUniqueZipEntryName($item, $usedNames),
+                    stream: $stream,
+                );
+            } finally {
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+            }
         }
 
-        $zip->close();
+        $zip->finish();
+    }
+
+    /**
+     * Creates the ZIP archive as a file, prefer writeZipArchive() for HTTP downloads.
+     *
+     * @throws FilesystemException|OverflowException
+     */
+    public function createZipArchive(?string $zipPath = null): string
+    {
+        $zipPath = $zipPath ?: tempnam(sys_get_temp_dir(), 'gallery');
+        $handle = fopen($zipPath, 'wb');
+        if (false === $handle) {
+            throw new RuntimeException('Unable to open ZIP archive for writing: ' . $zipPath);
+        }
+
+        try {
+            $this->writeZipArchive($handle);
+        } finally {
+            fclose($handle);
+        }
 
         return $zipPath;
+    }
+
+    /**
+     * @param array<string, true> $usedNames
+     */
+    private function getUniqueZipEntryName(GalleryItem $item, array &$usedNames): string
+    {
+        $extension = $item->getExtension();
+        $suffix = $extension ? '.' . $extension : '';
+        $baseName = $item->getName() ?: (string) $item->getId();
+
+        $name = $baseName . $suffix;
+        for ($i = 2; isset($usedNames[mb_strtolower($name)]); $i++) {
+            $name = $baseName . ' (' . $i . ')' . $suffix;
+        }
+        $usedNames[mb_strtolower($name)] = true;
+
+        return $name;
     }
 
     /**

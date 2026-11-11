@@ -13,7 +13,9 @@ use Sovic\Cms\Entity\Post;
 use Sovic\Common\Controller\Trait\DownloadTrait;
 use Sovic\Cms\Entity\GalleryItem;
 use Sovic\Cms\Gallery\GalleryFactory;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 class GalleryController extends BaseController implements ProjectControllerInterface
@@ -52,19 +54,26 @@ class GalleryController extends BaseController implements ProjectControllerInter
         }
 
         $gallery->setFilesystemOperator($galleryStorage);
-        try {
-            $archivePath = $gallery->createZipArchive();
 
-            $slugify = new Slugify();
-            $slugify->activateRuleSet('default');
-            $fileName = $slugify->slugify($fileName) . '.zip';
+        $slugify = new Slugify();
+        $slugify->activateRuleSet('default');
+        $fileName = ($slugify->slugify($fileName) ?: 'gallery') . '.zip';
 
-            $this->downloadFile($archivePath, $fileName);
-        } catch (FilesystemException) {
-            return $this->renderProject404();
-        }
+        $response = new StreamedResponse(static function () use ($gallery): void {
+            set_time_limit(0);
+            $output = fopen('php://output', 'wb');
+            $gallery->writeZipArchive($output);
+            fclose($output);
+        });
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $fileName,
+        ));
+        $response->headers->set('X-Accel-Buffering', 'no'); // stream through nginx without buffering
+        $response->headers->addCacheControlDirective('no-store');
 
-        die();
+        return $response;
     }
 
     #[Route('/gallery/item/{id}/download', name: 'gallery:item-download', defaults: [])]
@@ -84,13 +93,10 @@ class GalleryController extends BaseController implements ProjectControllerInter
             throw new InvalidArgumentException('Gallery item not found with ID: ' . $id);
         }
 
-        $projectDir = $this->getParameter('kernel.project_dir');
-        $path = $projectDir . '/public/gallery/' . $galleryItem->getPath();
-
-        $fileSize = filesize($path);
         $fileName = $galleryItem->getName() . '.' . $galleryItem->getExtension();
 
         try {
+            $fileSize = $galleryStorage->fileSize($galleryItem->getPath());
             $stream = $galleryStorage->readStream($galleryItem->getPath());
         } catch (FilesystemException $e) {
             throw new InvalidArgumentException('Unable to read file', 0, $e);
