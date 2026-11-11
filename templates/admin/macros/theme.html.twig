@@ -15,7 +15,8 @@
 {% endmacro %}
 
 {% macro table_class() %}
-    {{ 'table table-row-dashed align-middle gy-5 data-table' }}
+    {{ 'table table-row-dashed align-middle gy-5 data-table dataTable' }}
+    {# keep dataTable for plugins styles #}
 {% endmacro %}
 
 {% macro tbody_class() %}
