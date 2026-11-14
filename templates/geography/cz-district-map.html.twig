@@ -1,0 +1,24 @@
+{#
+    Map of districts (okresy) of one Czech region (kraj).
+
+    Params:
+      region          – region slug, same keys as cz-region-map.html.twig:
+                        prazsky, stredocesky, jihocesky, plzensky, karlovarsky, ustecky, liberecky,
+                        kralovehradecky, pardubicky, vysocina, jihomoravsky, olomoucky, moravskoslezsky, zlinsky
+      urls            – {district_slug: url}, districts without url are not clickable
+      active_path     – district slug to mark with the "active" class
+      path_fill_color – default '#b3b3b3'
+      stroke          – '' (default) | 'thinner' | 'thin'
+
+    District slugs are listed at the top of each cz-districts/{region}.html.twig file
+    (e.g. 'brno-venkov', 'frydek-mistek'). Praha has no okresy, its map shows městské obvody 'praha-1' … 'praha-10'.
+#}
+{% set regions = ['prazsky', 'stredocesky', 'jihocesky', 'plzensky', 'karlovarsky', 'ustecky', 'liberecky', 'kralovehradecky', 'pardubicky', 'vysocina', 'jihomoravsky', 'olomoucky', 'moravskoslezsky', 'zlinsky'] %}
+{% if region is defined and region in regions %}
+    {% include '@CmsBundle/geography/cz-districts/' ~ region ~ '.html.twig' with {
+        active_path: active_path ?? '',
+        path_fill_color: path_fill_color ?? '#b3b3b3',
+        stroke: (stroke ?? '') in ['thin', 'thinner'] ? stroke : '',
+        urls: urls ?? {},
+    } %}
+{% endif %}

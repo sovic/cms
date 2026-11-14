@@ -1,0 +1,27 @@
+{# Shared renderer for the generated region files, use cz-district-map.html.twig instead of including this directly. #}
+{% set stroke_width = {'': 2, 'thinner': 1.5, 'thin': 1}[stroke] %}
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="{{ view_box }}"
+     role="img"
+     aria-label="{{ region_name }}"
+     class="cz-district-map"
+     style="width: 100%; height: auto; fill-rule: evenodd; shape-rendering: geometricPrecision;">
+    {% for district in districts %}
+        {% set url = urls[district.slug] ?? null %}
+        {% if url %}
+        <a href="{{ url }}" xlink:href="{{ url }}">
+        {% endif %}
+            <path data-district="{{ district.slug }}"
+                  data-code="{{ district.code }}"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="{{ district.name }}"
+                  style="fill:{{ path_fill_color }};stroke:#ffffff;stroke-width:{{ stroke_width }};stroke-linejoin:round;vector-effect:non-scaling-stroke"
+                  class="{{ active_path == district.slug ? 'active' : '' }}"
+                  d="{{ district.d }}"/>
+        {% if url %}
+        </a>
+        {% endif %}
+    {% endfor %}
+</svg>
