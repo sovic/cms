@@ -1,0 +1,4 @@
+flash:
+  saved: 'Štítek byl uložen.'
+  group_saved: 'Skupina štítků byla uložena.'
+  form_error: 'Formulář obsahuje chyby, opravte je prosím a odešlete znovu.'

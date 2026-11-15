@@ -4,6 +4,8 @@ namespace Sovic\Cms\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Entity\Tag;
+use Sovic\Cms\Entity\TagGroup;
+use Sovic\Cms\Repository\TagGroupRepository;
 use Sovic\Cms\Repository\TagRepository;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\BasicSearchRequestFactory;
@@ -16,6 +18,11 @@ use Throwable;
 
 class TagController extends AdminBaseController
 {
+    /**
+     * Two views:
+     * - groups overview (default): groups with tag counts and tag preview
+     * - tags list: when group_id (0 = without group), view=tags or search is given
+     */
     #[Route(
         '/admin/tag/list',
         name: 'admin:tag:list',
@@ -35,13 +42,46 @@ class TagController extends AdminBaseController
 
         /** @var TagRepository $repo */
         $repo = $em->getRepository(Tag::class);
+        /** @var TagGroupRepository $groupRepo */
+        $groupRepo = $em->getRepository(TagGroup::class);
 
-        $tags = $repo->findBySearchRequest($searchRequest, $entity);
-        $total = $repo->countBySearchRequest($searchRequest, $entity);
+        $groups = $groupRepo->findOrdered($entity);
 
-        $this->assign('pagination', $searchRequest->getPagination($total));
-        $this->assign('query', $searchRequest->toArray());
-        $this->assign('tags', $tags);
+        $groupIdParam = (string) $request->query->get('group_id', '');
+        $groupId = $groupIdParam === '' ? null : (int) $groupIdParam;
+
+        $isTagsView = $groupId !== null
+            || $request->query->get('view') === 'tags'
+            || !empty($searchRequest->getSearch());
+
+        if ($isTagsView) {
+            $tags = $repo->findBySearchRequest($searchRequest, $entity, $groupId);
+            $total = $repo->countBySearchRequest($searchRequest, $entity, $groupId);
+
+            $currentGroup = $groupId > 0 ? $groupRepo->findOneById($groupId, $entity) : null;
+
+            $query = $searchRequest->toArray();
+            $query['view'] = 'tags';
+            if ($groupId !== null) {
+                $query['group_id'] = $groupId;
+            }
+
+            $this->assign('current_group', $currentGroup);
+            $this->assign('group_id', $groupId);
+            $this->assign('pagination', $searchRequest->getPagination($total));
+            $this->assign('query', $query);
+            $this->assign('tags', $tags);
+            $this->assign('usage', $repo->countUsage(array_map(static fn(Tag $tag) => $tag->getId(), $tags)));
+            $this->assign('view', 'tags');
+        } else {
+            $this->assign('group_counts', $repo->countPerGroup($entity));
+            $this->assign('group_previews', $repo->findPreviewPerGroup($entity));
+            $this->assign('query', $searchRequest->toArray());
+            $this->assign('total_count', $repo->countAll($entity));
+            $this->assign('ungrouped_count', $repo->countUngrouped($entity));
+            $this->assign('view', 'groups');
+        }
+        $this->assign('groups', $groups);
 
         return $this->render('@CmsBundle/admin/tag/list.html.twig');
     }
@@ -67,9 +107,19 @@ class TagController extends AdminBaseController
 
         if ($tag === null) {
             $tag = new Tag();
+
+            // preselect group when creating tag from group detail
+            $groupId = (int) $request->query->get('group_id', 0);
+            if ($groupId > 0) {
+                /** @var TagGroupRepository $groupRepo */
+                $groupRepo = $em->getRepository(TagGroup::class);
+                $tag->setTagGroup($groupRepo->findOneById($groupId, $project->getEntity()));
+            }
         }
 
-        $form = $this->createForm(\Sovic\Cms\Form\Admin\Tag::class, $tag);
+        $form = $this->createForm(\Sovic\Cms\Form\Admin\Tag::class, $tag, [
+            'project' => $project->getEntity(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -105,6 +155,7 @@ class TagController extends AdminBaseController
         $this->assign('editing', $editing);
         $this->assign('form', $form->createView());
         $this->assign('tag', $tag);
+        $this->assign('usage', $editing ? ($repo->countUsage([$tag->getId()])[$tag->getId()] ?? null) : null);
 
         return $this->render('@CmsBundle/admin/tag/edit.html.twig');
     }

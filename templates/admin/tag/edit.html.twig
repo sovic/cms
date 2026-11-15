@@ -9,11 +9,38 @@
 {% endblock %}
 
 {% block content %}
+    {% set back_url = tag.tagGroup
+        ? path('admin:tag:list', {'group_id': tag.tagGroup.id})
+        : path('admin:tag:list') %}
     <div class="app-container container">
         <div class="{{ theme.card_class() }}">
-            {{ form_macro.card_header(icons.back_to_list(path('admin:tag:list')) ~ block('title')) }}
+            {{ form_macro.card_header(icons.back_to_list(back_url) ~ block('title')) }}
 
             <div class="card-body">
+                {% if editing %}
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-8">
+                        <span class="badge {{ tag.isPublic ? 'badge-light-primary' : 'badge-light' }} fs-6">
+                            <i class="bi bi-hash me-1"></i>{{ tag.name }}
+                        </span>
+                        {% if tag.urlId %}
+                            <span class="text-muted">/{{ tag.urlId }}</span>
+                        {% endif %}
+                        {% if tag.private %}
+                            <span class="badge badge-light-warning">Soukromý</span>
+                        {% endif %}
+                        {% if usage %}
+                            <div class="d-flex flex-wrap gap-2 ms-md-auto">
+                                <span class="badge rounded-pill {{ usage.posts > 0 ? 'badge-light-success' : 'badge-light text-muted' }}">
+                                    <i class="bi bi-file-text me-1 {{ usage.posts > 0 ? 'text-success' : 'text-muted' }}"></i>Příspěvky: {{ usage.posts }}
+                                </span>
+                                <span class="badge rounded-pill {{ usage.pages > 0 ? 'badge-light-info' : 'badge-light text-muted' }}">
+                                    <i class="bi bi-file-earmark me-1 {{ usage.pages > 0 ? 'text-info' : 'text-muted' }}"></i>Stránky: {{ usage.pages }}
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
                 {{ block('edit_form') }}
             </div>
         </div>
@@ -26,8 +53,11 @@
 
     {{ form_macro.section_header('Základní informace') }}
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 col-md-6">
             {{ form_row(form.name) }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form_row(form.tagGroup) }}
         </div>
     </div>
 

@@ -2,16 +2,32 @@
 
 namespace Sovic\Cms\Form\Admin;
 
+use Sovic\Cms\Entity\TagGroup;
 use Sovic\Cms\Form\FormTheme;
+use Sovic\Cms\Repository\TagGroupRepository;
+use Sovic\Common\Entity\Project;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Tag extends AbstractType
 {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'project' => null,
+        ]);
+        $resolver->setAllowedTypes('project', ['null', Project::class]);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Project|null $project */
+        $project = $options['project'];
+
         $builder->setMethod('POST');
 
         $builder->add(
@@ -23,6 +39,19 @@ class Tag extends AbstractType
                 'attr' => [
                     'maxlength' => 100,
                 ],
+            ]
+        );
+
+        $builder->add(
+            'tagGroup',
+            EntityType::class,
+            [
+                'label' => 'Skupina',
+                'class' => TagGroup::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => '— bez skupiny —',
+                'query_builder' => fn(TagGroupRepository $repo) => $repo->createOrderedQueryBuilder($project),
             ]
         );
 

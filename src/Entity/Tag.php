@@ -17,6 +17,7 @@ use Sovic\Common\Entity\Project;
 
 #[Table(name: 'tag')]
 #[Index(name: 'project_id', columns: ['project_id'])]
+#[Index(name: 'group_id', columns: ['group_id'])]
 #[Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
@@ -43,8 +44,9 @@ class Tag
     #[Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
     protected ?string $lang = 'cs';
 
-    #[Column(name: 'group_id', type: Types::INTEGER, nullable: true)]
-    protected ?int $groupId = null;
+    #[ManyToOne(targetEntity: TagGroup::class)]
+    #[JoinColumn(name: 'group_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL', options: ['default' => null])]
+    protected ?TagGroup $tagGroup = null;
 
     public function getId(): int
     {
@@ -106,13 +108,18 @@ class Tag
         $this->lang = $lang;
     }
 
-    public function getGroupId(): ?int
+    public function getTagGroup(): ?TagGroup
     {
-        return $this->groupId;
+        return $this->tagGroup;
     }
 
-    public function setGroupId(?int $groupId): void
+    public function setTagGroup(?TagGroup $tagGroup): void
     {
-        $this->groupId = $groupId;
+        $this->tagGroup = $tagGroup;
+    }
+
+    public function getGroupId(): ?int
+    {
+        return $this->tagGroup?->getId();
     }
 }
