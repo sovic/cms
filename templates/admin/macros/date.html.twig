@@ -1,0 +1,48 @@
+{#
+# Date macros for the admin: the date in a <span> with the full time in its title.
+# The value may be a DateTime or an integer timestamp, it is always shown in the default (local) timezone.
+#
+# {% import '@CmsBundle/admin/macros/date.html.twig' as date_macro %}
+# {{ date_macro.date_wrapper(item.createdAt) }}
+# {{ date_macro.date_time_wrapper(item.createdAt, 'small', empty='?') }}
+#
+# In a macro file put the import inside the macro, macros do not see the top-level imports of their own file.
+#}
+
+{#
+# Date only, the default for lists.
+# @param value: DateTimeInterface|int|null
+# @param class: optional CSS class of the span, used for the empty text too
+# @param empty: text shown for an empty value
+#}
+{% macro date_wrapper(value, class = '', empty = '-') %}
+    {%- if value -%}
+        {{ _self.wrapper(value, date(value)|format_date, class) }}
+    {%- else -%}
+        {{ _self.empty_value(empty, class) }}
+    {%- endif -%}
+{% endmacro %}
+
+{#
+# Date and time, only where the time is needed in the cell.
+# @param value: DateTimeInterface|int|null
+# @param class: optional CSS class of the span, used for the empty text too
+# @param empty: text shown for an empty value
+#}
+{% macro date_time_wrapper(value, class = '', empty = '-') %}
+    {%- if value -%}
+        {{ _self.wrapper(value, date(value)|format_date_time, class) }}
+    {%- else -%}
+        {{ _self.empty_value(empty, class) }}
+    {%- endif -%}
+{% endmacro %}
+
+{# internal, use date_wrapper() or date_time_wrapper() #}
+{% macro wrapper(value, text, class) -%}
+    <span{% if class %} class="{{ class }}"{% endif %} title="{{ value|date('Y-m-d H:i:s') }}">{{ text }}</span>
+{%- endmacro %}
+
+{# internal #}
+{% macro empty_value(text, class) -%}
+    {% if class %}<span class="{{ class }}">{{ text }}</span>{% else %}{{ text }}{% endif %}
+{%- endmacro %}
