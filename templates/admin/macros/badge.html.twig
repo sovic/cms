@@ -14,11 +14,12 @@
     </div>
 {% endmacro %}
 
+{# Ano / Ne badge, "Ne" is neutral unless no_variant is set (badge-light-secondary is the brand color, not gray) #}
 {% macro yes_no(value, yes_variant, no_variant) %}
     {% if value %}
         <span class="badge badge-light-{{ yes_variant|default('success') }}">Ano</span>
     {% else %}
-        <span class="badge badge-light-{{ no_variant|default('secondary') }}">Ne</span>
+        <span class="badge badge-light{{ no_variant ? '-' ~ no_variant : '' }}">Ne</span>
     {% endif %}
 {% endmacro %}
 
