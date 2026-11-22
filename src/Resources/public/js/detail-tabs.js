@@ -63,6 +63,20 @@ document.querySelectorAll('.detail-tabs').forEach(function ($nav) {
         return $list.scrollWidth <= $list.clientWidth + 1; // both are rounded
     }
 
+    // the fixed back-to-top link is in the corner of the dropdown, a tap next to the button would scroll the page top
+    function updateBackToTop() {
+        const $backToTop = document.getElementById('back-to-top');
+        if (!$backToTop) {
+            return;
+        }
+        const link = $backToTop.getBoundingClientRect();
+        const nav = $nav.getBoundingClientRect();
+        const isOverTabs = link.width > 0
+            && link.left < nav.right && link.right > nav.left
+            && link.top < nav.bottom && link.bottom > nav.top;
+        $backToTop.classList.toggle('invisible', isOverTabs);
+    }
+
     function update() {
         const $focused = $nav.contains(document.activeElement) ? document.activeElement : null;
 
@@ -91,6 +105,7 @@ document.querySelectorAll('.detail-tabs').forEach(function ($nav) {
             const $fallback = $more.hidden ? (tabs.find((tab) => tab.isCurrent) || tabs[0]).$link : $toggle;
             (isVisible ? $focused : $fallback).focus({preventScroll: true});
         }
+        updateBackToTop();
     }
 
     $nav.append($more);
@@ -107,4 +122,8 @@ document.querySelectorAll('.detail-tabs').forEach(function ($nav) {
     // a loaded web font changes the width of the labels, not of the nav
     document.fonts.ready.then(update);
     document.fonts.addEventListener('loadingdone', update);
+
+    // after admin.js, which shows the link by the scroll position
+    window.addEventListener('scroll', updateBackToTop, {passive: true});
+    window.addEventListener('resize', updateBackToTop);
 });

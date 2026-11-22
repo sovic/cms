@@ -50,6 +50,12 @@
     flex: none;
 }
 
+/* above the fixed back-to-top link, which is in the same corner. On the button, the menu keeps its own z-index */
+.detail-tabs-more > .btn {
+    position: relative;
+    z-index: 1;
+}
+
 .detail-tabs-more > .dropdown-menu {
     max-height: 70vh;
     overflow-y: auto;
