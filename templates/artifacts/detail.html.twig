@@ -5,8 +5,8 @@
 {% endif %}
 
 {% import '@CmsBundle/admin/macros/theme.html.twig' as theme %}
-{% import '@CmsBundle/macro/detail.html.twig' as detail %}
-{% import '@CmsBundle/macro/form.html.twig' as form_macro %}
+{% import '@CmsBundle/admin/macros/detail.html.twig' as detail %}
+{% import '@CmsBundle/admin/macros/form.html.twig' as form_macro %}
 
 {% block title %}Uživatel #{{ user.id }}{% endblock %}
 
@@ -30,12 +30,14 @@
 
 {% block tabs %}
     {% set current_path = app.request.pathInfo %}
-    <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8"
-        role="tablist">
-        {{ detail.tab('Nastavení', path('admin:user:detail-edit', {'id': user.id}), current_path) }}
-        {{ detail.tab('Předplatné', path('admin:user:subscription', {'id': user.id}), current_path) }}
-        {{ detail.tab('Platby', path('admin:user:payments', {'id': user.id}), current_path) }}
-    </ul>
+    {# tabs that do not fit collapse into a dropdown, see js/detail-tabs.js #}
+    <nav class="detail-tabs mb-8" aria-label="Sekce uživatele">
+        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold">
+            {{ detail.tab('Nastavení', path('admin:user:detail-edit', {'id': user.id}), current_path) }}
+            {{ detail.tab('Předplatné', path('admin:user:subscription', {'id': user.id}), current_path) }}
+            {{ detail.tab('Platby', path('admin:user:payments', {'id': user.id}), current_path) }}
+        </ul>
+    </nav>
 {% endblock %}
 
 {% block tab_content %}
