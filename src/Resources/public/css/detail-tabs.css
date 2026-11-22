@@ -1,0 +1,56 @@
+/*
+ * Detail navigation tabs on one row, the ones that do not fit are in a dropdown, see js/detail-tabs.js
+ * Without JS the row scrolls horizontally.
+ */
+.detail-tabs {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    /* the one-row tabs must not widen the flex column they are in */
+    contain: inline-size;
+}
+
+.detail-tabs > .nav {
+    flex: 1 1 0;
+    min-width: 0;
+    flex-wrap: nowrap;
+    gap: 0 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.detail-tabs.is-ready > .nav {
+    overflow: visible;
+}
+
+.detail-tabs > .nav > .nav-item {
+    flex: none;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+/* spacing by gap, the :first-child margins of the theme do not work with hidden items */
+.detail-tabs > .nav.nav-line-tabs > .nav-item > .nav-link {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* only the current tab is left and even that one does not fit */
+.detail-tabs.is-truncated > .nav > .nav-item {
+    min-width: 0;
+    flex: 0 1 auto;
+}
+
+.detail-tabs.is-truncated > .nav .nav-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-tabs-more {
+    flex: none;
+}
+
+.detail-tabs-more > .dropdown-menu {
+    max-height: 70vh;
+    overflow-y: auto;
+}
