@@ -10,6 +10,7 @@ use Sovic\Cms\Entity\PageTag;
 use Sovic\Cms\Entity\PostTag;
 use Sovic\Cms\Entity\Tag;
 use Sovic\Cms\Entity\TagGroup;
+use Sovic\Cms\Tag\TagColor;
 use Sovic\Cms\Tag\TagName;
 use Sovic\Common\DataList\SearchRequestInterface;
 use Sovic\Common\Entity\Project;
@@ -142,7 +143,7 @@ class TagRepository extends EntityRepository
         $result = [];
         /** @var Tag $tag */
         foreach ($qb->getQuery()->getResult() as $tag) {
-            $groupId = $tag->getGroupId();
+            $groupId = $tag->getTagGroup()?->getId();
             if (count($result[$groupId] ?? []) < $perGroup) {
                 $result[$groupId][] = $tag;
             }
@@ -256,6 +257,25 @@ class TagRepository extends EntityRepository
         }
 
         return (int) $qb->getQuery()->execute();
+    }
+
+    /**
+     * @return array<string, string> color code keyed by tag name, only tags with palette color
+     */
+    public function findColorsByName(?Project $project = null): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('t.name, t.color');
+        $qb->from(Tag::class, 't');
+        $qb->where('t.name IS NOT NULL');
+        $qb->andWhere('t.color IN (:colors)');
+        $qb->setParameter('colors', array_column(TagColor::cases(), 'value'));
+        if ($project !== null) {
+            $qb->andWhere('t.project = :project');
+            $qb->setParameter('project', $project);
+        }
+
+        return array_column($qb->getQuery()->getArrayResult(), 'color', 'name');
     }
 
     /**

@@ -1,0 +1,40 @@
+{#
+Color dot of a tag, nothing is rendered for a tag without color.
+tag  Tag entity
+#}
+{% macro dot(tag) %}
+    {%- if tag.color -%}
+        <span class="tag-color-dot"
+              style="--tag-color: {{ tag.color.value }}"
+              title="{{ tag.color.trans }}"
+              aria-hidden="true"></span>
+    {%- endif -%}
+{% endmacro %}
+
+{#
+Color picker, native radios with visible color names.
+field  FormView  expanded EnumType of TagColor
+#}
+{% macro picker(field) %}
+    <fieldset class="mb-5">
+        <legend class="form-label fs-6">{{ field.vars.label }}</legend>
+        <div class="d-flex flex-wrap gap-2">
+            {% for option in field %}
+                <label class="tag-color-option" for="{{ option.vars.id }}">
+                    <input class="form-check-input m-0"
+                           type="radio"
+                           id="{{ option.vars.id }}"
+                           name="{{ option.vars.full_name }}"
+                           value="{{ option.vars.value }}"
+                           {% if option.vars.checked %}checked{% endif %}>
+                    <span class="tag-color-dot tag-color-swatch{{ option.vars.value ? '' : ' tag-color-dot-empty' }}"
+                          {% if option.vars.value %}style="--tag-color: {{ option.vars.value }}"{% endif %}
+                          aria-hidden="true"></span>
+                    {{ option.vars.label }}
+                </label>
+            {% endfor %}
+        </div>
+        {{ form_errors(field) }}
+    </fieldset>
+    {% do field.setRendered() %}
+{% endmacro %}

@@ -42,6 +42,27 @@ class TagController extends AbstractBaseApiController
         return $this->json($repo->findBySearch($q));
     }
 
+    /**
+     * Colors for tag inputs, separate from suggestions to keep their list of names format.
+     */
+    #[Route(
+        '/admin/api/web/tag/colors',
+        name: 'admin:api:web:tag:colors',
+        methods: ['GET'],
+    )]
+    public function colors(
+        EntityManagerInterface $em,
+        Project                $project,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        /** @var TagRepository $repo */
+        $repo = $em->getRepository(Tag::class);
+
+        // cast keeps empty result a JSON object
+        return $this->json((object) $repo->findColorsByName($project->getEntity()));
+    }
+
     #[Route(
         '/admin/api/web/tag/create',
         name: 'admin:api:web:tag:create',

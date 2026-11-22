@@ -13,11 +13,12 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Sovic\Cms\Entity\Trait\PrivateSlugTrait;
 use Sovic\Cms\Repository\TagRepository;
+use Sovic\Cms\Tag\TagColor;
 use Sovic\Common\Entity\Project;
 
 #[Table(name: 'tag')]
 #[Index(name: 'project_id', columns: ['project_id'])]
-#[Index(name: 'group_id', columns: ['group_id'])]
+#[Index(name: 'tag_group_id', columns: ['tag_group_id'])]
 #[Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
@@ -44,9 +45,17 @@ class Tag
     #[Column(name: 'lang', type: Types::STRING, length: 5, nullable: true, options: ['default' => 'cs'])]
     protected ?string $lang = 'cs';
 
+    // legacy, projects use it for their own grouping (e.g. ODS stores tag's own id), not related to TagGroup
+    #[Column(name: 'group_id', type: Types::INTEGER, nullable: true)]
+    protected ?int $groupId = null;
+
     #[ManyToOne(targetEntity: TagGroup::class)]
-    #[JoinColumn(name: 'group_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL', options: ['default' => null])]
+    #[JoinColumn(name: 'tag_group_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL', options: ['default' => null])]
     protected ?TagGroup $tagGroup = null;
+
+    // not using enumType, code outside the palette would break hydration of the whole list
+    #[Column(name: 'color', type: Types::STRING, length: 7, nullable: true, options: ['default' => null])]
+    protected ?string $color = null;
 
     public function getId(): int
     {
@@ -118,8 +127,23 @@ class Tag
         $this->tagGroup = $tagGroup;
     }
 
+    public function getColor(): ?TagColor
+    {
+        return $this->color === null ? null : TagColor::tryFrom($this->color);
+    }
+
+    public function setColor(?TagColor $color): void
+    {
+        $this->color = $color?->value;
+    }
+
     public function getGroupId(): ?int
     {
-        return $this->tagGroup?->getId();
+        return $this->groupId;
+    }
+
+    public function setGroupId(?int $groupId): void
+    {
+        $this->groupId = $groupId;
     }
 }

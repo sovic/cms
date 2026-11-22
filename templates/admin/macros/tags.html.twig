@@ -75,6 +75,28 @@ allow_create  bool      show button for creating a new tag
                 }
             });
 
+            // color dots by CSS rules, tagify re-renders its tags and suggestions on every change
+            fetch('{{ path('admin:api:web:tag:colors') }}')
+                .then(function (r) {
+                    return r.ok ? r.json() : {};
+                })
+                .then(function (colors) {
+                    const style = document.createElement('style');
+                    style.textContent = Object.entries(colors).map(function ([name, color]) {
+                        const selector = '[value="' + CSS.escape(name) + '"]';
+
+                        return '.tagify__tag' + selector + ' .tagify__tag-text::before, '
+                            + '.tagify__dropdown__item' + selector + '::before {'
+                            + 'content: ""; display: inline-block; width: .65rem; height: .65rem;'
+                            + 'margin-right: .35rem; border-radius: 50%; forced-color-adjust: none;'
+                            + 'background-color: ' + color + ';}';
+                    }).join('\n');
+                    document.head.append(style);
+                })
+                .catch(function (err) {
+                    console.error('Tag colors not loaded', err);
+                });
+
             function loadSuggestions(q) {
                 controller && controller.abort();
                 controller = new AbortController();

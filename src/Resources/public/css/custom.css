@@ -222,3 +222,46 @@ html[data-bs-theme='dark'] .text-black {
 .btn.check-button:has(> .check-button-input:checked) .check-button-box-checked {
     display: inline-block;
 }
+
+/* Tag color label, --tag-color is a code from the TagColor palette */
+.tag-color-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: .75rem;
+    height: .75rem;
+    border-radius: 50%;
+    background-color: var(--tag-color);
+    forced-color-adjust: none;
+}
+
+.tag-color-dot-empty {
+    border: 2px solid var(--bs-gray-400);
+    background-color: transparent;
+}
+
+/* bigger square swatch in color picker */
+.tag-color-swatch {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: .375rem;
+}
+
+.tag-color-option {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: 2.75rem;
+    padding: .5rem .75rem;
+    border: 1px solid var(--bs-gray-300);
+    border-radius: .475rem;
+    cursor: pointer;
+}
+
+.tag-color-option:has(:checked) {
+    border-color: currentColor;
+}
+
+.tag-color-option:has(:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
