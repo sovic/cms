@@ -49,10 +49,10 @@
         </div>
         <div class="card-body pt-0 pb-10">
             <div class="d-flex flex-wrap gap-5 js-toggle-switch" data-entity="user" data-entity-id="{{ user.id }}">
-                {{ form_macro.switch('user_active_' ~ user.id, 'Aktivní', user.active) }}
-                {{ form_macro.switch('user_interact_' ~ user.id, 'Může komentovat a hodnotit', user.canInteract) }}
-                {{ form_macro.switch('user_geoip_' ~ user.id, 'GeoIP omezení', user.geoipLimited) }}
-                {{ form_macro.switch('user_emailing_' ~ user.id, 'Emailing', user.emailing) }}
+                {{ form_macro.switch('user_active_' ~ user.id, 'active', 'Aktivní', user.active) }}
+                {{ form_macro.switch('user_interact_' ~ user.id, 'canInteract', 'Může komentovat a hodnotit', user.canInteract) }}
+                {{ form_macro.switch('user_geoip_' ~ user.id, 'geoipLimited', 'GeoIP omezení', user.geoipLimited) }}
+                {{ form_macro.switch('user_emailing_' ~ user.id, 'emailing', 'Emailing', user.isEmailingEnabled) }}
             </div>
         </div>
     </div>
@@ -117,4 +117,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cms/js/toggle-switch.js') }}"></script>
 {% endblock %}
