@@ -29,15 +29,16 @@ class GalleryItemResultSet
             }
             $result = [
                 'id' => $item->getId(),
-                'name' => $item->getName(),
                 'description' => $item->getDescription(),
                 'extension' => $item->getExtension(),
                 'filesize' => $item->getFilesize(),
-                'url' => $this->baseUrl . '/dl/' . $item->getId(), // TODO add a config with route
-                'model' => $item->getModel(),
-                'model_id' => $item->getModelId(),
+                'is_image' => GalleryUtils::isImageExtension($item->getExtension()),
                 'is_hero' => $item->isHero(),
                 'is_hero_mobile' => $item->isHeroMobile(), // TODO merge with is_hero and use variants / selected area
+                'model' => $item->getModel(),
+                'model_id' => $item->getModelId(),
+                'name' => $item->getName(),
+                'url' => $this->baseUrl . '/dl/' . $item->getId(), // TODO add a config with route
                 'width' => $item->getWidth(),
                 'height' => $item->getHeight(),
             ];

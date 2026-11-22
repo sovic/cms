@@ -26,7 +26,6 @@ use ZipStream\ZipStream;
  */
 class Gallery extends AbstractEntityModel
 {
-    private array $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     private FilesystemOperator $filesystemOperator;
 
     public function __construct(GalleryEntity $entity)
@@ -287,7 +286,8 @@ class Gallery extends AbstractEntityModel
         $item->setModelId($this->getEntity()->getModelId());
 
         // image processing
-        if (in_array($extension, $this->imageExtensions, true)) {
+        $isImage = GalleryUtils::isImageExtension($extension);
+        if ($isImage) {
             $image = new Imagick($path);
             $width = $image->getImageWidth();
             $height = $image->getImageHeight();
@@ -298,7 +298,7 @@ class Gallery extends AbstractEntityModel
         $item->setSequence($this->getItemsCount() + 1);
         $item->setCreateDate(new DateTimeImmutable());
         $item->setIsTemp(true);
-        if ($this->getCoverImage() === null) {
+        if ($isImage && $this->getCoverImage() === null) {
             $item->setIsCover(true);
         }
 

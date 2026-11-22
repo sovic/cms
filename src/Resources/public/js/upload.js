@@ -1,6 +1,37 @@
 (function () {
     'use strict';
 
+    function buildPreviewHtml(item) {
+        if (item.is_image) {
+            return `
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${item.big}">
+                    <div class="overlay-wrapper ratio ratio-4x3 rounded overflow-hidden bg-light">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <i class="bi bi-image text-gray-400 fs-3x"></i>
+                        </div>
+                        <img src="${item.small}" alt="${item.name}" loading="lazy" style="object-fit: cover;" onerror="this.classList.add('d-none')">
+                    </div>
+                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                    </div>
+                </a>`;
+        }
+
+        const filename = item.name + (item.extension ? '.' + item.extension : '');
+        return `
+                <a class="d-block overlay" href="${item.full}" target="_blank" rel="noopener" download="${filename}" title="Stáhnout">
+                    <div class="overlay-wrapper ratio ratio-4x3 rounded overflow-hidden bg-light">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-file-earmark-text text-gray-400 fs-3x"></i>
+                            ${item.extension ? `<span class="fs-7 fw-bold text-gray-500 text-uppercase mt-2">${item.extension}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                        <i class="bi bi-download text-white fs-3x"></i>
+                    </div>
+                </a>`;
+    }
+
     function buildGalleryItemHtml(item) {
         const isCover = !!item.is_cover;
         return `
@@ -8,23 +39,18 @@
     <div class="card card-flush shadow-sm h-100 ${isCover ? 'border border-primary' : ''}" data-item-id="${item.id}">
         <div class="card-body p-3 d-flex flex-column">
             <div class="position-relative mb-3">
-                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${item.big}">
-                    <img src="${item.small}" alt="${item.name}" class="img-fluid rounded w-100 overlay-wrapper" style="object-fit: cover; max-height: 160px;">
-                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                        <i class="bi bi-eye-fill text-white fs-3x"></i>
-                    </div>
-                </a>
-                <span class="badge badge-primary position-absolute top-0 start-0 m-1 ${isCover ? '' : 'd-none'}" id="cover-badge-${item.id}">Titulní</span>
-                <button type="button" class="btn btn-icon btn-sm btn-color-white position-absolute top-0 end-0 m-1 js-gallery-delete" data-item-id="${item.id}" title="Odebrat">
+                ${buildPreviewHtml(item)}
+                ${item.is_image ? `<span class="badge badge-primary position-absolute top-0 start-0 m-1 ${isCover ? '' : 'd-none'}" id="cover-badge-${item.id}">Titulní</span>` : ''}
+                <button type="button" class="btn btn-icon btn-sm btn-color-white bg-dark bg-opacity-25 position-absolute top-0 end-0 m-1 js-gallery-delete" data-item-id="${item.id}" title="Odebrat">
                     <i class="bi bi-x-lg fs-6"></i>
                 </button>
             </div>
             <div class="fs-8 text-gray-600 mb-2 text-truncate" title="${item.name}">${item.name}${item.extension ? '.' + item.extension : ''}</div>
             ${item.width && item.height ? `<div class="fs-8 text-gray-500 mb-3">${item.width} × ${item.height} px</div>` : ''}
             <div class="mt-auto d-flex gap-1">
-                <button type="button" class="btn btn-icon btn-sm btn-light-primary js-gallery-set-cover ${isCover ? 'active' : ''}" data-item-id="${item.id}" title="Nastavit jako titulní obrázek">
+                ${item.is_image ? `<button type="button" class="btn btn-icon btn-sm btn-light-primary js-gallery-set-cover ${isCover ? 'active' : ''}" data-item-id="${item.id}" title="Nastavit jako titulní obrázek">
                     <i class="bi bi-star${isCover ? '-fill' : ''}" id="cover-icon-${item.id}"></i>
-                </button>
+                </button>` : ''}
                 <button type="button" class="btn btn-icon btn-sm btn-light js-gallery-move-left" data-item-id="${item.id}" title="Posunout doleva">
                     <i class="bi bi-chevron-left"></i>
                 </button>

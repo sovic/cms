@@ -4,6 +4,7 @@ namespace Sovic\Cms\Gallery;
 
 use Sovic\Cms\Entity\GalleryItem;
 
+/** @deprecated */
 class GalleryHelper
 {
     public const SIZE_THUMB = 'small';
