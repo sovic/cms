@@ -7,8 +7,7 @@ use Sovic\Cms\Gallery\Gallery;
 use Sovic\Cms\Gallery\GalleryManager;
 
 /**
- * @method string getGalleryModelName()
- * @method int getGalleryModelId()
+ * Use in a class implementing GalleryModelInterface.
  *
  * @property EntityManagerInterface $entityManager
  */
@@ -19,7 +18,7 @@ trait GalleryModelTrait
     public function getGalleryManager(): GalleryManager
     {
         if (!isset($this->galleryManager)) {
-            $manager = new GalleryManager($this->getGalleryModelName(), $this->getGalleryModelId());
+            $manager = new GalleryManager($this);
             $manager->setEntityManager($this->entityManager);
 
             $this->galleryManager = $manager;

@@ -6,14 +6,15 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use League\Flysystem\FilesystemOperator;
+use Sovic\Cms\Entity\GalleryModelInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
 final class GalleryManager
 {
-    private array $galleries = [
-        'documents',
-        'downloads',
-    ];
+    /**
+     * @var string[] gallery names allowed besides the default (model-named) gallery
+     */
+    private array $galleries;
 
     private EntityManagerInterface $entityManager;
 
@@ -22,10 +23,11 @@ final class GalleryManager
     private string $modelName;
     private int $modelId;
 
-    public function __construct(string $modelName, int $modelId)
+    public function __construct(GalleryModelInterface $model)
     {
-        $this->modelName = $modelName;
-        $this->modelId = $modelId;
+        $this->modelName = $model->getGalleryModelName();
+        $this->modelId = (int) $model->getGalleryModelId();
+        $this->galleries = $model->getGalleryNames();
     }
 
     #[Required]
@@ -124,7 +126,7 @@ final class GalleryManager
         if ($galleryName === null || $galleryName === $this->modelName) {
             $galleryName = $this->modelName;
         } else if (!in_array($galleryName, $this->galleries, true)) {
-            $errorMessage = 'invalid gallery name [' . implode('|', $this->galleries) . ']';
+            $errorMessage = 'invalid gallery name [' . implode('|', [$this->modelName, ...$this->galleries]) . ']';
             throw new InvalidArgumentException($errorMessage);
         }
 

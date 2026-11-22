@@ -12,6 +12,7 @@ use Sovic\Cms\Entity\Gallery as GalleryEntity;
 use Sovic\Cms\Entity\GalleryItem;
 use Sovic\Cms\Gallery\GalleryFactory;
 use Sovic\Cms\Gallery\GalleryManager;
+use Sovic\Cms\Gallery\GalleryModelResolver;
 use Sovic\Cms\Repository\GalleryItemRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,10 +47,11 @@ class GalleryController extends AdminBaseController
         methods: ['POST'],
     )]
     public function toggleState(
-        string  $model,
-        int     $modelId,
-        string  $galleryName,
-        Request $request,
+        string               $model,
+        int                  $modelId,
+        string               $galleryName,
+        Request              $request,
+        GalleryModelResolver $galleryModelResolver,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -61,7 +63,14 @@ class GalleryController extends AdminBaseController
             return $this->sendFail();
         }
 
-        $manager = new GalleryManager($model, $modelId);
+        $galleryModel = $galleryModelResolver->resolve($model, $modelId);
+        if ($galleryModel === null) {
+            $this->data['message'] = 'model not found';
+
+            return $this->sendFail(404);
+        }
+
+        $manager = new GalleryManager($galleryModel);
         $manager->setEntityManager($this->entityManager);
         try {
             $gallery = $manager->loadGallery($galleryName);

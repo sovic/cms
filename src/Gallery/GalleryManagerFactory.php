@@ -14,7 +14,7 @@ readonly class GalleryManagerFactory
 
     public function loadByModel(GalleryModelInterface $galleryModel): GalleryManager
     {
-        $manager = new GalleryManager($galleryModel->getGalleryModelName(), $galleryModel->getGalleryModelId());
+        $manager = new GalleryManager($galleryModel);
         $manager->setEntityManager($this->entityManager);
 
         return $manager;

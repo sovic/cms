@@ -61,6 +61,11 @@ class Post extends AbstractEntityModel implements GalleryModelInterface
         return $this->getId();
     }
 
+    public function getGalleryNames(): array
+    {
+        return ['documents', 'downloads'];
+    }
+
     public function getAuthors(): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();

@@ -10,6 +10,7 @@ use League\Flysystem\FilesystemOperator;
 use Sovic\Cms\Controller\Admin\AdminBaseController;
 use Sovic\Cms\Gallery\GalleryItemResultSet;
 use Sovic\Cms\Gallery\GalleryManager;
+use Sovic\Cms\Gallery\GalleryModelResolver;
 use Sovic\Common\Controller\Trait\JsonResponseTrait;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,8 +39,9 @@ class UploadController extends AdminBaseController
     )]
     public function upload(
         Request             $request,
-        FilesystemOperator  $galleryStorage,
-        TranslatorInterface $t,
+        FilesystemOperator   $galleryStorage,
+        GalleryModelResolver $galleryModelResolver,
+        TranslatorInterface  $t,
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -54,7 +56,14 @@ class UploadController extends AdminBaseController
             return $this->sendFail();
         }
 
-        $manager = new GalleryManager($model, $modelId);
+        $galleryModel = $galleryModelResolver->resolve((string) $model, $modelId);
+        if ($galleryModel === null) {
+            $this->data['message'] = 'model not found';
+
+            return $this->sendFail(404);
+        }
+
+        $manager = new GalleryManager($galleryModel);
         $manager->setEntityManager($this->entityManager);
         $manager->setFilesystemOperator($galleryStorage);
 
