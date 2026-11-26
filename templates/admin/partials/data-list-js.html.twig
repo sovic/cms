@@ -217,16 +217,14 @@
 
         const resetBtn = modal.querySelector('[data-advanced-filters-reset]');
         if (resetBtn) {
+            // clears the advanced filters and applies it, basic filters and search are kept
             resetBtn.addEventListener('click', function () {
-                modal.querySelectorAll('select').forEach(function (field) {
-                    field.selectedIndex = 0;
+                const url = new URL(window.location.href);
+                url.searchParams.delete('page');
+                modal.querySelectorAll('select[name], input[name]').forEach(function (field) {
+                    url.searchParams.delete(field.name);
                 });
-                modal.querySelectorAll('input[type="checkbox"]').forEach(function (field) {
-                    field.checked = false;
-                });
-                modal.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]').forEach(function (field) {
-                    field.value = '';
-                });
+                window.location.href = url.toString();
             });
         }
     }
