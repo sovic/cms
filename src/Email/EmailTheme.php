@@ -86,7 +86,7 @@ readonly class EmailTheme implements EmailThemeInterface
         };
         /** @noinspection HtmlDeprecatedAttribute */
         /** @noinspection HtmlUnknownAttribute */
-        $replacement = '
+        $template = '
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                 <tbody>
                 <tr>
@@ -95,7 +95,7 @@ readonly class EmailTheme implements EmailThemeInterface
                             <tbody>
                             <tr>
                                 <td style="">
-                                    <a style="' . $ctaButtonStyle . '"$1>$2</a>
+                                    <a style="' . $ctaButtonStyle . '"%attributes%>%content%</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -105,7 +105,31 @@ readonly class EmailTheme implements EmailThemeInterface
                 </tbody>
             </table>
         ';
-        $html = preg_replace('/<a class="int_cta_link"(.*?)>(.*?)<\/a>/s', $replacement, $html);
+
+        // class can be anywhere among the attributes (editor / sanitizer may reorder them)
+        $html = preg_replace_callback(
+            '/<a\b([^>]*)>(.*?)<\/a>/s',
+            static function (array $matches) use ($template): string {
+                $attributes = $matches[1];
+                $classPattern = '/\s+class\s*=\s*(["\'])([^"\']*)\1/i';
+                if (preg_match($classPattern, $attributes, $classMatch) !== 1) {
+                    return $matches[0];
+                }
+                $classes = preg_split('/\s+/', trim($classMatch[2])) ?: [];
+                if (!in_array('int_cta_link', $classes, true)) {
+                    return $matches[0];
+                }
+                // drop class and any style, the button has its own style
+                $attributes = preg_replace([$classPattern, '/\s+style\s*=\s*(["\'])[^"\']*\1/i'], '', $attributes) ?? '';
+                $attributes = rtrim($attributes);
+
+                return strtr($template, [
+                    '%attributes%' => $attributes,
+                    '%content%' => $matches[2],
+                ]);
+            },
+            $html,
+        ) ?? $html;
 
         // update links style, only without style attribute
         $linkStyle = $themeData['link_style'] ?? '';

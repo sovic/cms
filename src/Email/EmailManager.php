@@ -105,6 +105,19 @@ class EmailManager implements EmailManagerInterface
         return $this->emailTheme->getFormattedHtml($html);
     }
 
+    /**
+     * Email body formatted by the theme, variables are kept as {placeholders}.
+     */
+    public function getPreviewHtml(Email $email): string
+    {
+        return $this->formatHtml($this->getSanitizedBody($email));
+    }
+
+    protected function getSanitizedBody(Email $email): string
+    {
+        return ($this->htmlSanitizer ?? new EmailHtmlSanitizer())->sanitize($email->getBody());
+    }
+
     public function sendTest(Email $email, string $emailTo): bool
     {
         $message = $this->buildMessage($email, [], $emailTo);
@@ -137,8 +150,7 @@ class EmailManager implements EmailManagerInterface
     ): TemplatedEmail {
         $theme = $this->emailTheme;
         // sanitize the template only, variables are inserted by code
-        $htmlSanitizer = $this->htmlSanitizer ?? new EmailHtmlSanitizer();
-        $body = $htmlSanitizer->sanitize($email->getBody());
+        $body = $this->getSanitizedBody($email);
         $subject = $email->getSubject();
         foreach ($data as $key => $value) {
             $body = str_replace('{' . $key . '}', $value, $body);
