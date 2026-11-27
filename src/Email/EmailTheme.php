@@ -7,9 +7,28 @@ use Sovic\Common\Project\Settings;
 
 readonly class EmailTheme implements EmailThemeInterface
 {
+    /**
+     * @param array<string, mixed> $options keyed by EmailThemeOption values, e.g. ['cta_button_align' => 'center']
+     */
     public function __construct(
         private Settings $settings,
+        private array    $options = [],
     ) {
+    }
+
+    protected function getOption(EmailThemeOption $option): mixed
+    {
+        $value = $this->options[$option->value] ?? null;
+        if ($value === null) {
+            return $option->defaultValue();
+        }
+
+        $allowedValues = $option->allowedValues();
+        if ($allowedValues !== null && !in_array($value, $allowedValues, true)) {
+            return $option->defaultValue();
+        }
+
+        return $value;
     }
 
     protected function getPrimaryColor(): string
@@ -44,6 +63,7 @@ readonly class EmailTheme implements EmailThemeInterface
             'secondary_color' => $secondaryColor,
             'font_family' => $fontFamily,
             'link_style' => 'Box-sizing: border-box; Color: ' . $primaryColor . '; Text-decoration: underline;',
+            'cta_button_align' => $this->getOption(EmailThemeOption::CtaButtonAlign),
             'cta_button_style' => 'Font-family: ' . $fontFamily . '; Box-sizing: border-box; Display: inline-block; Cursor: pointer; Color: #ffffff; Background: ' . $primaryColor . '; Border-radius: 5px; Font-size: 14px; Font-weight: bold; Margin: 0; Padding: 10px 25px 10px 25px !important; Text-decoration: none;',
             'paragraph_style' => $paragraphStyle,
             'last_paragraph_style' => $paragraphStyle . ' Margin-bottom: 0;',
@@ -57,14 +77,21 @@ readonly class EmailTheme implements EmailThemeInterface
 
         // replace it <a class="cta_button"> with styled button
         $ctaButtonStyle = $themeData['cta_button_style'] ?? '';
+        $ctaButtonAlign = $themeData['cta_button_align'] ?? 'left';
+        // layout sets "table { margin: 0 auto !important; }", override inline to keep the alignment
+        $ctaTableMargin = match ($ctaButtonAlign) {
+            'center' => '0 auto',
+            'right' => '0 0 0 auto',
+            default => '0',
+        };
         /** @noinspection HtmlDeprecatedAttribute */
         /** @noinspection HtmlUnknownAttribute */
         $replacement = '
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                 <tbody>
                 <tr>
-                    <td align="left">
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <td align="' . $ctaButtonAlign . '" style="text-align: ' . $ctaButtonAlign . ';">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: ' . $ctaTableMargin . ' !important;">
                             <tbody>
                             <tr>
                                 <td style="">
