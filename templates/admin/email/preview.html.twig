@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{{ email.subject }}</title>
+    {# links open in a new tab, the iframe is sandboxed #}
+    <base target="_blank">
+    <style>
+        body {
+            background: #ffffff;
+            color: #181c32;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .email-preview {
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        img {
+            height: auto;
+            max-width: 100%;
+        }
+
+        .email-preview-empty {
+            color: #99a1b7;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="email-preview">
+    {% if body is not empty %}
+        {{ body|raw }}
+    {% else %}
+        <p class="email-preview-empty">Šablona nemá žádný obsah.</p>
+    {% endif %}
+</div>
+</body>
+</html>

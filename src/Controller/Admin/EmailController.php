@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Trait\SettingsTrait;
 use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
 use Sovic\Cms\Email\EmailHtmlSanitizer;
+use Sovic\Cms\Email\EmailManager;
 use Sovic\Cms\Email\EmailSearchRequest;
 use Sovic\Cms\Email\EmailSettingsInterface;
 use Sovic\Cms\Entity\Email;
@@ -145,6 +146,40 @@ class EmailController extends AdminBaseController
         $this->assign('variables', $emailId ? $emailList->getVariablesForEmailId($emailId) : []);
 
         return $this->render('@CmsBundle/admin/email/edit.html.twig');
+    }
+
+    /**
+     * Read-only preview of the email body, loaded into a sandboxed iframe on the email list.
+     */
+    #[Route(
+        '/admin/email/preview/{id}',
+        name: 'admin:email:preview',
+        requirements: ['id' => '\d+'],
+        methods: ['GET'],
+    )]
+    public function preview(
+        int                    $id,
+        EmailManager           $emailManager,
+        EntityManagerInterface $em,
+    ): Response {
+        $this->getRouteAccessDecision('admin:email:edit');
+
+        $email = $em->getRepository(Email::class)->find($id);
+        if ($email === null || !$this->isAdminEmailEditGranted($email)) {
+            return $this->render404();
+        }
+
+        $this->assign('body', $emailManager->getPreviewHtml($email));
+        $this->assign('email', $email);
+
+        $response = $this->render('@CmsBundle/admin/email/preview.html.twig');
+        // no scripts, no external resources except images
+        $response->headers->set(
+            'Content-Security-Policy',
+            "default-src 'none'; img-src * data:; style-src 'unsafe-inline'; frame-ancestors 'self'",
+        );
+
+        return $response;
     }
 
     #[Route(

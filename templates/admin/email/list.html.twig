@@ -81,6 +81,22 @@
                     </td>
                 {% endif %}
                 <td class="text-end">
+                    <a href="#"
+                       class="btn btn-icon btn-active-light-primary w-30px h-30px"
+                       data-bs-toggle="modal"
+                       data-bs-target="#email-preview-modal"
+                       data-preview-url="{{ path('admin:email:preview', {'id': item.id}) }}"
+                       data-preview-title="{{ item.name }}"
+                       data-preview-subject="{{ item.subject }}"
+                       data-preview-edit-url="{{ detail_url }}"
+                       title="Náhled"
+                       aria-label="Náhled">
+                        <i class="ki-duotone ki-eye fs-3">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            <span class="path3"></span>
+                        </i>
+                    </a>
                     {% set actions = [] %}
                     {% if is_admin and not item.emailId %}
                         {% set actions = actions|merge([
@@ -99,4 +115,60 @@
         </tbody>
         <tfoot></tfoot>
     </table>
+
+    <div class="modal fade" id="email-preview-modal" tabindex="-1" aria-labelledby="email-preview-title"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="min-w-0">
+                        <h5 class="modal-title text-truncate" id="email-preview-title"></h5>
+                        <div class="text-muted fs-7 text-truncate">
+                            Předmět: <span id="email-preview-subject"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                </div>
+                <div class="modal-body p-0">
+                    {# sandbox without allow-scripts / allow-same-origin, the preview cannot touch the admin #}
+                    <iframe id="email-preview-frame"
+                            title="Náhled emailu"
+                            sandbox="allow-popups allow-popups-to-escape-sandbox"
+                            src="about:blank"
+                            class="d-block w-100 border-0"
+                            style="height: 70vh;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <span class="text-muted fs-7 me-auto">Proměnné jsou zobrazeny jako <code>{název}</code>.</span>
+                    <a href="#" class="btn btn-primary" id="email-preview-edit">Upravit</a>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--suppress JSUnresolvedReference -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const $modal = document.getElementById('email-preview-modal');
+            if (!$modal) {
+                return;
+            }
+            const $frame = document.getElementById('email-preview-frame');
+
+            $modal.addEventListener('show.bs.modal', function (event) {
+                const $button = event.relatedTarget;
+                if (!$button) {
+                    return;
+                }
+                document.getElementById('email-preview-title').textContent = $button.dataset.previewTitle || '';
+                document.getElementById('email-preview-subject').textContent = $button.dataset.previewSubject || '-';
+                document.getElementById('email-preview-edit').href = $button.dataset.previewEditUrl || '#';
+                $frame.src = $button.dataset.previewUrl;
+            });
+            $modal.addEventListener('hidden.bs.modal', function () {
+                $frame.src = 'about:blank';
+            });
+        });
+    </script>
 {% endblock %}
