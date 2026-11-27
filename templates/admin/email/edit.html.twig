@@ -96,7 +96,24 @@
 
     {{ form_end(form, {'render_rest': false}) }}
 
-    {{ content_editor.content_editor_basic('#email_body', 'cs') }}
+    {# email body: only elements kept by EmailHtmlSanitizer, no inline / block text formats #}
+    {{ content_editor.content_editor_basic('#email_body', 'cs', null, null, {
+        toolbar: ['undo redo | styleselect | bold italic | nonbreaking | bullist numlist | link | image | code | fullscreen | visualblocks'],
+        style_formats: [
+            {title: 'Paragraph', format: 'p'},
+            {title: 'Heading 1', format: 'h1'},
+            {title: 'Heading 2', format: 'h2'},
+            {title: 'Heading 3', format: 'h3'},
+            {title: 'Heading 4', format: 'h4'},
+            {title: 'Heading 5', format: 'h5'},
+            {title: 'Heading 6', format: 'h6'},
+        ],
+        formats: {
+            italic: {inline: 'i'},
+        },
+        valid_elements: 'p,strong,i,br,a[href|target|title|rel|class],ul,ol,li,img[src|alt|title|width|height],h1,h2,h3,h4,h5,h6',
+        extended_valid_elements: '',
+    }) }}
 {% endblock %}
 
 {% block javascripts %}

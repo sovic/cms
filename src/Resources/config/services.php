@@ -14,4 +14,6 @@ return static function (ContainerConfigurator $container): void {
             '../../Ai/Dto/',
             '../../Ai/Exception/',
         ]);
+
+    $services->set(\Sovic\Cms\Email\EmailHtmlSanitizer::class);
 };

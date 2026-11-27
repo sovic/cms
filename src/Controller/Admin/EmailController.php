@@ -5,6 +5,7 @@ namespace Sovic\Cms\Controller\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Sovic\Cms\Controller\Admin\Trait\SettingsTrait;
 use Sovic\Cms\Controller\Trait\ControllerAccessTrait;
+use Sovic\Cms\Email\EmailHtmlSanitizer;
 use Sovic\Cms\Email\EmailSearchRequest;
 use Sovic\Cms\Email\EmailSettingsInterface;
 use Sovic\Cms\Entity\Email;
@@ -89,6 +90,7 @@ class EmailController extends AdminBaseController
     public function detail(
         int                    $id,
         EmailSettingsInterface $emailList,
+        EmailHtmlSanitizer     $htmlSanitizer,
         EntityManagerInterface $em,
         Request                $request,
         TranslatorInterface    $t,
@@ -115,6 +117,7 @@ class EmailController extends AdminBaseController
                 if ($operator instanceof UserEntityInterface && !$email->getCreator()) {
                     $email->setCreator($operator);
                 }
+                $email->setBody($htmlSanitizer->sanitize($email->getBody()));
 
                 $em->persist($email);
                 $em->flush();

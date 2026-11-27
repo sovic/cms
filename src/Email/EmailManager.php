@@ -18,6 +18,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 class EmailManager implements EmailManagerInterface
 {
     protected EmailThemeInterface $emailTheme;
+    protected ?EmailHtmlSanitizer $htmlSanitizer = null;
     protected EntityManagerInterface $em;
     protected MailerInterface $mailer;
     protected Settings $settings;
@@ -38,6 +39,12 @@ class EmailManager implements EmailManagerInterface
     public function setTheme(EmailThemeInterface $theme): void
     {
         $this->emailTheme = $theme;
+    }
+
+    #[Required]
+    public function setHtmlSanitizer(EmailHtmlSanitizer $htmlSanitizer): void
+    {
+        $this->htmlSanitizer = $htmlSanitizer;
     }
 
     #[Required]
@@ -129,7 +136,9 @@ class EmailManager implements EmailManagerInterface
         ?string $replyTo = null,
     ): TemplatedEmail {
         $theme = $this->emailTheme;
-        $body = $email->getBody();
+        // sanitize the template only, variables are inserted by code
+        $htmlSanitizer = $this->htmlSanitizer ?? new EmailHtmlSanitizer();
+        $body = $htmlSanitizer->sanitize($email->getBody());
         $subject = $email->getSubject();
         foreach ($data as $key => $value) {
             $body = str_replace('{' . $key . '}', $value, $body);

@@ -39,7 +39,8 @@ class EmailFactory
             throw new RuntimeException('Email not found: ' . $emailId->getId());
         }
 
-        $body = $email->getBody();
+        // sanitize the template only, variables are inserted by code
+        $body = (new EmailHtmlSanitizer())->sanitize($email->getBody());
         $subject = $email->getSubject();
 
         $variables = $emailId->getVariables();
